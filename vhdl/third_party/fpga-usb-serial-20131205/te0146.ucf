@@ -1,0 +1,60 @@
+# I/O constraints for XC3S1000 on TE0146 Micromodule
+#NET "ram_io<0>"  LOC = "H15" | IOSTANDARD = LVCMOS33 | DRIVE = 24  | SLEW = FAST ;
+#NET "ram_io<1>"  LOC = "H14" | IOSTANDARD = LVCMOS33 | DRIVE = 24  | SLEW = FAST ;
+#NET "ram_io<2>"  LOC = "G16" | IOSTANDARD = LVCMOS33 | DRIVE = 24  | SLEW = FAST ;
+#NET "ram_io<3>"  LOC = "G14" | IOSTANDARD = LVCMOS33 | DRIVE = 24  | SLEW = FAST ;
+#NET "ram_io<4>"  LOC = "F14" | IOSTANDARD = LVCMOS33 | DRIVE = 24  | SLEW = FAST ;
+#NET "ram_io<5>"  LOC = "E15" | IOSTANDARD = LVCMOS33 | DRIVE = 24  | SLEW = FAST ;
+#NET "ram_io<6>"  LOC = "D16" | IOSTANDARD = LVCMOS33 | DRIVE = 24  | SLEW = FAST ;
+#NET "ram_io<7>"  LOC = "E13" | IOSTANDARD = LVCMOS33 | DRIVE = 24  | SLEW = FAST ;
+NET "phy_clkout"  LOC = "D9" | IOSTANDARD = LVCMOS33 ;
+NET "phy_databus16_8"  LOC = "B14" | IOSTANDARD = LVCMOS33 | DRIVE = 12 ;
+NET "phy_datain<0>"  LOC = "A8" | IOSTANDARD = LVCMOS33 ;
+NET "phy_datain<1>"  LOC = "C8" | IOSTANDARD = LVCMOS33 ;
+NET "phy_datain<2>"  LOC = "C7" | IOSTANDARD = LVCMOS33 ;
+NET "phy_datain<3>"  LOC = "A7" | IOSTANDARD = LVCMOS33 ;
+NET "phy_datain<4>"  LOC = "B7" | IOSTANDARD = LVCMOS33 ;
+NET "phy_datain<5>"  LOC = "B5" | IOSTANDARD = LVCMOS33 ;
+NET "phy_datain<6>"  LOC = "C5" | IOSTANDARD = LVCMOS33 ;
+NET "phy_datain<7>"  LOC = "A4" | IOSTANDARD = LVCMOS33 ;
+NET "phy_dataout<0>"  LOC = "A13" | IOSTANDARD = LVCMOS33 | DRIVE = 12 | SLEW = FAST ;
+NET "phy_dataout<1>"  LOC = "B11" | IOSTANDARD = LVCMOS33 | DRIVE = 12 | SLEW = FAST ;
+NET "phy_dataout<2>"  LOC = "C10" | IOSTANDARD = LVCMOS33 | DRIVE = 12 | SLEW = FAST ;
+NET "phy_dataout<3>"  LOC = "B10" | IOSTANDARD = LVCMOS33 | DRIVE = 12 | SLEW = FAST ;
+NET "phy_dataout<4>"  LOC = "A10" | IOSTANDARD = LVCMOS33 | DRIVE = 12 | SLEW = FAST ;
+NET "phy_dataout<5>"  LOC = "C9" | IOSTANDARD = LVCMOS33 | DRIVE = 12 | SLEW = FAST ;
+NET "phy_dataout<6>"  LOC = "A9" | IOSTANDARD = LVCMOS33 | DRIVE = 12 | SLEW = FAST ;
+NET "phy_dataout<7>"  LOC = "B8" | IOSTANDARD = LVCMOS33 | DRIVE = 12 | SLEW = FAST ;
+NET "phy_linestate<0>"  LOC = "A3" | IOSTANDARD = LVCMOS33 ;
+NET "phy_linestate<1>"  LOC = "A5" | IOSTANDARD = LVCMOS33 ;
+NET "phy_opmode<1>"  LOC = "C6" | IOSTANDARD = LVCMOS33 | DRIVE = 12 | SLEW = FAST ;
+NET "phy_opmode<0>"  LOC = "T10" | IOSTANDARD = LVCMOS33 | DRIVE = 12 | SLEW = FAST ;
+NET "phy_reset"  LOC = "B4" | IOSTANDARD = LVCMOS33 | DRIVE = 12 | SLEW = FAST ;
+NET "phy_rxactive"  LOC = "C11" | IOSTANDARD = LVCMOS33 ;
+NET "phy_rxerror"  LOC = "C12" | IOSTANDARD = LVCMOS33 ;
+NET "phy_rxvalid"  LOC = "A12" | IOSTANDARD = LVCMOS33 ;
+NET "phy_termselect"  LOC = "B6" | IOSTANDARD = LVCMOS33 | DRIVE = 12 | SLEW = FAST ;
+NET "phy_txready"  LOC = "A14" | IOSTANDARD = LVCMOS33 ;
+NET "phy_txvalid"  LOC = "B12" | IOSTANDARD = LVCMOS33 | DRIVE = 12 | SLEW = FAST ;
+NET "phy_xcvrselect"  LOC = "D6" | IOSTANDARD = LVCMOS33 | DRIVE = 12 | SLEW = FAST ;
+NET "led"  LOC = "N6" | IOSTANDARD = LVCMOS25 | DRIVE = 12;
+
+NET "phy_clkout" TNM_NET = "phy_clkout";
+TIMESPEC "TS_clk" = PERIOD "phy_clkout" 16 ns HIGH 50 %;
+#TIMESPEC "TS_clk" = PERIOD "phy_clkout" 14 ns HIGH 50 %;
+
+# USB3250 outputs are valid 4 ns after CLKOUT, hold time not specified
+# USB3250 inputs need 4 ns setup to CLKOUT and 0 ns hold
+NET "phy_datain*"     OFFSET = IN 10 ns VALID 10 ns BEFORE "phy_clkout" ;
+NET "phy_linestate*"  OFFSET = IN 10 ns VALID 10 ns BEFORE "phy_clkout" ;
+NET "phy_rxactive"    OFFSET = IN 10 ns VALID 10 ns BEFORE "phy_clkout" ;
+NET "phy_rxerror"     OFFSET = IN 10 ns VALID 10 ns BEFORE "phy_clkout" ;
+NET "phy_rxvalid"     OFFSET = IN 10 ns VALID 10 ns BEFORE "phy_clkout" ;
+NET "phy_txready"     OFFSET = IN 10 ns VALID 10 ns BEFORE "phy_clkout" ;
+NET "phy_dataout*"    OFFSET = OUT 6 ns BEFORE "phy_clkout" ;
+NET "phy_opmode*"     OFFSET = OUT 6 ns BEFORE "phy_clkout" ;
+NET "phy_reset"       OFFSET = OUT 6 ns BEFORE "phy_clkout" ;
+NET "phy_termselect"  OFFSET = OUT 6 ns BEFORE "phy_clkout" ;
+NET "phy_txvalid"     OFFSET = OUT 6 ns BEFORE "phy_clkout" ;
+NET "phy_xcvrselect"  OFFSET = OUT 6 ns BEFORE "phy_clkout" ;
+
