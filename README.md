@@ -19,42 +19,46 @@ The vna is composed of 3 separate boards:
 
 ##### Main board
 
-![main board](https://github.com/xaxaxa/vna/blob/master/pictures/main_top.png?raw=true)
+![main board](pictures/main_top.png)
 
 
 ##### Signal generator
 
-![signal generator board](https://github.com/xaxaxa/vna/blob/master/pictures/tx_top.png?raw=true)
+![signal generator board](pictures/tx_top.png)
 
 
 ##### Directional coupler
 
-![directional coupler board](https://github.com/xaxaxa/vna/blob/master/pictures/coupler_top.png?raw=true)
+![directional coupler board](pictures/coupler_top.png)
 
 
 ##### Complete assembly
 
-![vna assembly](https://raw.githubusercontent.com/xaxaxa/vna/master/pictures/all.jpg)
+![vna assembly](pictures/all.jpg)
 
 
 # Interfacing
 The main board connects to a PC through usb and communicates via a virtual serial port device; the PC software sets the frequency and other parameters by sending two-byte register write commands, and the device sends averaged vector values representing magnitude and phase of measured wave.
 
+# Block diagram
+##### Main board
+![block diagram](pictures/vna_main.png)
+
 # Screenshots
 
 ##### Open circuited stub
 
-![screenshot](https://github.com/xaxaxa/vna/blob/master/pictures/screenshot_open_stub.png?raw=true)
+![screenshot](pictures/screenshot_open_stub.png)
 
 
 ##### Short circuited stub
 
-![screenshot](https://github.com/xaxaxa/vna/blob/master/pictures/screenshot_shorted_stub.png?raw=true)
+![screenshot](pictures/screenshot_shorted_stub.png)
 
 
 ##### Antenna
 
-![screenshot](https://github.com/xaxaxa/vna/blob/master/pictures/screenshot_antenna.png?raw=true)
+![screenshot](pictures/screenshot_antenna.png)
 
 
 # Parts selection
