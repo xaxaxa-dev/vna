@@ -18,19 +18,13 @@ The vna is composed of 3 separate boards:
 * coupler: resistive directional coupler, ~15dB coupling
 
 ##### Main board
-
 ![main board](pictures/main_top.png)
 
-
 ##### Signal generator
-
 ![signal generator board](pictures/tx_top.png)
 
-
 ##### Directional coupler
-
 ![directional coupler board](pictures/coupler_top.png)
-
 
 ##### Complete assembly
 
@@ -43,8 +37,12 @@ The main board connects to a PC through usb and communicates via a virtual seria
 # Block diagram
 ##### Main board
 ![block diagram](pictures/vna_main.png)
+
 ##### Signal generator
 ![block diagram](pictures/vna_tx.png)
+
+##### FPGA logic
+![block diagram](pictures/fpga_logic.png)
 
 # Screenshots
 
