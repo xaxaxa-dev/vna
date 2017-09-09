@@ -1,0 +1,85 @@
+# This is the template file for creating symbols with tragesym						
+# every line starting with '#' is a comment line.						
+# save it as text file with tab separated cells and start tragesym						
+						
+[options]						
+# wordswap swaps labels if the pin is on the right side an looks like this:						
+"# ""PB1 (CLK)"". That's useful for micro controller port labels"						
+# rotate_labels rotates the pintext of top and bottom pins						
+# this is useful for large symbols like FPGAs with more than 100 pins						
+# sort_labels will sort the pins by it's labels						
+# useful for address ports, busses, ...						
+wordswap	yes					
+rotate_labels	yes					
+sort_labels	no					
+generate_pinseq	yes					
+sym_width	2600					
+sym_height	4300					
+pinwidthvertical	300					
+pinwidthhorizontal	300					
+[geda_attr]						
+# name will be printed in the top of the symbol						
+# if you have a device with slots, you'll have to use slot= and slotdef=						
+# use comment= if there are special information you want to add						
+version	20060113 1					
+name	ad9200					
+device	ad9200					
+refdes	U?					
+footprint						
+description	ADC					
+documentation						
+						
+numslots	0					
+dist-license						
+use-license						
+						
+						
+						
+						
+						
+						
+						
+						
+						
+[pins]						
+# tabseparated list of pin descriptions						
+#						
+# pinnr is the physical number of the pin						
+# seq is the pinseq= attribute, leave it blank if it doesn't matter						
+# type can be (in, out, io, oc, oe, pas, tp, tri, clk, pwr)						
+# style can be (line,dot,clk,dotclk,none). none if only want to add a net						
+# posit. can be (l,r,t,b) or empty for nets						
+# net specifies the name of the net. Vcc or GND for example.						
+# label represents the pinlabel.						
+#	"negation lines can be added with ""\_"" example: \_enable\_ "					
+#	"if you want to write a ""\"" use ""\\"" as escape sequence"					
+#						
+#pinnr	seq	type	style	posit.	net	label
+1		pwr	line	l		AVSS
+2		pwr	line	l		DRVDD
+3		io	line	l		D0
+4		io	line	l		D1
+5		io	line	l		D2
+6		io	line	l		D3
+7		io	line	l		D4
+8		io	line	l		D5
+9		io	line	l		D6
+10		io	line	l		D7
+11		io	line	l		D8
+12		io	line	l		D9
+13		io	line	l		OTR
+14		pwr	line	l		DRVSS
+28		pwr	line	r		AVDD
+27		io	line	r		AIN
+26		io	line	r		VREF
+25		io	line	r		REFBS
+24		io	line	r		REFBF
+23		io	line	r		MODE
+22		io	line	r		REFTF
+21		io	line	r		REFTS
+20		io	line	r		CLAMPIN
+19		io	line	r		CLAMP
+18		io	line	r		REFSENSE
+17		io	line	r		STBY
+16		io	line	r		THREE-STATE
+15		io	line	r		CLK
