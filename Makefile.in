@@ -1,0 +1,22 @@
+CXX = @CXX@ @CXXFLAGS@
+LDFLAGS = @LDFLAGS@
+EXTRA_LIBRARIES = @EXTRA_LIBRARIES@
+
+INSTALL_BINDIR = @prefix@@bindir@
+INSTALL_LIBDIR = @prefix@@libdir@
+INSTALL_INCLUDEDIR = @prefix@@includedir@
+
+all: vna_main
+
+vna_main: vna_main.C vna.glade.c
+	$(CXX) vna_main.C vna.glade.c -o $@ $(LDFLAGS) @GTK_CFLAGS@ @GTK_LIBS@ -lpthread
+
+vna.glade.c: vna.glade
+	xxd -i vna.glade > $@
+
+install: vna_main
+	# binaries
+	install vna_main $(INSTALL_BINDIR)/
+
+clean:
+	rm -f *.so vna_main *.glade.c
