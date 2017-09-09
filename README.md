@@ -43,6 +43,8 @@ The main board connects to a PC through usb and communicates via a virtual seria
 # Block diagram
 ##### Main board
 ![block diagram](pictures/vna_main.png)
+##### Signal generator
+![block diagram](pictures/vna_tx.png)
 
 # Screenshots
 
