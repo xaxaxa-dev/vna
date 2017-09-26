@@ -1,5 +1,5 @@
 # vna
-a simple and cheap vector network analyzer, including support software
+a simple and cheap vector network analyzer, including support software; total BOM cost is well under $100
 
 # Directory layout
 * Root directory: software; compile and run on any Linux based system
@@ -37,6 +37,11 @@ The main board connects to a PC through usb and communicates via a virtual seria
 
 ##### Complete assembly
 ![vna assembly](pictures/all.jpg)
+
+##### Calibration standards
+(Short, Open, Load)
+
+![calibration standards](pictures/calibration_standards.jpg)
 
 ##### Main board
 ![main board](pictures/main_top.png)
