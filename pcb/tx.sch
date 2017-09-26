@@ -145,7 +145,7 @@ refdes=L2
 T 43200 41900 5 10 0 0 0 0 1
 symversion=0.1
 T 43000 41100 5 10 1 1 0 0 1
-value=100n
+value=130n
 T 43300 41400 5 10 1 1 0 0 1
 footprint=0603
 }
@@ -516,7 +516,7 @@ refdes=L4
 T 54900 38000 5 10 0 0 90 0 1
 symversion=0.1
 T 55700 37800 5 10 1 1 90 0 1
-value=100n
+value=130n
 T 55400 38100 5 10 1 1 90 0 1
 footprint=0603
 }
@@ -880,7 +880,7 @@ refdes=L3
 T 44500 41900 5 10 0 0 0 0 1
 symversion=0.1
 T 44400 41100 5 10 1 1 0 0 1
-value=100n
+value=130n
 T 44600 41400 5 10 1 1 0 0 1
 footprint=0603
 }
