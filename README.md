@@ -1,5 +1,5 @@
 # vna
-a simple and cheap vector network analyzer, including support software; total BOM cost is well under $100
+a simple and cheap vector network analyzer, including support software.
 
 # Directory layout
 * Root directory: software; compile and run on any Linux based system
