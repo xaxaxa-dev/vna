@@ -24,6 +24,9 @@ The main board connects to a PC through usb and communicates via a virtual seria
 
 # Block diagram
 
+##### Overall architecture
+![block diagram](pictures/overall_diagram.png)
+
 ##### Main board
 ![block diagram](pictures/vna_main.png)
 
