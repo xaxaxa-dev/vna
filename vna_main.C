@@ -26,6 +26,7 @@ int nPoints=50;
 int startFreq=17000;
 int freqStep=200;
 double freqMultiplier=0.1; //19.2/4;
+bool showCursor = true;
 
 int nWait=50;		//number of data points to skip after changing frequency
 int nValues=150;	//number of data points to integrate over
@@ -240,6 +241,10 @@ void* thread1(void* v) {
 			if(requestedMeasurements>requestedMeasurementsPrev) break;
 			if(refreshThreadShouldExit) return NULL;
 		}
+		Glib::signal_idle().connect([]() {
+			polarView->commitTrace();
+			return false;
+		});
 		
 		// take extended measurement
 		if(requestedMeasurements>requestedMeasurementsPrev) {
@@ -346,13 +351,15 @@ void addButtonHandlers() {
 	// controls
 	Gtk::Window* window1;
 	Gtk::Button *b_oc, *b_sc, *b_t, *b_thru, *b_apply, *b_clear, *b_load, *b_save, *b_freq;
+	Gtk::ToggleButton *c_persistence, *c_freq;
 	
 	// get controls
 	GETWIDGET(window1);
 	GETWIDGET(b_oc); GETWIDGET(b_sc); GETWIDGET(b_t); GETWIDGET(b_thru);
 	GETWIDGET(b_apply); GETWIDGET(b_clear); 
 	GETWIDGET(b_load); GETWIDGET(b_save);
-	GETWIDGET(b_freq);
+	GETWIDGET(b_freq); GETWIDGET(c_persistence);
+	GETWIDGET(c_freq);
 	b_oc->signal_clicked().connect([window1]() {
 		for(int i=0;i<nPoints;i++) polarView->points[i] = NAN;
 		window1->set_sensitive(false);
@@ -469,6 +476,20 @@ void addButtonHandlers() {
 		}
 		dialog_freq->hide();
 	});
+	c_persistence->signal_toggled().connect([c_persistence]() {
+		polarView->persistence = c_persistence->get_active();
+		if(polarView->persistence)
+			polarView->clearPersistence();
+	});
+	c_freq->signal_toggled().connect([c_freq]() {
+		showCursor = c_freq->get_active();
+		if(showCursor) {
+			polarView->cursorColor = 0xffffff00;
+		} else {
+			polarView->cursorColor = 0x00000000;
+		}
+		polarView->queue_draw();
+	});
 }
 
 string GetDirFromPath(const string path)
@@ -529,14 +550,15 @@ void updateLabels() {
 	Gtk::Scale* s_freq;
 	Gtk::Label *l_freq,*l_refl,*l_refl_phase,*l_through,*l_through_phase;
 	Gtk::Label *l_impedance, *l_admittance, *l_s_admittance, *l_p_impedance, *l_series, *l_parallel;
-	GETWIDGET(s_freq); GETWIDGET(l_freq); GETWIDGET(l_refl); GETWIDGET(l_refl_phase);
+	Gtk::ToggleButton *c_freq;
+	GETWIDGET(s_freq); GETWIDGET(c_freq); GETWIDGET(l_refl); GETWIDGET(l_refl_phase);
 	GETWIDGET(l_through); GETWIDGET(l_through_phase);
 	GETWIDGET(l_impedance); GETWIDGET(l_admittance); GETWIDGET(l_s_admittance);
 	GETWIDGET(l_p_impedance); GETWIDGET(l_series); GETWIDGET(l_parallel);
 	
 	int freqIndex=(int)s_freq->get_value();
 	double freq=freqAt(freqIndex);
-	l_freq->set_text(ssprintf(20, "%.1f MHz", freq));
+	c_freq->set_label(ssprintf(20, "%.1f MHz", freq));
 	if(!use_cal) {
 		l_refl->set_text("");
 		l_refl_phase->set_text("");

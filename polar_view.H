@@ -43,6 +43,12 @@ namespace xaxaxa
 		double w,h;
 		double r,centerX,centerY;
 		int selectedPoint=0;
+		bool persistence = false;
+		//ARGB
+		uint32_t cursorColor = 0xffffff00;
+		
+		::Cairo::RefPtr< ::Cairo::ImageSurface > img;
+		
 		
 		double ptX(double x) {
 			return centerX+x/scale*r;
@@ -50,8 +56,7 @@ namespace xaxaxa
 		double ptY(double y) {
 			return centerY-y/scale*r;
 		}
-		void do_draw(const ::Cairo::RefPtr< ::Cairo::Context>& gc)
-		{
+		void draw_grid(const ::Cairo::RefPtr< ::Cairo::Context>& gc) {
 			w=get_allocation().get_width();
 			h=get_allocation().get_height();
 			
@@ -94,18 +99,33 @@ namespace xaxaxa
 			gc->move_to(centerX-r,centerY);
 			gc->line_to(centerX+r,centerY);
 			gc->stroke();
-			
+		}
+		void draw_chart(const ::Cairo::RefPtr< ::Cairo::Context>& gc)
+		{
 			if(points.size()==0) return;
-			gc->set_line_width(2.0);
-			gc->set_source_rgb(0,0,1);
 			for(int i=1;i<(int)points.size();i++) {
 				if(isnan(points[i-1].real()) || isnan(points[i].real())) continue;
 				gc->move_to(ptX(points[i-1].real()), ptY(points[i-1].imag()));
 				gc->line_to(ptX(points[i].real()), ptY(points[i].imag()));
 				gc->stroke();
 			}
-			
-			gc->set_source_rgb(1,1,0);
+		}
+		void do_draw(const ::Cairo::RefPtr< ::Cairo::Context>& gc) {
+			draw_grid(gc);
+			if(persistence) {
+				if(img) {
+					gc->set_source(img, 0, 0);
+					gc->paint();
+				}
+			} else {
+				gc->set_line_width(2.0);
+				gc->set_source_rgb(0,0,1);
+				draw_chart(gc);
+			}
+			gc->set_line_width(2.0);
+			uint32_t c = cursorColor;
+			gc->set_source_rgba(double((c>>16)&0xFF)/255, double((c>>8)&0xFF)/255,
+								double((c)&0xFF)/255, double((c>>24)&0xFF)/255);
 			draw_point(gc,points[selectedPoint].real(),points[selectedPoint].imag(),3);
 		}
 		void draw_point(const ::Cairo::RefPtr< ::Cairo::Context>& gc, double re, double im, double size) {
@@ -143,6 +163,22 @@ namespace xaxaxa
 				}
 				do_draw(ctx);
 			}
+		}
+		void clearPersistence() {
+			int w=(int)get_allocation().get_width();
+			int h=(int)get_allocation().get_height();
+			img=::Cairo::ImageSurface::create(::Cairo::FORMAT_ARGB32,w,h);
+		}
+		void commitTrace() {
+			if(!persistence) return;
+			int w=(int)get_allocation().get_width();
+			int h=(int)get_allocation().get_height();
+			if(!img || img->get_width()!=w || img->get_height()!=h)
+				clearPersistence();
+			::Cairo::RefPtr< ::Cairo::Context > imgCtx = ::Cairo::Context::create(img);
+			imgCtx->set_line_width(2.0);
+			imgCtx->set_source_rgba(0,0,1, 1);
+			draw_chart(imgCtx);
 		}
 		virtual bool on_expose_event(GdkEventExpose* evt)
 		{
