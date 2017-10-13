@@ -9,7 +9,7 @@ a simple and cheap vector network analyzer, including support software.
 # Specifications
 * Frequency range: guaranteed **137MHz - 2500MHz**, typical **135MHz - 3500MHz**
 * Measurement signal level (controlled using on-board switches): **-5dBm to 10dBm, with 2dB increments**
-* Measurement signal level (controlled using spi interface, not yet implemented): **-20dBm to 10dBm, with 1dB increments**
+* Measurement signal level (controlled using spi interface): **-20dBm to 10dBm, with 1dB increments**
 * 3 receivers: forward coupled, reverse coupled, through; can measure S11 and S21 of a two port device. To measure S22 and S12 the DUT needs to be manually reversed.
 
 # Physical assembly
