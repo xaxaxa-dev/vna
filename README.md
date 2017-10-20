@@ -4,6 +4,7 @@ A simple and cheap vector network analyzer, including support software.
 **Update:** A kickstarter has been launched to bring this project to production!
 https://www.kickstarter.com/projects/1759352588/xavna-a-full-featured-low-cost-two-port-vna
 
+The production version will be redesigned to fit onto a single PCB.
 
 # Directory layout
 * Root directory: software; compile and run on any Linux based system
