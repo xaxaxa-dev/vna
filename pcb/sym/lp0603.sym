@@ -6,9 +6,9 @@ pinnumber=1
 T 300 550 5 8 0 1 0 8 1
 pinseq=1
 T 450 600 9 8 1 1 0 0 1
-pinlabel=GND
+pinlabel=OUT
 T 450 600 5 8 0 1 0 2 1
-pintype=pwr
+pintype=io
 }
 P 100 300 400 300 1 0 0
 {
@@ -17,9 +17,9 @@ pinnumber=2
 T 300 250 5 8 0 1 0 8 1
 pinseq=2
 T 450 300 9 8 1 1 0 0 1
-pinlabel=IN
+pinlabel=GND
 T 450 300 5 8 0 1 0 2 1
-pintype=io
+pintype=pwr
 }
 P 1500 600 1200 600 1 0 0
 {
@@ -28,9 +28,9 @@ pinnumber=4
 T 1300 550 5 8 0 1 0 2 1
 pinseq=3
 T 1150 600 9 8 1 1 0 6 1
-pinlabel=GND
+pinlabel=IN
 T 1150 600 5 8 0 1 0 8 1
-pintype=pwr
+pintype=io
 }
 P 1500 300 1200 300 1 0 0
 {
@@ -39,9 +39,9 @@ pinnumber=3
 T 1300 250 5 8 0 1 0 2 1
 pinseq=4
 T 1150 300 9 8 1 1 0 6 1
-pinlabel=OUT
+pinlabel=GND
 T 1150 300 5 8 0 1 0 8 1
-pintype=io
+pintype=pwr
 }
 B 400 100 800 700 3 0 0 0 -1 -1 0 -1 -1 -1 -1 -1
 T 1200 900 8 10 1 1 0 6 1

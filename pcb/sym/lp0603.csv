@@ -55,8 +55,8 @@ use-license
 #	"if you want to write a ""\"" use ""\\"" as escape sequence"					
 #						
 #pinnr	seq	type	style	posit.	net	label
-1		pwr	line	l		GND
-2		io	line	l		IN
-4		pwr	line	r		GND
-3		io	line	r		OUT
+1		io	line	l		OUT
+2		pwr	line	l		GND
+4		io	line	r		IN
+3		pwr	line	r		GND
 
