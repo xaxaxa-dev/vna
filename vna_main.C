@@ -11,6 +11,7 @@
 #include <string>
 #include <stdarg.h>
 #include <termios.h>
+#include <fftw3.h>
 
 //#include "adf4350_board.H"
 
@@ -20,12 +21,14 @@ using namespace std;
 #define TOKEN_TO_STRING(TOK) # TOK
 #define GETWIDGET(x) builder->get_widget(TOKEN_TO_STRING(x), x)
 
+#define FFTWFUNC(x) fftw_ ## x
 
 // settings
 int nPoints=50;
 int startFreq=17000;
 int freqStep=200;
 double freqMultiplier=0.1; //19.2/4;
+bool timeDomain = false;
 bool showCursor = true;
 
 int nWait=50;		//number of data points to skip after changing frequency
@@ -44,6 +47,7 @@ int ttyFD=-1;
 Glib::RefPtr<Gtk::Builder> builder;
 xaxaxa::PolarView* polarView=NULL;
 xaxaxa::GraphView* graphView=NULL;
+xaxaxa::GraphView* timeGraphView=NULL;
 pthread_t refreshThread;
 bool refreshThreadShouldExit=false;
 
@@ -73,6 +77,27 @@ string ssprintf(int maxLen, const char* fmt, ...) {
 double dB(double power) {
 	return log10(power)*10;
 }
+double gauss(double x, double m, double s) {
+    static const double inv_sqrt_2pi = 0.3989422804014327;
+    double a = (x - m) / s;
+    return inv_sqrt_2pi / s * std::exp(-0.5d * a * a);
+}
+
+int timePoints() {
+	return (nPoints*3-1);
+}
+
+// returns MHz
+double freqAt(int i) {
+	return (startFreq+i*freqStep)*freqMultiplier;
+}
+// returns ns
+double timeAt(int i) {
+	double fs=double(freqStep)*freqMultiplier; // MHz
+	double totalTime = 1000./fs/2; // ns
+	return double(i)*totalTime/double(timePoints())/2;
+}
+
 
 //writes the commands in the buffer to stdout
 void doWriteSPI(string buf) {
@@ -188,9 +213,7 @@ complex5 readValue3(int cnt) {
 	}
 	return result;
 }
-double freqAt(int i) {
-	return (startFreq+i*freqStep)*freqMultiplier;
-}
+
 
 // increment this variable to request the thread take an extended measurement (for when more accuracy is required)
 volatile int requestedMeasurements=0;
@@ -198,11 +221,21 @@ volatile int requestedMeasurements=0;
 function<void(vector<complex5>)>* volatile measurementCallback;
 
 void* thread1(void* v) {
-	polarView->scale=0.2e12;
 	int requestedMeasurementsPrev=requestedMeasurements;
+	
+	complex<double>* reflArray = (complex<double>*)FFTWFUNC(malloc)(nPoints*3*sizeof(complex<double>));
+	complex<double>* thruArray = (complex<double>*)FFTWFUNC(malloc)(nPoints*3*sizeof(complex<double>));
+	double* reflTD = (double*)FFTWFUNC(malloc)(timePoints()*2*sizeof(double));
+	double* thruTD = (double*)FFTWFUNC(malloc)(timePoints()*2*sizeof(double));
+	
+	FFTWFUNC(plan) p1, p2;
+	p1 = fftw_plan_dft_c2r_1d(timePoints()*2, (fftw_complex*)reflArray, reflTD, 0);
+	p2 = fftw_plan_dft_c2r_1d(timePoints()*2, (fftw_complex*)thruArray, thruTD, 0);
+	
 	while(true) {
-		double max_mag=0;
-
+		memset(reflArray, 0, nPoints*3*sizeof(complex<double>));
+		memset(thruArray, 0, nPoints*3*sizeof(complex<double>));
+		
 		int N=startFreq;
 		for(int i=0;i<nPoints;i++) {
 			//printf("%d\n",N);
@@ -215,32 +248,38 @@ void* thread1(void* v) {
 			complex<double> thruValue=values.val[3];
 			printf("%7.2f %20lf %10lf %20lf %10lf\n",N*freqMultiplier,
 				abs(values.val[2]),arg(values.val[2]),abs(values.val[0]),arg(values.val[0]));
-			
+			auto refl = reflValue;
+			auto thru = thruValue;
 			if(use_cal) {
 				//auto refl=(cal_X[i]*cal_Y[i]-value*cal_Z[i])/(value-cal_X[i]);
-				auto refl=(cal_X[i]*cal_Y[i]-reflValue)/(reflValue*cal_Z[i]-cal_X[i]);
-				auto thru=thruValue/cal_thru[i];
-				polarView->points[i]=refl;
-				graphView->lines[0][i] = arg(refl);
-				graphView->lines[1][i] = arg(thru);
-				graphView->lines[2][i] = dB(norm(refl));
-				graphView->lines[3][i] = dB(norm(thru));
-				
-			} else {
-				polarView->points[i]=reflValue;
-				double mag=abs(reflValue);
-				if(mag>max_mag) max_mag=mag;
-				graphView->lines[0][i] = arg(reflValue);
-				graphView->lines[1][i] = arg(thruValue);
-				graphView->lines[2][i] = dB(norm(reflValue));
-				graphView->lines[3][i] = dB(norm(thruValue));
-				printf("%f %f\n", graphView->lines[0][i], graphView->lines[2][i]);
+				refl=(cal_X[i]*cal_Y[i]-reflValue)/(reflValue*cal_Z[i]-cal_X[i]);
+				thru=thruValue/cal_thru[i];
 			}
+			
+			reflArray[i] = refl * gauss(double(i)/nPoints, 0, 0.7);
+			thruArray[i] = thru * gauss(double(i)/nPoints, 0, 0.7);
+			polarView->points[i]=refl;
+			graphView->lines[0][i] = arg(refl);
+			graphView->lines[1][i] = arg(thru);
+			graphView->lines[2][i] = dB(norm(refl));
+			graphView->lines[3][i] = dB(norm(thru));
 			
 			N+=freqStep;
 			if(requestedMeasurements>requestedMeasurementsPrev) break;
 			if(refreshThreadShouldExit) return NULL;
 		}
+		// compute time domain values
+		FFTWFUNC(execute)(p1);
+		FFTWFUNC(execute)(p2);
+		int tPoints = timePoints();
+		for(int i=0;i<tPoints;i++) {
+			auto refl = reflTD[i]/nPoints;
+			auto thru = thruTD[i]/nPoints;
+			timeGraphView->lines[0][i] = dB(refl*refl);
+			timeGraphView->lines[1][i] = dB(thru*thru);
+			printf("%d %.10lf\n",i,reflTD[i]);
+		}
+		
 		Glib::signal_idle().connect([]() {
 			polarView->commitTrace();
 			return false;
@@ -278,9 +317,6 @@ void* thread1(void* v) {
 				return false;
 			});
 		}
-		
-		if(use_cal) polarView->scale=1;
-		else polarView->scale=max_mag;
 	}
 }
 
@@ -349,17 +385,17 @@ bool loadCalibration(char* data, int size) {
 
 void addButtonHandlers() {
 	// controls
-	Gtk::Window* window1;
+	Gtk::Window *window1, *window3;
 	Gtk::Button *b_oc, *b_sc, *b_t, *b_thru, *b_apply, *b_clear, *b_load, *b_save, *b_freq;
-	Gtk::ToggleButton *c_persistence, *c_freq;
+	Gtk::ToggleButton *c_persistence, *c_freq, *c_ttf;
 	
 	// get controls
-	GETWIDGET(window1);
+	GETWIDGET(window1); GETWIDGET(window3);
 	GETWIDGET(b_oc); GETWIDGET(b_sc); GETWIDGET(b_t); GETWIDGET(b_thru);
 	GETWIDGET(b_apply); GETWIDGET(b_clear); 
 	GETWIDGET(b_load); GETWIDGET(b_save);
 	GETWIDGET(b_freq); GETWIDGET(c_persistence);
-	GETWIDGET(c_freq);
+	GETWIDGET(c_freq); GETWIDGET(c_ttf);
 	b_oc->signal_clicked().connect([window1]() {
 		for(int i=0;i<nPoints;i++) polarView->points[i] = NAN;
 		window1->set_sensitive(false);
@@ -490,6 +526,11 @@ void addButtonHandlers() {
 		}
 		polarView->queue_draw();
 	});
+	c_ttf->signal_toggled().connect([c_ttf, window3]() {
+		if(c_ttf->get_active())
+			window3->show();
+		else window3->hide();
+	});
 }
 
 string GetDirFromPath(const string path)
@@ -547,7 +588,7 @@ const char* si_unit(double val) {
 }
 
 void updateLabels() {
-	Gtk::Scale* s_freq;
+	Gtk::Scale *s_freq;
 	Gtk::Label *l_freq,*l_refl,*l_refl_phase,*l_through,*l_through_phase;
 	Gtk::Label *l_impedance, *l_admittance, *l_s_admittance, *l_p_impedance, *l_series, *l_parallel;
 	Gtk::ToggleButton *c_freq;
@@ -556,9 +597,12 @@ void updateLabels() {
 	GETWIDGET(l_impedance); GETWIDGET(l_admittance); GETWIDGET(l_s_admittance);
 	GETWIDGET(l_p_impedance); GETWIDGET(l_series); GETWIDGET(l_parallel);
 	
+	// frequency label
 	int freqIndex=(int)s_freq->get_value();
 	double freq=freqAt(freqIndex);
 	c_freq->set_label(ssprintf(20, "%.1f MHz", freq));
+	
+	// impedance display panel (left side)
 	if(!use_cal) {
 		l_refl->set_text("");
 		l_refl_phase->set_text("");
@@ -593,14 +637,35 @@ void updateLabels() {
 	value = capacitance_inductance_Y(freq*1e6, Y.imag());
 	l_parallel->set_text(ssprintf(127, "%.2f Ω\n%.2f %s%s", 1./Y.real(), fabs(si_scale(value)), si_unit(value), value>0?"H":"F"));
 }
+void updateLabels_ttf() {
+	Gtk::Scale *s_time;
+	Gtk::ToggleButton *c_time;
+	Gtk::Label *l_refl1,*l_through1;
+	GETWIDGET(s_time); GETWIDGET(c_time);
+	GETWIDGET(l_refl1); GETWIDGET(l_through1);
+	
+	// time label
+	int timeIndex=(int)s_time->get_value();
+	double t=timeAt(timeIndex);
+	c_time->set_label(ssprintf(20, "%.2f ns", t));
+	
+	// reflection and through labels
+	double refl = timeGraphView->lines[0][timeIndex];
+	double through = timeGraphView->lines[1][timeIndex];
+	l_refl1->set_text(ssprintf(20, "%.1f dB", refl));
+	l_through1->set_text(ssprintf(20, "%.1f dB", through));
+	
+}
+
+
 void updateFreqButton() {
 	Gtk::Button *b_freq;
 	GETWIDGET(b_freq);
 	b_freq->set_label(ssprintf(31, "%.1f MHz -\n%.1f MHz", freqAt(0), freqAt(nPoints-1)));
 }
 void resizeVectors() {
-	Gtk::Scale* s_freq;
-	GETWIDGET(s_freq);
+	Gtk::Scale *s_freq,*s_time;
+	GETWIDGET(s_freq); GETWIDGET(s_time);
 	cal_X.resize(nPoints);
 	cal_Y.resize(nPoints);
 	cal_Z.resize(nPoints);
@@ -609,9 +674,12 @@ void resizeVectors() {
 	cal_t.resize(nPoints, 0);
 	cal_thru = vector<complex<double> >(nPoints, 1);
 	s_freq->set_range(0, nPoints-1);
+	s_time->set_range(0, timePoints()-1);
 	polarView->points.resize(nPoints);
 	for(int i=0;i<4;i++)
 		graphView->lines[i].resize(nPoints);
+	for(int i=0;i<2;i++)
+		timeGraphView->lines[i].resize(timePoints());
 }
 
 int main(int argc, char** argv) {
@@ -652,11 +720,11 @@ skip_tcsetaddr:
 	
 	// controls
 	Gtk::Window* window1;
-	Gtk::Viewport *vp_main, *vp_graph;
-	Gtk::Scale* s_freq;
+	Gtk::Viewport *vp_main, *vp_graph, *vp_ttf;
+	Gtk::Scale *s_freq, *s_time;
 	
 	// get controls
-	GETWIDGET(window1); GETWIDGET(vp_main); GETWIDGET(vp_graph); GETWIDGET(s_freq);
+	GETWIDGET(window1); GETWIDGET(vp_main); GETWIDGET(vp_graph); GETWIDGET(vp_ttf); GETWIDGET(s_freq); GETWIDGET(s_time);
 	addButtonHandlers();
 	
 	
@@ -677,11 +745,27 @@ skip_tcsetaddr:
 	vp_graph->add(*graphView);
 	graphView->show();
 	
+	// time graph view
+	timeGraphView = new xaxaxa::GraphView();
+	timeGraphView->minValue = -60;
+	timeGraphView->maxValue = 0;
+	timeGraphView->hgridMin = -60;
+	timeGraphView->hgridSpacing = 10;
+	timeGraphView->selectedPoints = {0, 0};
+	timeGraphView->colors = {0x0000ff, 0xff0000};
+	timeGraphView->lines.resize(2);
+	vp_ttf->add(*timeGraphView);
+	timeGraphView->show();
+	
 	resizeVectors();
 	
 	// controls
 	s_freq->set_value(0);
+	s_time->set_value(0);
+	s_freq->set_increments(1, 10);
+	s_time->set_increments(1, 10);
 	updateLabels();
+	updateLabels_ttf();
 	s_freq->signal_value_changed().connect([s_freq](){
 		polarView->selectedPoint = (int)s_freq->get_value();
 		graphView->selectedPoints[0] = graphView->selectedPoints[1]
@@ -689,6 +773,11 @@ skip_tcsetaddr:
 		updateLabels();
 		polarView->queue_draw();
 		graphView->queue_draw();
+	});
+	s_time->signal_value_changed().connect([s_time](){
+		timeGraphView->selectedPoints[0] = timeGraphView->selectedPoints[1] = (int)s_time->get_value();
+		updateLabels_ttf();
+		timeGraphView->queue_draw();
 	});
 	
 	// frequency dialog
@@ -713,8 +802,10 @@ skip_tcsetaddr:
 	// periodic refresh
 	sigc::connection conn = Glib::signal_timeout().connect([](){
 		updateLabels();
+		updateLabels_ttf();
 		polarView->queue_draw();
 		graphView->queue_draw();
+		timeGraphView->queue_draw();
 		return true;
 	}, 200);
 	
