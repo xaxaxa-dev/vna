@@ -36,6 +36,8 @@ int nValues=150;	//number of data points to integrate over
 int nWaitExtended=150;
 int nValuesExtended=250;
 
+int reflIndex=3, thruIndex=4;
+
 
 // globals
 
@@ -113,9 +115,19 @@ u64 sx(u64 data, int bits) {
 }
 
 void setFrequency(int N) {
-	u8 buf[8] = {
+	int attenuation=0;
+	double freq = N*freqMultiplier;
+	
+	if(freq<400) attenuation=20;
+	else if(freq<1000) attenuation=18;
+	else if(freq<2000) attenuation=14;
+	else if(freq<3000) attenuation=8;
+	else attenuation=2;
+	
+	u8 buf[10] = {
 		1, u8(N>>8),
 		2, u8(N),
+		4, u8(attenuation*2),
 		0, 0,
 		3, 1
 	};
@@ -238,14 +250,14 @@ void* thread1(void* v) {
 		
 		int N=startFreq;
 		for(int i=0;i<nPoints;i++) {
-			//printf("%d\n",N);
+			printf("%d\n",N);
 			setFrequency(N);
 			readValue3(nWait);
 			
 			
 			complex5 values=readValue3(nValues);
-			complex<double> reflValue=values.val[4];
-			complex<double> thruValue=values.val[3];
+			complex<double> reflValue=values.val[reflIndex];
+			complex<double> thruValue=values.val[thruIndex];
 			printf("%7.2f %20lf %10lf %20lf %10lf\n",N*freqMultiplier,
 				abs(values.val[2]),arg(values.val[2]),abs(values.val[0]),arg(values.val[0]));
 			auto refl = reflValue;
@@ -302,9 +314,9 @@ void* thread1(void* v) {
 				printf("%7.2f %20lf %10lf %20lf %10lf\n",N*freqMultiplier,
 					abs(values.val[2]),arg(values.val[2]),abs(values.val[0]),arg(values.val[0]));
 				
-				polarView->points[i]=values.val[4];
-				graphView->lines[1][i] = arg(values.val[3]);
-				graphView->lines[3][i] = dB(norm(values.val[3]));
+				polarView->points[i]=values.val[reflIndex];
+				graphView->lines[1][i] = arg(values.val[thruIndex]);
+				graphView->lines[3][i] = dB(norm(values.val[thruIndex]));
 				
 				N+=freqStep;
 			}
@@ -401,7 +413,7 @@ void addButtonHandlers() {
 		window1->set_sensitive(false);
 		takeMeasurement([window1](vector<complex5> values) {
 			for(int i=0;i<nPoints;i++)
-				cal_oc[i] = values[i].val[4];
+				cal_oc[i] = values[i].val[reflIndex];
 			window1->set_sensitive(true);
 		});
 	});
@@ -410,7 +422,7 @@ void addButtonHandlers() {
 		window1->set_sensitive(false);
 		takeMeasurement([window1](vector<complex5> values) {
 			for(int i=0;i<nPoints;i++)
-				cal_sc[i] = values[i].val[4];
+				cal_sc[i] = values[i].val[reflIndex];
 			window1->set_sensitive(true);
 		});
 	});
@@ -419,7 +431,7 @@ void addButtonHandlers() {
 		window1->set_sensitive(false);
 		takeMeasurement([window1](vector<complex5> values) {
 			for(int i=0;i<nPoints;i++)
-				cal_t[i] = values[i].val[4];
+				cal_t[i] = values[i].val[reflIndex];
 			window1->set_sensitive(true);
 		});
 	});
@@ -428,7 +440,7 @@ void addButtonHandlers() {
 		window1->set_sensitive(false);
 		takeMeasurement([window1](vector<complex5> values) {
 			for(int i=0;i<nPoints;i++)
-				cal_thru[i] = values[i].val[3];
+				cal_thru[i] = values[i].val[thruIndex];
 			window1->set_sensitive(true);
 		});
 	});
@@ -735,9 +747,9 @@ skip_tcsetaddr:
 	
 	// graph view
 	graphView = new xaxaxa::GraphView();
-	graphView->minValue = -40;
+	graphView->minValue = -80;
 	graphView->maxValue = 50;
-	graphView->hgridMin = -40;
+	graphView->hgridMin = -80;
 	graphView->hgridSpacing = 10;
 	graphView->selectedPoints = {0, 0, 0, 0};
 	graphView->colors = {0x00aadd, 0xff8833, 0x0000ff, 0xff0000};
