@@ -1,14 +1,14 @@
 
-Element["" "SMT transistor, 5 pins" "" "SC70_5" 130.4000mm 49.3000mm -94.00mil -86.00mil 0 100 ""]
+Element["" "" "" "" 73.8000mm 19.7000mm 0.0000 0.0000 0 100 ""]
 (
-	Pad[-10.00mil 0.0000 10.00mil 0.0000 15.00mil 30.00mil 21.00mil "4" "4" "square,edge2"]
-	Pad[-10.00mil -51.00mil 10.00mil -51.00mil 15.00mil 30.00mil 21.00mil "5" "5" "square,edge2"]
-	Pad[-80.00mil -51.00mil -60.00mil -51.00mil 15.00mil 30.00mil 21.00mil "1" "1" "square"]
-	Pad[-80.00mil -26.00mil -60.00mil -26.00mil 15.00mil 30.00mil 21.00mil "2" "2" "square"]
-	Pad[-80.00mil 0.0000 -60.00mil 0.0000 15.00mil 30.00mil 21.00mil "3" "3" "square"]
-	ElementLine [-94.00mil 14.00mil 25.00mil 14.00mil 10.00mil]
-	ElementLine [25.00mil -66.00mil 25.00mil 14.00mil 10.00mil]
-	ElementLine [-94.00mil -66.00mil 25.00mil -66.00mil 10.00mil]
-	ElementLine [-94.00mil -66.00mil -94.00mil 14.00mil 10.00mil]
+	Pad[0.5460mm 0.7000mm 1.0540mm 0.7000mm 15.00mil 30.00mil 19.00mil "" "4" "square,edge2"]
+	Pad[0.5460mm -0.5954mm 1.0540mm -0.5954mm 15.00mil 30.00mil 19.00mil "" "5" "square,edge2"]
+	Pad[-1.2320mm -0.5954mm -0.7240mm -0.5954mm 15.00mil 30.00mil 19.00mil "" "1" "square"]
+	Pad[-1.2320mm 0.0396mm -0.7240mm 0.0396mm 15.00mil 30.00mil 19.00mil "" "2" "square"]
+	Pad[-1.2320mm 0.7000mm -0.7240mm 0.7000mm 15.00mil 30.00mil 19.00mil "" "3" "square"]
+	ElementLine [-1.5876mm 1.0556mm 1.4350mm 1.0556mm 10.00mil]
+	ElementLine [1.4350mm -0.9764mm 1.4350mm 1.0556mm 10.00mil]
+	ElementLine [-1.5876mm -0.9764mm 1.4350mm -0.9764mm 10.00mil]
+	ElementLine [-1.5876mm -0.9764mm -1.5876mm 1.0556mm 10.00mil]
 
 	)

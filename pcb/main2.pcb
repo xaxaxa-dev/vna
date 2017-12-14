@@ -3,15 +3,15 @@
 # To read pcb files, the pcb version (or the git source date) must be >= the file version
 FileVersion[20091103]
 
-PCB["main2" 250.0000mm 180.0000mm]
+PCB["main2" 170.0000mm 150.0000mm]
 
-Grid[1968.503937 0.0000 0.0000 1]
+Grid[393.700787 0.0000 0.0000 1]
 PolyArea[200000000.000000]
 Thermal[0.500000]
 DRC[0.2000mm 0.1990mm 0.2000mm 0.1500mm 0.3000mm 0.2000mm]
-Flags("showdrc,nameonpcb,alldirection,clearnew")
+Flags("showdrc,nameonpcb,clearnew")
 Groups("1,c:2:3:4:5:6,s:7:8")
-Styles["Signal,0.3000mm,1.1000mm,0.5000mm,0.3000mm:Power,0.6000mm,1.4000mm,0.7000mm,0.3000mm:Fat,1.0000mm,6.5000mm,3.5000mm,0.3000mm:Skinny,0.2000mm,1.0000mm,0.4000mm,0.3000mm"]
+Styles["Signal,0.3000mm,1.1000mm,0.5000mm,0.3000mm:Power,0.8000mm,1.4000mm,0.7000mm,0.3000mm:Fat,0.8000mm,2.0000mm,1.2000mm,0.3000mm:Skinny,0.2000mm,1.0000mm,0.4000mm,0.3000mm"]
 
 Symbol[' ' 18.00mil]
 (
@@ -786,7 +786,7 @@ Symbol['~' 12.00mil]
 	SymbolLine[20.00mil 35.00mil 25.00mil 30.00mil 8.00mil]
 )
 Attribute("PCB::grid::unit" "mm")
-Attribute("PCB::grid::size" "0.5000mm")
+Attribute("PCB::grid::size" "0.1000mm")
 Via[98.6000mm 106.5000mm 1.4000mm 0.0000 0.0000 0.7000mm "" ""]
 Via[80.8000mm 103.3000mm 1.4000mm 0.0000 0.0000 0.7000mm "" ""]
 Via[80.8000mm 97.3000mm 1.4000mm 0.0000 0.0000 0.7000mm "" ""]
@@ -877,7 +877,6 @@ Via[88.6000mm 76.6000mm 1.1000mm 0.0000 0.0000 0.5000mm "" ""]
 Via[89.6000mm 77.4000mm 1.1000mm 0.0000 0.0000 0.5000mm "" ""]
 Via[72.3000mm 62.7000mm 1.1000mm 0.0000 0.0000 0.5000mm "" ""]
 Via[72.0000mm 63.8000mm 1.1000mm 0.0000 0.0000 0.5000mm "" ""]
-Via[74.1000mm 70.6000mm 1.1000mm 0.0000 0.0000 0.5000mm "" ""]
 Via[82.3000mm 113.3000mm 1.1000mm 0.0000 0.0000 0.5000mm "" ""]
 Via[73.0000mm 117.8000mm 1.1000mm 0.0000 0.0000 0.5000mm "" ""]
 Via[74.6000mm 117.4000mm 1.1000mm 0.0000 0.0000 0.5000mm "" ""]
@@ -916,8 +915,6 @@ Via[109.4000mm 69.5000mm 1.8000mm 0.0000 0.0000 1.0000mm "" ""]
 Via[109.4000mm 67.9000mm 1.8000mm 0.0000 0.0000 1.0000mm "" ""]
 Via[111.0000mm 75.3000mm 1.8000mm 0.0000 0.0000 1.0000mm "" ""]
 Via[112.6000mm 75.3000mm 1.8000mm 0.0000 0.0000 1.0000mm "" ""]
-Via[122.7000mm 73.5000mm 1.8000mm 0.0000 0.0000 1.0000mm "" ""]
-Via[122.7000mm 75.2000mm 1.8000mm 0.0000 0.0000 1.0000mm "" ""]
 Via[115.0000mm 70.7000mm 1.4000mm 0.0000 0.0000 0.7000mm "" ""]
 Via[115.0000mm 72.1000mm 1.4000mm 0.0000 0.0000 0.7000mm "" ""]
 Via[57.7000mm 106.9000mm 1.1000mm 0.6000mm 0.0000 0.5000mm "" ""]
@@ -1011,12 +1008,10 @@ Via[102.1000mm 112.0000mm 1.4000mm 0.6000mm 0.0000 0.7000mm "" ""]
 Via[103.3000mm 111.7000mm 1.4000mm 0.6000mm 0.0000 0.7000mm "" ""]
 Via[109.0000mm 115.2000mm 1.4000mm 0.0000 0.0000 0.7000mm "" ""]
 Via[109.0000mm 116.6000mm 1.4000mm 0.0000 0.0000 0.7000mm "" ""]
-Via[115.3000mm 122.6000mm 1.4000mm 0.0000 0.0000 0.7000mm "" ""]
+Via[115.3000mm 122.7000mm 1.4000mm 0.0000 0.0000 0.7000mm "" ""]
 Via[110.0000mm 111.0000mm 1.4000mm 0.6000mm 0.0000 0.7000mm "" ""]
 Via[111.3000mm 111.0000mm 1.4000mm 0.6000mm 0.0000 0.7000mm "" ""]
 Via[110.6000mm 109.9000mm 1.4000mm 0.6000mm 0.0000 0.7000mm "" ""]
-Via[116.2000mm 64.6000mm 1.8000mm 0.6000mm 0.0000 1.0000mm "" ""]
-Via[118.2000mm 64.6000mm 1.8000mm 0.6000mm 0.0000 1.0000mm "" ""]
 Via[117.2000mm 74.6000mm 1.4000mm 0.6000mm 0.0000 0.7000mm "" ""]
 Via[116.0000mm 74.9000mm 1.4000mm 0.6000mm 0.0000 0.7000mm "" ""]
 Via[115.5000mm 73.8000mm 1.4000mm 0.6000mm 0.0000 0.7000mm "" ""]
@@ -1026,7 +1021,6 @@ Via[108.9000mm 120.8000mm 1.4000mm 0.6000mm 0.0000 0.7000mm "" ""]
 Via[109.8000mm 72.0000mm 1.8000mm 0.8000mm 0.0000 1.0000mm "" ""]
 Via[64.2000mm 58.9000mm 1.0000mm 0.0000 0.0000 0.4000mm "" ""]
 Via[119.2000mm 76.6000mm 1.8000mm 0.6000mm 0.0000 1.0000mm "" ""]
-Via[121.4000mm 100.9000mm 1.8000mm 0.6000mm 0.0000 1.0000mm "" ""]
 Via[120.5000mm 61.4000mm 1.1000mm 0.6000mm 0.0000 0.5000mm "" ""]
 Via[120.5000mm 62.4000mm 1.1000mm 0.6000mm 0.0000 0.5000mm "" ""]
 Via[75.1000mm 49.3000mm 1.4000mm 0.6000mm 0.0000 0.7000mm "" ""]
@@ -1036,7 +1030,7 @@ Via[105.6000mm 52.8000mm 1.1000mm 0.6000mm 0.0000 0.5000mm "" ""]
 Via[108.0000mm 59.1000mm 1.1000mm 0.6000mm 0.0000 0.5000mm "" ""]
 Via[112.9000mm 70.3000mm 1.1000mm 0.6000mm 0.0000 0.5000mm "" ""]
 Via[119.7000mm 55.3000mm 1.1000mm 0.6000mm 0.0000 0.5000mm "" ""]
-Via[113.2000mm 62.6000mm 1.1000mm 0.0000 0.0000 0.5000mm "" ""]
+Via[113.0000mm 61.9000mm 1.1000mm 0.0000 0.0000 0.5000mm "" ""]
 Via[115.0000mm 69.4000mm 1.1000mm 0.0000 0.0000 0.5000mm "" ""]
 Via[111.4000mm 64.3000mm 1.4000mm 0.0000 0.0000 0.7000mm "" ""]
 Via[111.4000mm 65.6000mm 1.4000mm 0.0000 0.0000 0.7000mm "" ""]
@@ -1092,11 +1086,6 @@ Via[85.0000mm 41.9000mm 1.1000mm 0.6000mm 0.0000 0.5000mm "" ""]
 Via[92.0000mm 49.7000mm 1.1000mm 0.6000mm 0.0000 0.5000mm "" ""]
 Via[90.2000mm 50.6000mm 1.1000mm 0.6000mm 0.0000 0.5000mm "" ""]
 Via[88.3000mm 51.4000mm 1.1000mm 0.6000mm 0.0000 0.5000mm "" ""]
-Via[115.9000mm 108.7000mm 1.0000mm 0.4000mm 0.0000 0.4000mm "" ""]
-Via[115.9000mm 107.3000mm 1.0000mm 0.4000mm 0.0000 0.4000mm "" ""]
-Via[120.4000mm 108.8000mm 1.0000mm 0.6000mm 0.0000 0.4000mm "" ""]
-Via[115.5000mm 105.7000mm 1.2000mm 0.6000mm 0.0000 0.6000mm "" ""]
-Via[115.5000mm 104.6000mm 1.2000mm 0.6000mm 0.0000 0.6000mm "" ""]
 Via[64.2000mm 61.1000mm 1.0000mm 0.0000 0.0000 0.4000mm "" ""]
 Via[65.7000mm 61.1000mm 1.0000mm 0.0000 0.0000 0.4000mm "" ""]
 Via[44.2000mm 54.5000mm 1.0000mm 0.0000 0.0000 0.4000mm "" ""]
@@ -1452,10 +1441,6 @@ Via[107.1000mm 103.2000mm 0.9000mm 0.0000 0.0000 0.3000mm "" ""]
 Via[74.0000mm 42.2000mm 1.1000mm 0.0000 0.0000 0.5000mm "" ""]
 Via[122.5000mm 70.6000mm 1.1000mm 0.0000 0.0000 0.5000mm "" ""]
 Via[115.8000mm 53.5000mm 1.1000mm 0.0000 0.0000 0.5000mm "" ""]
-Via[122.5000mm 56.1000mm 1.1000mm 0.0000 0.0000 0.5000mm "" ""]
-Via[123.6000mm 56.1000mm 1.1000mm 0.0000 0.0000 0.5000mm "" ""]
-Via[122.5000mm 55.0000mm 1.1000mm 0.0000 0.0000 0.5000mm "" ""]
-Via[123.6000mm 55.0000mm 1.1000mm 0.0000 0.0000 0.5000mm "" ""]
 Via[103.0000mm 51.2000mm 1.1000mm 0.0000 0.0000 0.5000mm "" ""]
 Via[101.8000mm 45.2000mm 1.1000mm 0.0000 0.0000 0.5000mm "" ""]
 Via[107.3000mm 28.6000mm 1.1000mm 0.0000 0.0000 0.5000mm "" ""]
@@ -1881,53 +1866,68 @@ Via[78.5000mm 31.6000mm 1.0000mm 0.0000 0.0000 0.4000mm "" ""]
 Via[77.5000mm 30.4000mm 1.0000mm 0.0000 0.0000 0.4000mm "" ""]
 Via[76.1000mm 30.1000mm 1.0000mm 0.0000 0.0000 0.4000mm "" ""]
 Via[74.5000mm 30.1000mm 1.0000mm 0.0000 0.0000 0.4000mm "" ""]
+Via[118.5000mm 104.5000mm 1.1000mm 0.6000mm 0.0000 0.5000mm "" ""]
+Via[118.6000mm 105.9000mm 1.1000mm 0.6000mm 0.0000 0.5000mm "" ""]
+Via[119.4000mm 107.1000mm 1.1000mm 0.6000mm 0.0000 0.5000mm "" ""]
+Via[115.4000mm 104.6000mm 1.1000mm 0.6000mm 0.0000 0.5000mm "" ""]
+Via[118.6000mm 99.8000mm 1.4000mm 0.6000mm 0.0000 0.7000mm "" ""]
+Via[119.9000mm 99.6000mm 1.4000mm 0.6000mm 0.0000 0.7000mm "" ""]
+Via[119.4000mm 100.8000mm 1.4000mm 0.6000mm 0.0000 0.7000mm "" ""]
+Via[121.8000mm 58.9000mm 1.4000mm 0.0000 0.0000 0.7000mm "" ""]
+Via[121.8000mm 56.5000mm 1.4000mm 0.0000 0.0000 0.7000mm "" ""]
+Via[121.2000mm 57.7000mm 1.4000mm 0.0000 0.0000 0.7000mm "" ""]
+Via[111.6000mm 79.3000mm 1.4000mm 0.6000mm 0.0000 0.7000mm "" ""]
+Via[122.8000mm 73.5000mm 1.8000mm 0.0000 0.0000 1.0000mm "" ""]
+Via[122.8000mm 75.2000mm 1.8000mm 0.0000 0.0000 1.0000mm "" ""]
+Via[116.3000mm 64.6000mm 1.8000mm 0.6000mm 0.0000 1.0000mm "" ""]
+Via[118.3000mm 64.6000mm 1.8000mm 0.6000mm 0.0000 1.0000mm "" ""]
 
-Element["onsolder" "0805" "C29" "10u" 86.8000mm 95.2000mm 0.8000mm -0.5000mm 2 71 "auto"]
+Element["onsolder" "0805" "C29" "10u" 86.8000mm 95.2000mm -0.8000mm 3.0000mm 0 71 "auto"]
 (
-	Pad[-0.1500mm -1.0500mm 0.1500mm -1.0500mm 1.3000mm 0.6016mm 1.4484mm "1" "1" "onsolder,square"]
-	Pad[-0.1500mm 1.0500mm 0.1500mm 1.0500mm 1.3000mm 0.0000 1.4484mm "2" "2" "onsolder,square"]
+	Pad[-0.1500mm -1.0500mm 0.1500mm -1.0500mm 1.3000mm 0.6016mm 1.3468mm "1" "1" "onsolder,square"]
+	Pad[-0.1500mm 1.0500mm 0.1500mm 1.0500mm 1.3000mm 0.0000 1.3468mm "2" "2" "onsolder,square"]
 
 	)
 
-Element["onsolder" "0805" "C44" "10u" 100.4000mm 101.2000mm 0.5000mm 0.9000mm 3 71 "auto"]
+Element["onsolder" "0805" "C44" "10u" 100.4000mm 101.2000mm -0.6000mm 2.1000mm 0 71 "auto"]
 (
-	Pad[1.0500mm -0.1500mm 1.0500mm 0.1500mm 1.3000mm 0.0000 1.4484mm "1" "1" "onsolder,square"]
-	Pad[-1.0500mm -0.1500mm -1.0500mm 0.1500mm 1.3000mm 0.6016mm 1.4484mm "2" "2" "onsolder,square"]
+	Pad[1.0500mm -0.1500mm 1.0500mm 0.1500mm 1.3000mm 0.0000 1.3468mm "1" "1" "onsolder,square"]
+	Pad[-1.0500mm -0.1500mm -1.0500mm 0.1500mm 1.3000mm 0.6016mm 1.3468mm "2" "2" "onsolder,square"]
 
 	)
 
-Element["onsolder" "0805" "C50" "10u" 92.1000mm 110.3000mm -0.6000mm -0.4000mm 1 71 "auto"]
+Element["onsolder" "0805" "C50" "10u" 92.1000mm 110.3000mm -0.7000mm 2.1000mm 0 71 "auto"]
 (
-	Pad[-1.0500mm -0.1500mm -1.0500mm 0.1500mm 1.3000mm 0.0000 1.4484mm "1" "1" "onsolder,square"]
-	Pad[1.0500mm -0.1500mm 1.0500mm 0.1500mm 1.3000mm 0.5000mm 1.4484mm "2" "2" "onsolder,square"]
+	Pad[-1.0500mm -0.1500mm -1.0500mm 0.1500mm 1.3000mm 0.0000 1.3468mm "1" "1" "onsolder,square"]
+	Pad[1.0500mm -0.1500mm 1.0500mm 0.1500mm 1.3000mm 0.5000mm 1.3468mm "2" "2" "onsolder,square"]
 
 	)
 
-Element["onsolder" "0805" "C42" "10u" 87.7000mm 105.5000mm 0.6000mm -0.5000mm 2 71 "auto"]
+Element["onsolder" "0805" "C42" "10u" 87.7000mm 105.5000mm 0.8000mm -2.9000mm 2 71 "auto"]
 (
 	Pad[-0.1500mm -1.0500mm 0.1500mm -1.0500mm 1.3000mm 0.0000 1.4484mm "1" "1" "onsolder,square"]
 	Pad[-0.1500mm 1.0500mm 0.1500mm 1.0500mm 1.3000mm 0.5000mm 1.3984mm "2" "2" "onsolder,square"]
 
 	)
 
-Element["onsolder" "0805" "C33" "10u" 84.0000mm 100.6000mm 0.5000mm 0.9000mm 3 71 "auto"]
+Element["onsolder" "0805" "C33" "10u" 84.0000mm 100.6000mm 3.0000mm 0.9000mm 3 71 "auto"]
 (
-	Pad[1.0500mm -0.1500mm 1.0500mm 0.1500mm 1.3000mm 0.0000 1.4484mm "1" "1" "onsolder,square"]
-	Pad[-1.0500mm -0.1500mm -1.0500mm 0.1500mm 1.3000mm 0.5000mm 1.4484mm "2" "2" "onsolder,square"]
+	Pad[1.0500mm -0.1500mm 1.0500mm 0.1500mm 1.3000mm 0.0000 1.3468mm "1" "1" "onsolder,square"]
+	Pad[-1.0500mm -0.1500mm -1.0500mm 0.1500mm 1.3000mm 0.5000mm 1.3468mm "2" "2" "onsolder,square"]
 
 	)
 
-Element["onsolder" "0805" "C27" "10u" 81.9000mm 95.1000mm 0.5000mm 0.9000mm 3 71 "auto"]
+Element["onsolder" "0805" "C27" "10u" 81.9000mm 95.1000mm -1.9000mm 1.3000mm 3 71 "auto"]
 (
-	Pad[1.0500mm -0.1500mm 1.0500mm 0.1500mm 1.3000mm 0.0000 1.4484mm "1" "1" "onsolder,square"]
-	Pad[-1.0500mm -0.1500mm -1.0500mm 0.1500mm 1.3000mm 0.6016mm 1.4484mm "2" "2" "onsolder,square"]
+	Pad[1.0500mm -0.1500mm 1.0500mm 0.1500mm 1.3000mm 0.0000 1.3468mm "1" "1" "onsolder,square"]
+	Pad[-1.0500mm -0.1500mm -1.0500mm 0.1500mm 1.3000mm 0.6016mm 1.3468mm "2" "2" "onsolder,square"]
 
 	)
 
 Element["onsolder" "0603" "C40" "470n" 84.6000mm 109.8000mm -0.8000mm 1.7000mm 0 71 "auto"]
 (
-	Pad[-0.7500mm -0.0500mm -0.7500mm 0.0500mm 0.9000mm 0.6000mm 1.0500mm "1" "1" "onsolder,square"]
-	Pad[0.7500mm -0.0500mm 0.7500mm 0.0500mm 0.9000mm 0.0000 1.0500mm "2" "2" "onsolder,square"]
+	Pad[-0.7500mm -0.0500mm -0.7500mm 0.0500mm 0.9000mm 0.6000mm 0.9484mm "1" "1" "onsolder,square"]
+	Pad[0.7500mm -0.0500mm 0.7500mm 0.0500mm 0.9000mm 0.0000 0.9484mm "2" "2" "onsolder,square"]
 
 	)
 
@@ -1940,64 +1940,64 @@ Element["onsolder" "0603" "C43" "470n" 89.9000mm 106.0000mm 1.7000mm 0.8000mm 3 
 
 Element["onsolder" "0603" "C56" "100n" 99.7000mm 107.3000mm 1.7000mm 0.6000mm 3 71 "auto"]
 (
-	Pad[-0.0500mm 0.7500mm 0.0500mm 0.7500mm 0.9000mm 0.6000mm 1.0500mm "1" "1" "onsolder,square"]
-	Pad[-0.0500mm -0.7500mm 0.0500mm -0.7500mm 0.9000mm 0.0000 1.0500mm "2" "2" "onsolder,square"]
+	Pad[-0.0500mm 0.7500mm 0.0500mm 0.7500mm 0.9000mm 0.6000mm 0.9484mm "1" "1" "onsolder,square"]
+	Pad[-0.0500mm -0.7500mm 0.0500mm -0.7500mm 0.9000mm 0.0000 0.9484mm "2" "2" "onsolder,square"]
 
 	)
 
-Element["onsolder" "0603" "C51" "470n" 97.0000mm 102.8000mm -0.9000mm -0.6000mm 0 71 "auto"]
+Element["onsolder" "0603" "C51" "470n" 97.0000mm 102.8000mm -0.9000mm -0.7000mm 0 71 "auto"]
 (
-	Pad[0.7500mm -0.0500mm 0.7500mm 0.0500mm 0.9000mm 0.6000mm 1.0500mm "1" "1" "onsolder,square"]
-	Pad[-0.7500mm -0.0500mm -0.7500mm 0.0500mm 0.9000mm 0.0000 1.0500mm "2" "2" "onsolder,square"]
+	Pad[0.7500mm -0.0500mm 0.7500mm 0.0500mm 0.9000mm 0.6000mm 0.9484mm "1" "1" "onsolder,square"]
+	Pad[-0.7500mm -0.0500mm -0.7500mm 0.0500mm 0.9000mm 0.0000 0.9484mm "2" "2" "onsolder,square"]
 
 	)
 
 Element["onsolder" "0603" "C45" "470n" 97.4000mm 98.6000mm 1.7000mm 0.9000mm 3 71 "auto"]
 (
 	Pad[-0.0500mm 0.7500mm 0.0500mm 0.7500mm 0.9000mm 0.6000mm 0.9484mm "1" "1" "onsolder,square"]
-	Pad[-0.0500mm -0.7500mm 0.0500mm -0.7500mm 0.9000mm 0.0000 1.0500mm "2" "2" "onsolder,square"]
+	Pad[-0.0500mm -0.7500mm 0.0500mm -0.7500mm 0.9000mm 0.0000 0.9484mm "2" "2" "onsolder,square"]
 
 	)
 
 Element["onsolder" "0603" "C41" "470n" 97.5000mm 92.1000mm -0.7000mm 1.0000mm 3 71 "auto"]
 (
-	Pad[-0.0500mm 0.7500mm 0.0500mm 0.7500mm 0.9000mm 0.6000mm 1.0500mm "1" "1" "onsolder,square"]
-	Pad[-0.0500mm -0.7500mm 0.0500mm -0.7500mm 0.9000mm 0.0000 1.0500mm "2" "2" "onsolder,square"]
+	Pad[-0.0500mm 0.7500mm 0.0500mm 0.7500mm 0.9000mm 0.6000mm 0.9484mm "1" "1" "onsolder,square"]
+	Pad[-0.0500mm -0.7500mm 0.0500mm -0.7500mm 0.9000mm 0.0000 0.9484mm "2" "2" "onsolder,square"]
 
 	)
 
-Element["onsolder" "0603" "C34" "470n" 91.5000mm 93.4000mm -1.7000mm -0.8000mm 1 71 "auto"]
+Element["onsolder" "0603" "C34" "470n" 91.5000mm 93.4000mm -1.8000mm 0.4000mm 1 71 "auto"]
 (
-	Pad[-0.0500mm -0.7500mm 0.0500mm -0.7500mm 0.9000mm 0.6000mm 1.0500mm "1" "1" "onsolder,square"]
-	Pad[-0.0500mm 0.7500mm 0.0500mm 0.7500mm 0.9000mm 0.0000 1.0500mm "2" "2" "onsolder,square"]
+	Pad[-0.0500mm -0.7500mm 0.0500mm -0.7500mm 0.9000mm 0.6000mm 0.9484mm "1" "1" "onsolder,square"]
+	Pad[-0.0500mm 0.7500mm 0.0500mm 0.7500mm 0.9000mm 0.0000 0.9484mm "2" "2" "onsolder,square"]
 
 	)
 
 Element["onsolder" "0603" "C30" "470n" 3500.00mil 94.0000mm -0.7000mm 2.4000mm 0 71 "auto"]
 (
-	Pad[-0.0500mm -0.7500mm 0.0500mm -0.7500mm 0.9000mm 0.6000mm 1.0500mm "1" "1" "onsolder,square"]
-	Pad[-0.0500mm 0.7500mm 0.0500mm 0.7500mm 0.9000mm 0.0000 1.0500mm "2" "2" "onsolder,square"]
+	Pad[-0.0500mm -0.7500mm 0.0500mm -0.7500mm 0.9000mm 0.6000mm 0.9484mm "1" "1" "onsolder,square"]
+	Pad[-0.0500mm 0.7500mm 0.0500mm 0.7500mm 0.9000mm 0.0000 0.9484mm "2" "2" "onsolder,square"]
 
 	)
 
 Element["onsolder" "0603" "C32" "470n" 82.0000mm 98.0000mm 1.7000mm 0.7000mm 3 71 "auto"]
 (
-	Pad[-0.0500mm 0.7500mm 0.0500mm 0.7500mm 0.9000mm 0.6000mm 1.0500mm "1" "1" "onsolder,square"]
-	Pad[-0.0500mm -0.7500mm 0.0500mm -0.7500mm 0.9000mm 0.0000 1.0500mm "2" "2" "onsolder,square"]
+	Pad[-0.0500mm 0.7500mm 0.0500mm 0.7500mm 0.9000mm 0.6000mm 0.9484mm "1" "1" "onsolder,square"]
+	Pad[-0.0500mm -0.7500mm 0.0500mm -0.7500mm 0.9000mm 0.0000 0.9484mm "2" "2" "onsolder,square"]
 
 	)
 
 Element["onsolder" "0603" "C35" "470n" 79.1000mm 106.9000mm -2.5000mm -1.1000mm 1 71 "auto"]
 (
-	Pad[0.7500mm -0.0500mm 0.7500mm 0.0500mm 0.9000mm 0.6000mm 1.0500mm "1" "1" "onsolder,square"]
-	Pad[-0.7500mm -0.0500mm -0.7500mm 0.0500mm 0.9000mm 0.0000 1.0500mm "2" "2" "onsolder,square"]
+	Pad[0.7500mm -0.0500mm 0.7500mm 0.0500mm 0.9000mm 0.6000mm 0.9484mm "1" "1" "onsolder,square"]
+	Pad[-0.7500mm -0.0500mm -0.7500mm 0.0500mm 0.9000mm 0.0000 0.9484mm "2" "2" "onsolder,square"]
 
 	)
 
 Element["onsolder" "0603" "C36" "470n" 79.0000mm 108.8000mm -2.5000mm -0.9000mm 1 71 "auto"]
 (
-	Pad[0.7500mm -0.0500mm 0.7500mm 0.0500mm 0.9000mm 0.6000mm 1.0500mm "1" "1" "onsolder,square"]
-	Pad[-0.7500mm -0.0500mm -0.7500mm 0.0500mm 0.9000mm 0.0000 1.0500mm "2" "2" "onsolder,square"]
+	Pad[0.7500mm -0.0500mm 0.7500mm 0.0500mm 0.9000mm 0.6000mm 0.9484mm "1" "1" "onsolder,square"]
+	Pad[-0.7500mm -0.0500mm -0.7500mm 0.0500mm 0.9000mm 0.0000 0.9484mm "2" "2" "onsolder,square"]
 
 	)
 
@@ -2008,38 +2008,38 @@ Element["onsolder" "0603" "C25" "470n" 79.6000mm 92.8000mm -0.6000mm 0.9000mm 3 
 
 	)
 
-Element["onsolder" "0805" "C31" "10u" 92.9000mm 90.1000mm -0.6000mm 0.4000mm 0 71 "auto"]
+Element["onsolder" "0805" "C31" "10u" 92.9000mm 90.1000mm 2.2000mm 0.8000mm 3 71 "auto"]
 (
-	Pad[-0.1500mm 1.0500mm 0.1500mm 1.0500mm 1.3000mm 0.6016mm 1.4484mm "1" "1" "onsolder,square"]
-	Pad[-0.1500mm -1.0500mm 0.1500mm -1.0500mm 1.3000mm 0.0000 1.4484mm "2" "2" "onsolder,square"]
+	Pad[-0.1500mm 1.0500mm 0.1500mm 1.0500mm 1.3000mm 0.6016mm 1.3468mm "1" "1" "onsolder,square"]
+	Pad[-0.1500mm -1.0500mm 0.1500mm -1.0500mm 1.3000mm 0.0000 1.3468mm "2" "2" "onsolder,square"]
 
 	)
 
-Element["onsolder" "0603" "C67" "10u" 95.2000mm 99.1000mm -0.6000mm 0.7000mm 3 71 "auto"]
+Element["onsolder" "0603" "C67" "10u" 95.2000mm 99.1000mm -0.7000mm 0.7000mm 3 71 "auto"]
 (
-	Pad[-0.0500mm 0.7500mm 0.0500mm 0.7500mm 0.9000mm 0.6000mm 0.9992mm "1" "1" "onsolder,square"]
-	Pad[-0.0500mm -0.7500mm 0.0500mm -0.7500mm 0.9000mm 0.0000 1.0500mm "2" "2" "onsolder,square"]
+	Pad[-0.0500mm 0.7500mm 0.0500mm 0.7500mm 0.9000mm 0.6000mm 0.9484mm "1" "1" "onsolder,square"]
+	Pad[-0.0500mm -0.7500mm 0.0500mm -0.7500mm 0.9000mm 0.0000 0.9484mm "2" "2" "onsolder,square"]
 
 	)
 
 Element["onsolder" "0603" "C64" "10u" 79.8000mm 99.2000mm -0.6000mm 0.7000mm 3 71 "auto"]
 (
-	Pad[-0.0500mm 0.7500mm 0.0500mm 0.7500mm 0.9000mm 0.6000mm 1.0500mm "1" "1" "onsolder,square"]
-	Pad[-0.0500mm -0.7500mm 0.0500mm -0.7500mm 0.9000mm 0.0000 1.0500mm "2" "2" "onsolder,square"]
+	Pad[-0.0500mm 0.7500mm 0.0500mm 0.7500mm 0.9000mm 0.6000mm 0.9484mm "1" "1" "onsolder,square"]
+	Pad[-0.0500mm -0.7500mm 0.0500mm -0.7500mm 0.9000mm 0.0000 0.9484mm "2" "2" "onsolder,square"]
 
 	)
 
-Element["onsolder" "0603" "C65" "470n" 79.6000mm 104.2000mm -0.6000mm 0.7000mm 3 71 "auto"]
+Element["onsolder" "0603" "C65" "470n" 79.6000mm 104.2000mm -0.7000mm 0.7000mm 3 71 "auto"]
 (
-	Pad[-0.0500mm 0.7500mm 0.0500mm 0.7500mm 0.9000mm 0.6000mm 1.0500mm "1" "1" "onsolder,square"]
-	Pad[-0.0500mm -0.7500mm 0.0500mm -0.7500mm 0.9000mm 0.0000 1.0500mm "2" "2" "onsolder,square"]
+	Pad[-0.0500mm 0.7500mm 0.0500mm 0.7500mm 0.9000mm 0.6000mm 0.9484mm "1" "1" "onsolder,square"]
+	Pad[-0.0500mm -0.7500mm 0.0500mm -0.7500mm 0.9000mm 0.0000 0.9484mm "2" "2" "onsolder,square"]
 
 	)
 
 Element["onsolder" "0603" "C66" "10u" 88.4000mm 109.8000mm -0.7000mm 1.7000mm 0 71 "auto"]
 (
-	Pad[-0.7500mm -0.0500mm -0.7500mm 0.0500mm 0.9000mm 0.6000mm 1.0500mm "1" "1" "onsolder,square"]
-	Pad[0.7500mm -0.0500mm 0.7500mm 0.0500mm 0.9000mm 0.0000 1.0500mm "2" "2" "onsolder,square"]
+	Pad[-0.7500mm -0.0500mm -0.7500mm 0.0500mm 0.9000mm 0.6000mm 0.9484mm "1" "1" "onsolder,square"]
+	Pad[0.7500mm -0.0500mm 0.7500mm 0.0500mm 0.9000mm 0.0000 0.9484mm "2" "2" "onsolder,square"]
 
 	)
 
@@ -2052,57 +2052,57 @@ Element["onsolder" "0603" "C63" "10u" 88.3000mm 90.1000mm 0.7000mm -1.7000mm 2 7
 
 Element["" "0603" "R33" "22k" 78.2000mm 113.9000mm -0.9000mm 0.6000mm 0 71 ""]
 (
-	Pad[-0.7500mm -0.0500mm -0.7500mm 0.0500mm 0.9000mm 0.6000mm 1.0500mm "1" "1" "square"]
-	Pad[0.7500mm -0.0500mm 0.7500mm 0.0500mm 0.9000mm 0.6000mm 1.0500mm "2" "2" "square"]
+	Pad[-0.7500mm -0.0500mm -0.7500mm 0.0500mm 0.9000mm 0.6000mm 0.9484mm "1" "1" "square"]
+	Pad[0.7500mm -0.0500mm 0.7500mm 0.0500mm 0.9000mm 0.6000mm 0.9484mm "2" "2" "square"]
 
 	)
 
-Element["" "0603" "C68" "470n" 81.4000mm 4500.00mil -1.0000mm -1.6000mm 0 71 ""]
+Element["" "0603" "C68" "470n" 81.4000mm 4500.00mil -1.3000mm -1.7000mm 0 71 ""]
 (
 	Pad[-0.7500mm -0.0500mm -0.7500mm 0.0500mm 0.9000mm 0.6000mm 1.0500mm "1" "1" "square"]
 	Pad[0.7500mm -0.0500mm 0.7500mm 0.0500mm 0.9000mm 0.6000mm 1.0500mm "2" "2" "square"]
 
 	)
 
-Element["" "0603" "R32" "2.2k" 99.6000mm 112.3000mm -0.2000mm -1.7000mm 0 71 ""]
+Element["" "0603" "R32" "2.2k" 99.6000mm 112.4000mm -0.2000mm -1.7000mm 0 71 ""]
 (
 	Pad[-0.7500mm -0.0500mm -0.7500mm 0.0500mm 0.9000mm 0.6000mm 1.0500mm "1" "1" "square"]
 	Pad[0.7500mm -0.0500mm 0.7500mm 0.0500mm 0.9000mm 0.6000mm 1.0500mm "2" "2" "square"]
 
 	)
 
-Element["onsolder" "0805" "C39" "10u" 82.0000mm 110.2000mm -1.3000mm 0.6000mm 0 71 "auto"]
+Element["onsolder" "0805" "C39" "10u" 82.0000mm 110.2000mm -0.7000mm 2.9000mm 0 71 "auto"]
 (
-	Pad[-0.1500mm 1.0500mm 0.1500mm 1.0500mm 1.3000mm 0.0000 1.4484mm "1" "1" "onsolder,square"]
-	Pad[-0.1500mm -1.0500mm 0.1500mm -1.0500mm 1.3000mm 0.5000mm 1.4484mm "2" "2" "onsolder,square"]
+	Pad[-0.1500mm 1.0500mm 0.1500mm 1.0500mm 1.3000mm 0.0000 1.3468mm "1" "1" "onsolder,square"]
+	Pad[-0.1500mm -1.0500mm 0.1500mm -1.0500mm 1.3000mm 0.5000mm 1.3468mm "2" "2" "onsolder,square"]
 
 	)
 
-Element["onsolder" "0603" "C55" "470n" 107.4000mm 100.1000mm 1.7000mm 0.2000mm 3 71 "auto"]
+Element["onsolder" "0603" "C55" "470n" 107.4000mm 100.1000mm 1.8000mm 0.2000mm 3 71 "auto"]
 (
 	Pad[-0.0500mm 0.7500mm 0.0500mm 0.7500mm 0.9000mm 0.0000 1.0000mm "1" "1" "onsolder,square"]
-	Pad[-0.0500mm -0.7500mm 0.0500mm -0.7500mm 0.9000mm 0.6000mm 1.0500mm "2" "2" "onsolder,square"]
+	Pad[-0.0500mm -0.7500mm 0.0500mm -0.7500mm 0.9000mm 0.6000mm 0.9484mm "2" "2" "onsolder,square"]
 
 	)
 
-Element["onsolder" "0603" "C53" "1u" 104.4000mm 99.7000mm -0.9000mm -0.6000mm 0 71 "auto"]
+Element["onsolder" "0603" "C53" "1u" 104.4000mm 99.7000mm -0.9000mm -0.7000mm 0 71 "auto"]
 (
-	Pad[-0.7500mm -0.0500mm -0.7500mm 0.0500mm 0.9000mm 0.0000 1.0500mm "1" "1" "onsolder,square"]
-	Pad[0.7500mm -0.0500mm 0.7500mm 0.0500mm 0.9000mm 0.6000mm 1.0500mm "2" "2" "onsolder,square"]
+	Pad[-0.7500mm -0.0500mm -0.7500mm 0.0500mm 0.9000mm 0.0000 0.9484mm "1" "1" "onsolder,square"]
+	Pad[0.7500mm -0.0500mm 0.7500mm 0.0500mm 0.9000mm 0.6000mm 0.9484mm "2" "2" "onsolder,square"]
 
 	)
 
 Element["onsolder" "0603" "C83" "470n" 105.7000mm 105.8000mm -0.6000mm 0.7000mm 3 71 "auto"]
 (
-	Pad[-0.0500mm 0.7500mm 0.0500mm 0.7500mm 0.9000mm 0.6000mm 1.0500mm "1" "1" "onsolder,square"]
-	Pad[-0.0500mm -0.7500mm 0.0500mm -0.7500mm 0.9000mm 0.0000 1.0500mm "2" "2" "onsolder,square"]
+	Pad[-0.0500mm 0.7500mm 0.0500mm 0.7500mm 0.9000mm 0.6000mm 0.9484mm "1" "1" "onsolder,square"]
+	Pad[-0.0500mm -0.7500mm 0.0500mm -0.7500mm 0.9000mm 0.0000 0.9484mm "2" "2" "onsolder,square"]
 
 	)
 
-Element["onsolder" "0603" "R20" "2.2k" 78.5000mm 111.6000mm -1.0000mm -0.9000mm 0 71 "auto"]
+Element["onsolder" "0603" "R20" "2.2k" 78.5000mm 111.6000mm -0.7000mm 1.8000mm 0 71 "auto"]
 (
-	Pad[-0.7500mm -0.0500mm -0.7500mm 0.0500mm 0.9000mm 0.6000mm 1.0500mm "1" "1" "onsolder,square"]
-	Pad[0.7500mm -0.0500mm 0.7500mm 0.0500mm 0.9000mm 0.6000mm 1.0500mm "2" "2" "onsolder,square"]
+	Pad[-0.7500mm -0.0500mm -0.7500mm 0.0500mm 0.9000mm 0.6000mm 0.9484mm "1" "1" "onsolder,square"]
+	Pad[0.7500mm -0.0500mm 0.7500mm 0.0500mm 0.9000mm 0.6000mm 0.9484mm "2" "2" "onsolder,square"]
 
 	)
 
@@ -2113,7 +2113,7 @@ Element["" "0603" "C71" "1u" 61.5000mm 90.9000mm -1.7000mm 0.9000mm 1 71 ""]
 
 	)
 
-Element["" "0603" "C91" "470n" 72.1000mm 102.4000mm 1.8000mm -0.7000mm 3 71 ""]
+Element["" "0603" "C91" "470n" 72.1000mm 102.4000mm 1.7000mm -1.4000mm 3 71 ""]
 (
 	Pad[-0.0500mm -0.7500mm 0.0500mm -0.7500mm 0.9000mm 0.6000mm 1.0500mm "1" "1" "square"]
 	Pad[-0.0500mm 0.7500mm 0.0500mm 0.7500mm 0.9000mm 0.6000mm 1.0500mm "2" "2" "square"]
@@ -2229,7 +2229,7 @@ Element["" "0603" "C108" "56p" 61.3000mm 85.8000mm -0.7000mm -2.5000mm 0 71 ""]
 
 	)
 
-Element["" "0603" "C105" "1u" 61.9000mm 75.6000mm -1.6000mm 1.1000mm 1 71 ""]
+Element["" "0603" "C105" "1u" 61.9000mm 75.6000mm -2.9000mm -1.3000mm 0 71 ""]
 (
 	Pad[-0.0500mm 0.7500mm 0.0500mm 0.7500mm 0.9000mm 0.6000mm 1.0500mm "1" "1" "square"]
 	Pad[-0.0500mm -0.7500mm 0.0500mm -0.7500mm 0.9000mm 0.6000mm 1.0500mm "2" "2" "square"]
@@ -2306,14 +2306,14 @@ Element["" "0603" "L19" "fb" 66.9000mm 87.9000mm 1.6000mm -0.7000mm 3 71 ""]
 
 	)
 
-Element["" "0603" "C106" "100n" 59.3000mm 105.6000mm -1.7000mm 1.1000mm 1 71 ""]
+Element["" "0603" "C106" "100n" 59.3000mm 105.6000mm -1.7000mm 0.8000mm 1 71 ""]
 (
 	Pad[-0.0500mm 0.7500mm 0.0500mm 0.7500mm 0.9000mm 0.6000mm 1.0500mm "1" "1" "square"]
 	Pad[-0.0500mm -0.7500mm 0.0500mm -0.7500mm 0.9000mm 0.6000mm 1.0500mm "2" "2" "square"]
 
 	)
 
-Element["" "0603" "R45" "82" 61.9000mm 104.8000mm -1.1000mm 0.5000mm 0 71 ""]
+Element["" "0603" "R45" "50" 61.9000mm 104.8000mm -1.1000mm 0.5000mm 0 71 ""]
 (
 	Pad[-0.7500mm -0.0500mm -0.7500mm 0.0500mm 0.9000mm 0.6000mm 1.0500mm "1" "1" "square"]
 	Pad[0.7500mm -0.0500mm 0.7500mm 0.0500mm 0.9000mm 0.6000mm 1.0500mm "2" "2" "square"]
@@ -2327,14 +2327,14 @@ Element["" "0603" "C3" "1u" 62.2000mm 107.9000mm -1.6000mm -0.2000mm 0 71 ""]
 
 	)
 
-Element["" "0603" "C7" "100n" 61.3509mm 112.4393mm -1.8509mm -1.0393mm 0 71 ""]
+Element["" "0603" "C7" "10u" 61.3509mm 112.4393mm -1.8509mm -1.0393mm 0 71 ""]
 (
 	Pad[0.0810mm 0.7473mm 7.07mil 0.7299mm 0.9000mm 0.6000mm 1.0500mm "1" "1" "square,edge2"]
 	Pad[-7.07mil -0.7299mm -0.0810mm -0.7473mm 0.9000mm 0.6000mm 1.0500mm "2" "2" "square"]
 
 	)
 
-Element["" "0603" "C5" "10u" 62.8282mm 112.1788mm 1.6718mm 0.7212mm 3 71 ""]
+Element["" "0603" "C5" "100n" 62.8282mm 112.1788mm 1.6718mm 0.7212mm 3 71 ""]
 (
 	Pad[0.0810mm 0.7473mm 7.07mil 0.7299mm 0.9000mm 0.6000mm 1.0500mm "1" "1" "square,edge2"]
 	Pad[-7.07mil -0.7299mm -0.0810mm -0.7473mm 0.9000mm 0.6000mm 1.0500mm "2" "2" "square"]
@@ -2369,21 +2369,21 @@ Element["" "0603" "C69" "100n" 59.0000mm 93.8000mm -0.6000mm -1.7000mm 0 71 ""]
 
 	)
 
-Element["" "0603" "R51" "470" 58.5000mm 101.4000mm -1.8000mm 1.0000mm 1 71 ""]
+Element["" "0603" "R51" "36" 58.5000mm 101.4000mm -1.8000mm 1.0000mm 1 71 ""]
 (
 	Pad[-0.0500mm 0.7500mm 0.0500mm 0.7500mm 0.9000mm 0.6000mm 1.0500mm "1" "1" "square"]
 	Pad[-0.0500mm -0.7500mm 0.0500mm -0.7500mm 0.9000mm 0.6000mm 1.0500mm "2" "2" "square"]
 
 	)
 
-Element["" "0603" "R52" "470" 60.7000mm 115.4000mm -1.5000mm 0.6000mm 0 71 ""]
+Element["" "0603" "R52" "36" 60.7000mm 115.4000mm -1.5000mm 0.7000mm 0 71 ""]
 (
 	Pad[-0.7500mm -0.0500mm -0.7500mm 0.0500mm 0.9000mm 0.6000mm 1.0500mm "1" "1" "square"]
 	Pad[0.7500mm -0.0500mm 0.7500mm 0.0500mm 0.9000mm 0.6000mm 1.0500mm "2" "2" "square"]
 
 	)
 
-Element["" "0603" "R50" "470" 59.2000mm 84.3000mm -0.6000mm -0.1000mm 3 71 ""]
+Element["" "0603" "R50" "36" 59.2000mm 84.3000mm -0.6000mm -0.1000mm 3 71 ""]
 (
 	Pad[-0.0500mm -0.7500mm 0.0500mm -0.7500mm 0.9000mm 0.6000mm 1.0500mm "1" "1" "square"]
 	Pad[-0.0500mm 0.7500mm 0.0500mm 0.7500mm 0.9000mm 0.6000mm 1.0500mm "2" "2" "square"]
@@ -2438,13 +2438,6 @@ Element["" "0603" "R36" "22k" 61.4000mm 72.6000mm -1.0000mm 0.6000mm 0 71 ""]
 
 	)
 
-Element["" "0805" "R35" "10" 63.9000mm 66.3000mm -0.9000mm -0.5000mm 0 71 ""]
-(
-	Pad[-0.1500mm -1.0500mm 0.1500mm -1.0500mm 1.3000mm 0.5000mm 1.4484mm "1" "1" "square"]
-	Pad[-0.1500mm 1.0500mm 0.1500mm 1.0500mm 1.3000mm 0.5000mm 1.4484mm "2" "2" "square"]
-
-	)
-
 Element["" "0603" "C4" "2.2u" 64.0000mm 69.9000mm 1.5000mm -0.6000mm 3 71 ""]
 (
 	Pad[-0.0500mm -0.7500mm 0.0500mm -0.7500mm 0.9000mm 0.6000mm 1.0500mm "1" "1" "square"]
@@ -2452,7 +2445,7 @@ Element["" "0603" "C4" "2.2u" 64.0000mm 69.9000mm 1.5000mm -0.6000mm 3 71 ""]
 
 	)
 
-Element["" "tcxo3225" "U16" "unknown" 59.3000mm 66.5000mm 0.6000mm -0.9000mm 3 82 ""]
+Element["" "tcxo3225" "U16" "unknown" 59.3000mm 66.5000mm -3.4000mm 1.9000mm 1 82 ""]
 (
 	Pad[1.3000mm 0.9000mm 1.3000mm 0.9000mm 1.4000mm 0.6000mm 1.4436mm "Vdd" "4" "square,edge2"]
 	Pad[-1.3000mm 0.9000mm -1.3000mm 0.9000mm 1.4000mm 0.6000mm 1.4436mm "OUT" "3" "square"]
@@ -2465,20 +2458,6 @@ Element["" "tcxo3225" "U16" "unknown" 59.3000mm 66.5000mm 0.6000mm -0.9000mm 3 8
 
 	)
 
-Element["" "SC70_5" "U17" "unknown" 62.0000mm 70.8000mm -1.3000mm 0.1000mm 1 64 ""]
-(
-	Pad[-10.00mil 0.0000 10.00mil 0.0000 15.00mil 30.00mil 21.00mil "OUT" "4" "square,edge2"]
-	Pad[-10.00mil -51.00mil 10.00mil -51.00mil 15.00mil 30.00mil 21.00mil "VCC" "5" "square,edge2"]
-	Pad[-80.00mil -51.00mil -60.00mil -51.00mil 15.00mil 30.00mil 21.00mil "NC" "1" "square"]
-	Pad[-80.00mil -26.00mil -60.00mil -26.00mil 15.00mil 30.00mil 21.00mil "IN" "2" "square"]
-	Pad[-80.00mil 0.0000 -60.00mil 0.0000 15.00mil 30.00mil 21.00mil "GND" "3" "square"]
-	ElementLine [-94.00mil 14.00mil 25.00mil 14.00mil 10.00mil]
-	ElementLine [25.00mil -66.00mil 25.00mil 14.00mil 10.00mil]
-	ElementLine [-94.00mil -66.00mil 25.00mil -66.00mil 10.00mil]
-	ElementLine [-94.00mil -66.00mil -94.00mil 14.00mil 10.00mil]
-
-	)
-
 Element["" "0603" "C136" "2.2u" 70.5000mm 62.8000mm -0.6000mm -1.7000mm 0 71 ""]
 (
 	Pad[-0.7500mm -0.0500mm -0.7500mm 0.0500mm 0.9000mm 0.6000mm 1.0500mm "1" "1" "square"]
@@ -2488,22 +2467,22 @@ Element["" "0603" "C136" "2.2u" 70.5000mm 62.8000mm -0.6000mm -1.7000mm 0 71 ""]
 
 Element["onsolder" "0603" "C135" "2.2u" 62.4000mm 70.5000mm 1.0000mm 0.3000mm 0 71 "auto"]
 (
-	Pad[-0.0500mm -0.7500mm 0.0500mm -0.7500mm 0.9000mm 0.6000mm 1.0000mm "1" "1" "onsolder,square"]
-	Pad[-0.0500mm 0.7500mm 0.0500mm 0.7500mm 0.9000mm 0.0000 1.0500mm "2" "2" "onsolder,square"]
+	Pad[-0.0500mm -0.7500mm 0.0500mm -0.7500mm 0.9000mm 0.6000mm 0.9492mm "1" "1" "onsolder,square"]
+	Pad[-0.0500mm 0.7500mm 0.0500mm 0.7500mm 0.9000mm 0.0000 0.9484mm "2" "2" "onsolder,square"]
 
 	)
 
-Element["" "0603" "R48" "36" 67.2000mm 62.0000mm 0.9000mm 0.5000mm 2 71 ""]
+Element["" "0603" "R48" "36" 67.2000mm 62.0000mm -2.5000mm -0.2000mm 0 71 ""]
 (
 	Pad[-0.0500mm -0.7500mm 0.0500mm -0.7500mm 0.9000mm 0.6000mm 1.0500mm "1" "1" "square"]
 	Pad[-0.0500mm 0.7500mm 0.0500mm 0.7500mm 0.9000mm 0.6000mm 1.0500mm "2" "2" "square"]
 
 	)
 
-Element["" "0603" "C116" "10u" 72.0000mm 65.5000mm 1.6535mm -1.3293mm 3 71 ""]
+Element["" "0603" "C116" "10u" 72.0000mm 65.5000mm 1.7000mm -1.9000mm 3 71 ""]
 (
-	Pad[-0.0500mm 0.7500mm 0.0500mm 0.7500mm 0.9000mm 0.6000mm 1.0500mm "1" "1" "square"]
-	Pad[-0.0500mm -0.7500mm 0.0500mm -0.7500mm 0.9000mm 0.0000 1.0500mm "2" "2" "square"]
+	Pad[-0.0500mm 0.7500mm 0.0500mm 0.7500mm 0.9000mm 0.6000mm 0.9484mm "1" "1" "square"]
+	Pad[-0.0500mm -0.7500mm 0.0500mm -0.7500mm 0.9000mm 0.0000 0.9484mm "2" "2" "square"]
 
 	)
 
@@ -2565,7 +2544,7 @@ Element["" "0603" "C122" "30p" 78.9000mm 66.4000mm 1.4000mm 0.2000mm 3 71 ""]
 
 	)
 
-Element["" "0603" "C130" "30p" 85.3000mm 62.2000mm -1.0000mm -1.7000mm 0 71 ""]
+Element["" "0603" "C130" "100n" 85.3000mm 62.2000mm -1.0000mm -1.7000mm 0 71 ""]
 (
 	Pad[0.7500mm -0.0500mm 0.7500mm 0.0500mm 0.9000mm 0.6000mm 1.0500mm "1" "1" "square"]
 	Pad[-0.7500mm -0.0500mm -0.7500mm 0.0500mm 0.9000mm 0.6000mm 1.0500mm "2" "2" "square"]
@@ -2632,7 +2611,7 @@ Element["hidename" "custom_qfn32" "U15" "unknown" 83.5000mm 70.1000mm 0.2460mm -
 
 	)
 
-Element["" "0603" "R30" "4.7k" 75.8000mm 62.5000mm -0.4000mm 0.5000mm 1 71 ""]
+Element["" "0603" "R30" "4.7k" 75.8000mm 62.5000mm 0.1000mm -1.8000mm 0 71 ""]
 (
 	Pad[0.7500mm -0.0500mm 0.7500mm 0.0500mm 0.9000mm 0.6000mm 1.0500mm "1" "1" "square"]
 	Pad[-0.7500mm -0.0500mm -0.7500mm 0.0500mm 0.9000mm 0.6000mm 1.0500mm "2" "2" "square"]
@@ -2702,24 +2681,17 @@ Element["" "0603" "C119" "470n" 78.2000mm 69.4000mm -0.9000mm 0.6000mm 0 71 ""]
 
 	)
 
-Element["" "0603" "C128" "100n" 85.3122mm 64.8050mm 0.0685mm 1.4849mm 1 71 ""]
+Element["" "0603" "C128" "30p" 85.3122mm 64.8050mm 0.0685mm 1.4849mm 1 71 ""]
 (
 	Pad[0.4949mm -0.5657mm 0.5657mm -0.4950mm 0.9000mm 0.6000mm 1.0500mm "1" "1" "square"]
 	Pad[-0.5657mm 0.4950mm -0.4949mm 0.5657mm 0.9000mm 0.6000mm 1.0500mm "2" "2" "square,edge2"]
 
 	)
 
-Element["hidename" "custom_bead" "B2" "unknown" 72.3000mm 70.5000mm 0.0000 0.0000 3 100 ""]
+Element["hidename" "custom_bead" "B2" "unknown" 73.0000mm 70.8000mm 0.0000 0.0000 0 100 ""]
 (
-	Pad[-0.2000mm -0.4000mm 0.2000mm -0.4000mm 0.6000mm 20.00mil 0.8040mm "1" "1" "square"]
-	Pad[-0.2000mm 0.4000mm 0.2000mm 0.4000mm 0.6000mm 20.00mil 0.8040mm "2" "2" "square"]
-
-	)
-
-Element["hidename" "custom_bead" "B1" "unknown" 72.3000mm 68.5000mm 0.0000 0.0000 3 100 ""]
-(
-	Pad[-0.2000mm -0.4000mm 0.2000mm -0.4000mm 0.6000mm 20.00mil 0.8040mm "1" "1" "square"]
-	Pad[-0.2000mm 0.4000mm 0.2000mm 0.4000mm 0.6000mm 20.00mil 0.8040mm "2" "2" "square"]
+	Pad[-0.4000mm -0.2000mm -0.4000mm 0.2000mm 0.6000mm 20.00mil 0.8040mm "1" "1" "square"]
+	Pad[0.4000mm -0.2000mm 0.4000mm 0.2000mm 0.6000mm 20.00mil 0.8040mm "2" "2" "square"]
 
 	)
 
@@ -2737,10 +2709,10 @@ Element["" "0603" "C118" "100n" 76.9000mm 71.9000mm -1.1000mm 0.6000mm 0 71 ""]
 
 	)
 
-Element["" "0603" "R49" "1" 74.1000mm 67.1000mm -1.1000mm -0.5000mm 0 71 ""]
+Element["" "0603" "R49" "1" 73.7000mm 67.1000mm 1.6000mm -0.9000mm 3 71 ""]
 (
-	Pad[-0.0500mm 0.7500mm 0.0500mm 0.7500mm 0.9000mm 0.6000mm 1.0500mm "1" "1" "square"]
-	Pad[-0.0500mm -0.7500mm 0.0500mm -0.7500mm 0.9000mm 0.6000mm 1.0500mm "2" "2" "square"]
+	Pad[-0.0500mm 0.7500mm 0.0500mm 0.7500mm 0.9000mm 0.6000mm 0.9484mm "1" "1" "square"]
+	Pad[-0.0500mm -0.7500mm 0.0500mm -0.7500mm 0.9000mm 0.6000mm 0.9484mm "2" "2" "square"]
 
 	)
 
@@ -2771,7 +2743,7 @@ Element["" "0603" "C8" "10u" 61.4000mm 118.5000mm -0.3000mm 0.6000mm 0 71 ""]
 
 	)
 
-Element["" "0603" "C9" "100n" 65.4725mm 4615.30mil -0.2725mm 0.5714mm 0 71 ""]
+Element["" "0603" "C9" "100n" 65.4725mm 4615.30mil -0.2725mm 0.6714mm 0 71 ""]
 (
 	Pad[0.7299mm -7.07mil 0.7473mm -0.0810mm 0.9000mm 0.6000mm 1.0500mm "1" "1" "square"]
 	Pad[-0.7473mm 0.0810mm -0.7299mm 7.07mil 0.9000mm 0.6000mm 1.0500mm "2" "2" "square,edge2"]
@@ -2785,7 +2757,7 @@ Element["" "0603" "L1" "fb" 69.1479mm 116.4046mm -0.5479mm -1.4046mm 0 71 ""]
 
 	)
 
-Element["" "0603" "C10" "10u" 68.2128mm 118.2464mm -0.2128mm 0.5536mm 0 71 ""]
+Element["" "0603" "C10" "10u" 68.2128mm 118.2464mm -0.2128mm 0.6536mm 0 71 ""]
 (
 	Pad[-0.7473mm 0.0810mm -0.7299mm 7.07mil 0.9000mm 0.6000mm 1.0500mm "1" "1" "square,edge2"]
 	Pad[0.7299mm -7.07mil 0.7473mm -0.0810mm 0.9000mm 0.6000mm 1.0500mm "2" "2" "square"]
@@ -2858,13 +2830,6 @@ Element["hidename" "connector5" "CONN16" "unknown" 106.3500mm 79.9500mm 1.6412mm
 	ElementLine [50.00mil 50.00mil -50.00mil 50.00mil 10.00mil]
 	ElementArc [0.0000 0.0000 50.00mil 50.00mil 180 180 10.00mil]
 	ElementArc [0.0000 400.00mil 50.00mil 50.00mil 0 180 10.00mil]
-
-	)
-
-Element["" "0805" "R56" "10" 111.5000mm 81.5000mm 0.9000mm 0.5000mm 2 71 ""]
-(
-	Pad[-0.1500mm 1.0500mm 0.1500mm 1.0500mm 1.3000mm 0.5000mm 1.4484mm "1" "1" "square"]
-	Pad[-0.1500mm -1.0500mm 0.1500mm -1.0500mm 1.3000mm 0.5000mm 1.4484mm "2" "2" "square"]
 
 	)
 
@@ -2979,7 +2944,7 @@ Element["hidename" "custom_pad1" "T14" "unknown" 118.8000mm 96.6000mm -1.3000mm 
 
 	)
 
-Element["" "0603" "C59" "2.2u" 72.8000mm 72.5000mm -0.5000mm 0.9000mm 1 71 ""]
+Element["" "0603" "C59" "2.2u" 72.8000mm 72.5000mm -0.8000mm 0.6000mm 0 71 ""]
 (
 	Pad[0.7500mm -0.0500mm 0.7500mm 0.0500mm 0.9000mm 0.6000mm 1.0500mm "1" "1" "square"]
 	Pad[-0.7500mm -0.0500mm -0.7500mm 0.0500mm 0.9000mm 0.6000mm 1.0500mm "2" "2" "square"]
@@ -3025,10 +2990,10 @@ Element["" "0603" "C120" "10u" 86.2000mm 3000.00mil -0.4000mm 3.2000mm 1 71 ""]
 
 	)
 
-Element["onsolder" "0603" "C60" "470n" 110.1000mm 4000.00mil 2.0000mm -1.4000mm 2 71 "auto"]
+Element["onsolder" "0603" "C60" "470n" 110.1000mm 4000.00mil 2.1000mm -1.5000mm 2 71 "auto"]
 (
 	Pad[0.4949mm 0.5657mm 0.5657mm 0.4950mm 0.9000mm 0.6000mm 0.9500mm "1" "1" "onsolder,square,edge2"]
-	Pad[-0.5657mm -0.4950mm -0.4949mm -0.5657mm 0.9000mm 0.0000 1.0500mm "2" "2" "onsolder,square"]
+	Pad[-0.5657mm -0.4950mm -0.4949mm -0.5657mm 0.9000mm 0.0000 0.9484mm "2" "2" "onsolder,square"]
 
 	)
 
@@ -3039,21 +3004,21 @@ Element["" "0603" "C117" "470n" 84.1518mm 3039.10mil -33.53mil -1.3932mm 1 71 ""
 
 	)
 
-Element["" "0603" "LED6" "green" 121.2000mm 79.1000mm 1.7000mm -0.6000mm 3 71 ""]
+Element["" "0603" "LED6" "green" 121.2000mm 79.1000mm 2.1000mm -0.6000mm 3 71 ""]
 (
 	Pad[-0.0500mm 0.7500mm 0.0500mm 0.7500mm 0.9000mm 0.6000mm 1.0500mm "A" "1" "square"]
 	Pad[-0.0500mm -0.7500mm 0.0500mm -0.7500mm 0.9000mm 0.6000mm 1.0500mm "K" "2" "square"]
 
 	)
 
-Element["" "0603" "LED5" "red" 121.5000mm 82.8000mm 1.7000mm -0.6000mm 3 71 ""]
+Element["" "0603" "LED5" "red" 121.5000mm 82.8000mm 2.1000mm -0.6000mm 3 71 ""]
 (
 	Pad[-0.0500mm 0.7500mm 0.0500mm 0.7500mm 0.9000mm 0.6000mm 1.0500mm "A" "1" "square"]
 	Pad[-0.0500mm -0.7500mm 0.0500mm -0.7500mm 0.9000mm 0.6000mm 1.0500mm "K" "2" "square"]
 
 	)
 
-Element["" "0603" "LED4" "green" 101.5000mm 114.5000mm 1.9000mm -0.9000mm 3 71 ""]
+Element["" "0603" "LED4" "green" 101.5000mm 114.5000mm 1.8000mm -0.9000mm 3 71 ""]
 (
 	Pad[-0.0500mm -0.7500mm 0.0500mm -0.7500mm 0.9000mm 0.6000mm 1.0500mm "A" "1" "square"]
 	Pad[-0.0500mm 0.7500mm 0.0500mm 0.7500mm 0.9000mm 0.6000mm 1.0500mm "K" "2" "square"]
@@ -3067,7 +3032,7 @@ Element["" "0603" "R60" "50" 92.8000mm 72.7000mm 1.7000mm -0.8000mm 3 71 ""]
 
 	)
 
-Element["" "0603" "C57" "470n" 105.4000mm 121.4000mm 0.9000mm -0.1000mm 0 71 ""]
+Element["" "0603" "C57" "470n" 105.4000mm 121.4000mm 1.8000mm -0.7000mm 3 71 ""]
 (
 	Pad[-0.0500mm 0.7500mm 0.0500mm 0.7500mm 0.9000mm 0.6000mm 1.2024mm "1" "1" "square"]
 	Pad[-0.0500mm -0.7500mm 0.0500mm -0.7500mm 0.9000mm 0.6000mm 1.0500mm "2" "2" "square"]
@@ -3081,35 +3046,35 @@ Element["" "0603" "C127" "1n" 92.6000mm 67.4000mm -0.8000mm -1.8000mm 0 71 ""]
 
 	)
 
-Element["onsolder" "0805" "C54" "10u" 98.4000mm 110.7000mm -0.7000mm 0.5000mm 0 71 "auto"]
+Element["onsolder" "0805" "C54" "10u" 98.4000mm 110.7000mm -2.1000mm -0.7000mm 1 71 "auto"]
 (
-	Pad[-0.1500mm 1.0500mm 0.1500mm 1.0500mm 1.3000mm 0.0000 1.4484mm "1" "1" "onsolder,square"]
-	Pad[-0.1500mm -1.0500mm 0.1500mm -1.0500mm 1.3000mm 0.5000mm 1.4484mm "2" "2" "onsolder,square"]
+	Pad[-0.1500mm 1.0500mm 0.1500mm 1.0500mm 1.3000mm 0.0000 1.3976mm "1" "1" "onsolder,square"]
+	Pad[-0.1500mm -1.0500mm 0.1500mm -1.0500mm 1.3000mm 0.5000mm 1.3976mm "2" "2" "onsolder,square"]
 
 	)
 
-Element["onsolder" "0603" "C52" "470n" 94.6000mm 107.8000mm -1.3000mm -0.7000mm 0 71 "auto"]
+Element["onsolder" "0603" "C52" "470n" 94.6000mm 107.8000mm -1.8000mm -0.7000mm 0 71 "auto"]
 (
-	Pad[-0.7219mm 0.2095mm -0.6877mm 0.3035mm 0.9000mm 0.6000mm 1.0500mm "1" "1" "onsolder,square,edge2"]
-	Pad[0.6877mm -0.3035mm 0.7219mm -0.2095mm 0.9000mm 0.0000 1.0500mm "2" "2" "onsolder,square"]
+	Pad[-0.7219mm 0.2095mm -0.6877mm 0.3035mm 0.9000mm 0.6000mm 0.9484mm "1" "1" "onsolder,square,edge2"]
+	Pad[0.6877mm -0.3035mm 0.7219mm -0.2095mm 0.9000mm 0.0000 0.9484mm "2" "2" "onsolder,square"]
 
 	)
 
-Element["onsolder" "0805" "C38" "10u" 97.9366mm 94.9634mm 1.7634mm 0.2366mm 1 71 "auto"]
+Element["onsolder" "0805" "C38" "10u" 97.9366mm 94.9634mm 3.2634mm 0.1366mm 3 71 "auto"]
 (
-	Pad[-0.9843mm 0.3951mm -0.8343mm 25.78mil 1.3000mm 0.0000 1.4484mm "1" "1" "onsolder,square,edge2"]
-	Pad[0.8343mm -25.78mil 0.9843mm -0.3951mm 1.3000mm 0.6016mm 1.4484mm "2" "2" "onsolder,square"]
+	Pad[-0.9843mm 0.3951mm -0.8343mm 25.78mil 1.3000mm 0.0000 1.3468mm "1" "1" "onsolder,square,edge2"]
+	Pad[0.8343mm -25.78mil 0.9843mm -0.3951mm 1.3000mm 0.6016mm 1.3468mm "2" "2" "onsolder,square"]
 
 	)
 
-Element["onsolder" "0603" "C28" "470n" 3323.30mil 92.6877mm -0.5118mm 0.0123mm 2 71 "auto"]
+Element["onsolder" "0603" "C28" "470n" 3323.30mil 92.6877mm -3.0118mm 0.5123mm 0 71 "auto"]
 (
-	Pad[17.47mil 0.6067mm 20.49mil 0.5424mm 0.9000mm 0.6000mm 1.0500mm "1" "1" "onsolder,square,edge2"]
-	Pad[-20.49mil -0.5424mm -17.47mil -0.6067mm 0.9000mm 0.0000 1.0500mm "2" "2" "onsolder,square"]
+	Pad[17.47mil 0.6067mm 20.49mil 0.5424mm 0.9000mm 0.6000mm 0.9484mm "1" "1" "onsolder,square,edge2"]
+	Pad[-20.49mil -0.5424mm -17.47mil -0.6067mm 0.9000mm 0.0000 0.9484mm "2" "2" "onsolder,square"]
 
 	)
 
-Element["" "0805" "C141" "10u" 104.5000mm 115.5000mm 0.9000mm 0.5000mm 2 71 ""]
+Element["" "0805" "C141" "10u" 104.5000mm 115.5000mm -1.0000mm 3.2000mm 0 71 ""]
 (
 	Pad[-0.1500mm 1.0500mm 0.1500mm 1.0500mm 1.3000mm 0.5000mm 1.4484mm "1" "1" "square"]
 	Pad[-0.1500mm -1.0500mm 0.1500mm -1.0500mm 1.3000mm 0.5000mm 1.4484mm "2" "2" "square"]
@@ -3123,14 +3088,14 @@ Element["" "0603" "C73" "1n" 113.9000mm 112.1000mm -1.7000mm 0.9000mm 1 70 ""]
 
 	)
 
-Element["" "0805" "C72" "10u" 107.7000mm 111.5000mm -0.6000mm 0.8000mm 1 71 ""]
+Element["" "0805" "C72" "10u" 107.7000mm 111.5000mm -1.0000mm -2.1000mm 0 71 ""]
 (
 	Pad[-1.0500mm -0.1500mm -1.0500mm 0.1500mm 1.3000mm 0.5000mm 1.4484mm "1" "1" "square"]
 	Pad[1.0500mm -0.1500mm 1.0500mm 0.1500mm 1.3000mm 0.5000mm 1.4484mm "2" "2" "square"]
 
 	)
 
-Element["" "0805" "C74" "10u" 106.8000mm 115.5000mm 0.9000mm 0.5000mm 2 71 ""]
+Element["" "0805" "C74" "10u" 106.8000mm 115.5000mm -0.6000mm 3.3000mm 0 71 ""]
 (
 	Pad[-0.1500mm 1.0500mm 0.1500mm 1.0500mm 1.3000mm 0.5000mm 1.4484mm "1" "1" "square"]
 	Pad[-0.1500mm -1.0500mm 0.1500mm -1.0500mm 1.3000mm 0.5000mm 1.4484mm "2" "2" "square"]
@@ -3158,7 +3123,7 @@ Element["" "0603" "C77" "1n" 116.8000mm 67.7000mm -1.2000mm -2.4000mm 0 71 ""]
 
 	)
 
-Element["" "0603" "R42" "2.2k" 120.8000mm 70.8000mm -0.8000mm -0.5000mm 0 71 ""]
+Element["" "0603" "R42" "2.2k" 120.8000mm 70.8000mm 1.8000mm -0.7000mm 3 71 ""]
 (
 	Pad[-0.0500mm 0.7500mm 0.0500mm 0.7500mm 0.9000mm 0.6000mm 1.0500mm "1" "1" "square"]
 	Pad[-0.0500mm -0.7500mm 0.0500mm -0.7500mm 0.9000mm 0.6000mm 1.0500mm "2" "2" "square"]
@@ -3172,31 +3137,31 @@ Element["" "0603" "R43" "100k" 120.0000mm 67.7000mm 1.8000mm -0.9000mm 3 71 ""]
 
 	)
 
-Element["" "0805" "C76" "10u" 113.7000mm 64.9000mm -0.6000mm 0.8000mm 1 71 ""]
+Element["" "0805" "C76" "10u" 113.7000mm 64.9000mm -1.5000mm -2.0000mm 0 71 ""]
 (
-	Pad[-1.0500mm -0.1500mm -1.0500mm 0.1500mm 1.3000mm 0.5000mm 1.4484mm "1" "1" "square"]
-	Pad[1.0500mm -0.1500mm 1.0500mm 0.1500mm 1.3000mm 0.5000mm 1.4484mm "2" "2" "square"]
+	Pad[-1.0500mm -0.1500mm -1.0500mm 0.1500mm 1.3000mm 0.5000mm 1.3468mm "1" "1" "square"]
+	Pad[1.0500mm -0.1500mm 1.0500mm 0.1500mm 1.3000mm 0.5000mm 1.3468mm "2" "2" "square"]
 
 	)
 
-Element["" "0805" "C80" "4.7u" 120.2000mm 74.4000mm 0.4000mm -0.9000mm 3 71 ""]
+Element["" "0805" "C80" "4.7u" 120.2000mm 74.4000mm -0.3000mm 1.1000mm 0 71 ""]
 (
-	Pad[1.0500mm -0.1500mm 1.0500mm 0.1500mm 1.3000mm 0.5000mm 1.4484mm "1" "1" "square"]
-	Pad[-1.0500mm -0.1500mm -1.0500mm 0.1500mm 1.3000mm 0.5000mm 1.4484mm "2" "2" "square"]
+	Pad[1.0500mm -0.1500mm 1.0500mm 0.1500mm 1.3000mm 0.5000mm 1.3468mm "1" "1" "square"]
+	Pad[-1.0500mm -0.1500mm -1.0500mm 0.1500mm 1.3000mm 0.5000mm 1.3468mm "2" "2" "square"]
 
 	)
 
-Element["" "0805" "C82" "10u" 111.7000mm 72.8000mm 0.8000mm 0.5000mm 2 71 ""]
+Element["" "0805" "C82" "10u" 111.7000mm 72.8000mm -1.1000mm -0.1000mm 3 71 ""]
 (
 	Pad[-0.1500mm 1.0500mm 0.1500mm 1.0500mm 1.3000mm 0.5000mm 1.4484mm "1" "1" "square"]
 	Pad[-0.1500mm -1.0500mm 0.1500mm -1.0500mm 1.3000mm 0.5000mm 1.4484mm "2" "2" "square"]
 
 	)
 
-Element["" "0805" "C78" "10u" 111.9000mm 68.7000mm -0.4000mm 0.9000mm 1 71 ""]
+Element["" "0805" "C78" "10u" 111.9000mm 68.7000mm -1.4000mm -2.0000mm 0 71 ""]
 (
-	Pad[-1.0500mm -0.1500mm -1.0500mm 0.1500mm 1.3000mm 0.5000mm 1.4484mm "1" "1" "square"]
-	Pad[1.0500mm -0.1500mm 1.0500mm 0.1500mm 1.3000mm 0.5000mm 1.4484mm "2" "2" "square"]
+	Pad[-1.0500mm -0.1500mm -1.0500mm 0.1500mm 1.3000mm 0.5000mm 1.3468mm "1" "1" "square"]
+	Pad[1.0500mm -0.1500mm 1.0500mm 0.1500mm 1.3000mm 0.5000mm 1.3976mm "2" "2" "square"]
 
 	)
 
@@ -3214,10 +3179,10 @@ Element["" "0603" "R53" "1" 116.8000mm 54.4000mm -0.6000mm -0.1000mm 3 71 ""]
 
 	)
 
-Element["" "0603" "C138" "2.2u" 114.2000mm 61.4000mm 0.9000mm 0.5000mm 2 71 ""]
+Element["" "0603" "C138" "2.2u" 114.2000mm 61.4000mm 1.8000mm -0.9000mm 3 71 ""]
 (
-	Pad[-0.0500mm -0.7500mm 0.0500mm -0.7500mm 0.9000mm 0.6000mm 1.0500mm "1" "1" "square"]
-	Pad[-0.0500mm 0.7500mm 0.0500mm 0.7500mm 0.9000mm 0.6000mm 1.0500mm "2" "2" "square"]
+	Pad[-0.0500mm -0.7500mm 0.0500mm -0.7500mm 0.9000mm 0.6000mm 0.9992mm "1" "1" "square"]
+	Pad[-0.0500mm 0.7500mm 0.0500mm 0.7500mm 0.9000mm 0.6000mm 0.9992mm "2" "2" "square"]
 
 	)
 
@@ -3485,20 +3450,6 @@ Element["" "0603" "C227" "10n" 95.4857mm 38.1637mm 1.8143mm -1.9637mm 3 71 ""]
 
 	)
 
-Element["" "SC70_5" "U207" "unknown" 91.1000mm 39.8000mm -0.6000mm -1.6000mm 3 82 ""]
-(
-	Pad[0.0000 -10.00mil 0.0000 10.00mil 15.00mil 30.00mil 21.00mil "OUT" "4" "square,edge2"]
-	Pad[51.00mil -10.00mil 51.00mil 10.00mil 15.00mil 30.00mil 21.00mil "VCC" "5" "square,edge2"]
-	Pad[51.00mil -80.00mil 51.00mil -60.00mil 15.00mil 30.00mil 21.00mil "NC" "1" "square"]
-	Pad[26.00mil -80.00mil 26.00mil -60.00mil 15.00mil 30.00mil 21.00mil "IN" "2" "square"]
-	Pad[0.0000 -80.00mil 0.0000 -60.00mil 15.00mil 30.00mil 21.00mil "GND" "3" "square"]
-	ElementLine [-14.00mil -94.00mil -14.00mil 25.00mil 10.00mil]
-	ElementLine [-14.00mil 25.00mil 66.00mil 25.00mil 10.00mil]
-	ElementLine [66.00mil -94.00mil 66.00mil 25.00mil 10.00mil]
-	ElementLine [-14.00mil -94.00mil 66.00mil -94.00mil 10.00mil]
-
-	)
-
 Element["" "0805" "L207" "15n" 95.6000mm 33.2000mm -0.5000mm 0.7000mm 1 71 ""]
 (
 	Pad[-1.0500mm -0.1500mm -1.0500mm 0.1500mm 1.3000mm 0.5000mm 1.4484mm "1" "1" "square"]
@@ -3583,21 +3534,21 @@ Element["" "0603" "C207" "10n" 108.7000mm 33.1000mm 1.7000mm -1.2000mm 3 71 ""]
 
 	)
 
-Element["" "0603" "C211" "30p" 116.0000mm 45.6000mm -0.6000mm 0.2000mm 3 71 ""]
+Element["" "0603" "C211" "30p" 116.0000mm 45.6000mm -0.6000mm 0.1000mm 3 71 ""]
 (
 	Pad[0.3892mm 0.6430mm 0.4711mm 0.5857mm 0.9000mm 0.6000mm 0.9484mm "1" "1" "square,edge2"]
 	Pad[-0.4711mm -0.5857mm -0.3892mm -0.6430mm 0.9000mm 0.6000mm 0.9484mm "2" "2" "square"]
 
 	)
 
-Element["" "0603" "C212" "100n" 116.3000mm 48.5000mm -0.5000mm 0.9000mm 1 71 ""]
+Element["" "0603" "C212" "100n" 116.3000mm 48.5000mm 2.5000mm -0.9000mm 3 71 ""]
 (
 	Pad[0.7500mm -0.0500mm 0.7500mm 0.0500mm 0.9000mm 0.6000mm 0.9484mm "1" "1" "square"]
 	Pad[-0.7500mm -0.0500mm -0.7500mm 0.0500mm 0.9000mm 0.6000mm 0.9484mm "2" "2" "square"]
 
 	)
 
-Element["" "0603" "C214" "100n" 112.0500mm 45.3794mm 1.0500mm 0.9206mm 1 71 ""]
+Element["" "0603" "C214" "30p" 112.0500mm 45.3794mm 1.0500mm 0.9206mm 1 71 ""]
 (
 	Pad[-0.4183mm 0.6245mm -0.3317mm 0.6745mm 0.9000mm 0.6000mm 0.9484mm "1" "1" "square,edge2"]
 	Pad[0.3317mm -0.6745mm 0.4183mm -0.6245mm 0.9000mm 0.6000mm 0.9484mm "2" "2" "square"]
@@ -3629,7 +3580,7 @@ Element["hidename" "custom_qfn32" "U201" "unknown" 113.8000mm 40.3000mm 0.0000 0
 	Pad[86.22mil -29.52mil 3.1098mm -0.7498mm 11.02mil 20.00mil 0.3379mm "MUXOUT" "30" "square"]
 	Pad[86.22mil -49.21mil 3.1098mm -49.20mil 11.02mil 20.00mil 0.3379mm "SDgnd" "31" "square"]
 	Pad[86.22mil -68.89mil 3.1098mm -68.89mil 11.02mil 20.00mil 0.3379mm "SDVdd" "32" "square,edge2"]
-	Pad[0.0000 0.0000 0.0000 0.0000 122.04mil 0.0000 122.04mil "" "33" "square"]
+	Pad[0.0000 0.0000 0.0000 0.0000 122.04mil 0.0000 124.04mil "" "33" "square"]
 	Pad[-3.1100mm 68.89mil -2.1902mm 1.7502mm 11.02mil 20.00mil 0.3379mm "Vvco" "16" "square,edge2"]
 	Pad[-3.1100mm 49.21mil -2.1902mm 1.2502mm 11.02mil 20.00mil 0.3379mm "RFoutB-" "15" "square,edge2"]
 	Pad[-3.1100mm 29.52mil -2.1902mm 0.7502mm 11.02mil 20.00mil 0.3379mm "RFoutB+" "14" "square,edge2"]
@@ -3657,7 +3608,7 @@ Element["hidename" "custom_qfn32" "U201" "unknown" 113.8000mm 40.3000mm 0.0000 0
 
 	)
 
-Element["" "0603" "C215" "30p" 111.0000mm 47.9000mm 2.4000mm -1.2000mm 3 71 ""]
+Element["" "0603" "C215" "100n" 111.0000mm 47.9000mm 2.4000mm -1.2000mm 3 71 ""]
 (
 	Pad[-0.7500mm -0.0500mm -0.7500mm 0.0500mm 0.9000mm 0.6000mm 0.9484mm "1" "1" "square"]
 	Pad[0.7500mm -0.0500mm 0.7500mm 0.0500mm 0.9000mm 0.6000mm 0.9484mm "2" "2" "square"]
@@ -3778,28 +3729,28 @@ Element["hidename" "custom_pad1" "T10" "unknown" 123.6000mm 68.0000mm 2.7000mm -
 
 	)
 
-Element["" "0603" "R40" "10k" 115.6000mm 112.1000mm 1.6000mm -0.2000mm 3 70 ""]
+Element["" "0603" "R40" "10k" 115.6000mm 112.1000mm 1.8000mm -0.7000mm 3 70 ""]
 (
 	Pad[-0.0500mm 0.7500mm 0.0500mm 0.7500mm 0.9000mm 0.6000mm 1.0500mm "1" "1" "square"]
 	Pad[-0.0500mm -0.7500mm 0.0500mm -0.7500mm 0.9000mm 0.6000mm 1.0500mm "2" "2" "square"]
 
 	)
 
-Element["" "0805" "C79" "4.7u" 115.3000mm 120.3000mm 0.9000mm 0.4000mm 2 71 ""]
+Element["" "0805" "C79" "4.7u" 115.3000mm 120.3000mm -1.0000mm -0.7000mm 3 71 ""]
 (
-	Pad[-0.1500mm 1.0500mm 0.1500mm 1.0500mm 1.3000mm 0.5000mm 1.4484mm "1" "1" "square"]
+	Pad[-0.1500mm 1.0500mm 0.1500mm 1.0500mm 1.3000mm 0.5000mm 1.3468mm "1" "1" "square"]
 	Pad[-0.1500mm -1.0500mm 0.1500mm -1.0500mm 1.3000mm 0.5000mm 1.4484mm "2" "2" "square"]
 
 	)
 
-Element["" "0603" "R39" "470k" 115.4000mm 116.5000mm -0.7000mm 0.6000mm 0 71 ""]
+Element["" "0603" "R39" "470k" 115.4000mm 116.5000mm 1.7000mm -0.5000mm 0 71 ""]
 (
 	Pad[0.7500mm -0.0500mm 0.7500mm 0.0500mm 0.9000mm 0.6000mm 1.0500mm "1" "1" "square"]
 	Pad[-0.7500mm -0.0500mm -0.7500mm 0.0500mm 0.9000mm 0.6000mm 1.0500mm "2" "2" "square"]
 
 	)
 
-Element["" "0603" "R38" "10k" 115.4000mm 114.9000mm 1.5000mm -0.1000mm 0 71 ""]
+Element["" "0603" "R38" "10k" 115.4000mm 114.9000mm 1.7000mm -0.5000mm 0 71 ""]
 (
 	Pad[0.7500mm -0.0500mm 0.7500mm 0.0500mm 0.9000mm 0.6000mm 1.0500mm "1" "1" "square"]
 	Pad[-0.7500mm -0.0500mm -0.7500mm 0.0500mm 0.9000mm 0.6000mm 1.0500mm "2" "2" "square"]
@@ -3808,8 +3759,8 @@ Element["" "0603" "R38" "10k" 115.4000mm 114.9000mm 1.5000mm -0.1000mm 0 71 ""]
 
 Element["onsolder" "mcw-0630" "L8" "10uH" 118.0000mm 69.7000mm 0.7000mm 0.6000mm 3 100 "auto"]
 (
-	Pad[-0.6000mm 3.0000mm 0.5000mm 3.0000mm 2.4000mm 0.6000mm 2.5500mm "1" "1" "onsolder,square"]
-	Pad[-0.6000mm -3.0000mm 0.5000mm -3.0000mm 2.4000mm 0.6000mm 2.5500mm "2" "2" "onsolder,square"]
+	Pad[-0.6000mm 3.0000mm 0.5000mm 3.0000mm 2.4000mm 0.6000mm 2.4000mm "1" "1" "onsolder,square"]
+	Pad[-0.6000mm -3.0000mm 0.5000mm -3.0000mm 2.4000mm 0.6000mm 2.4000mm "2" "2" "onsolder,square"]
 	ElementLine [3.3000mm -3.5000mm 3.3000mm 3.5000mm 0.3000mm]
 	ElementLine [-3.4000mm 3.5000mm 3.3000mm 3.5000mm 0.3000mm]
 	ElementLine [-3.4000mm -3.5000mm 3.3000mm -3.5000mm 0.3000mm]
@@ -3849,14 +3800,14 @@ Element["hidename" "0603" "C235" "1n" 32.4000mm 36.1000mm 0.5000mm -1.0000mm 3 7
 
 	)
 
-Element["" "0603" "R220" "270" 74.4000mm 35.6000mm 1.6000mm 0.5000mm 2 71 ""]
+Element["" "0603" "R220" "270" 74.4000mm 35.6000mm 1.8000mm -1.0000mm 3 71 ""]
 (
 	Pad[-0.0500mm -0.7500mm 0.0500mm -0.7500mm 0.9000mm 0.6000mm 1.0500mm "1" "1" "square"]
 	Pad[-0.0500mm 0.7500mm 0.0500mm 0.7500mm 0.9000mm 0.6000mm 1.0500mm "2" "2" "square"]
 
 	)
 
-Element["hidename" "custom_sma4" "CONN3" "unknown" 28.0000mm 36.5000mm 0.0000 0.0000 1 100 ""]
+Element["" "custom_sma4" "CONN3" "unknown" 28.0000mm 36.5000mm 2.8000mm 5.0000mm 1 100 ""]
 (
 	Pin[-1.8000mm 3.3000mm 1.4000mm 0.0000 1.5524mm 0.7000mm "0" "0" ""]
 	Pin[-1.8000mm 2.2000mm 1.4000mm 0.0000 1.5524mm 0.7000mm "0" "0" ""]
@@ -3881,70 +3832,70 @@ Element["hidename" "custom_sma4" "CONN3" "unknown" 28.0000mm 36.5000mm 0.0000 0.
 
 	)
 
-Element["" "0603" "R225" "39" 1500.00mil 34.7000mm 1.7000mm 0.5000mm 2 71 ""]
+Element["" "0603" "R225" "39" 1500.00mil 34.7000mm 1.8000mm -0.5000mm 3 71 ""]
 (
 	Pad[-0.0500mm -0.7500mm 0.0500mm -0.7500mm 0.9000mm 0.0000 1.0500mm "1" "1" "square"]
 	Pad[-0.0500mm 0.7500mm 0.0500mm 0.7500mm 0.9000mm 0.0000 1.0500mm "2" "2" "square"]
 
 	)
 
-Element["" "0603" "R224" "39" 39.4000mm 38.3000mm -0.9000mm -0.5000mm 0 71 ""]
+Element["" "0603" "R224" "39" 39.4000mm 38.3000mm 0.7000mm -0.2000mm 1 71 ""]
 (
 	Pad[-0.0500mm 0.7500mm 0.0500mm 0.7500mm 0.9000mm 0.0000 1.0500mm "1" "1" "square"]
 	Pad[-0.0500mm -0.7500mm 0.0500mm -0.7500mm 0.9000mm 0.0000 1.0500mm "2" "2" "square"]
 
 	)
 
-Element["" "0603" "R223" "36" 36.1000mm 34.7000mm 0.9000mm 0.5000mm 2 71 ""]
+Element["" "0603" "R223" "36" 36.1000mm 34.7000mm -1.7000mm -2.6000mm 0 71 ""]
 (
 	Pad[-0.0500mm -0.7500mm 0.0500mm -0.7500mm 0.9000mm 0.0000 1.0500mm "1" "1" "square"]
 	Pad[-0.0500mm 0.7500mm 0.0500mm 0.7500mm 0.9000mm 0.0000 1.0500mm "2" "2" "square"]
 
 	)
 
-Element["" "0603" "R222" "36" 37.8000mm 38.3000mm -0.9000mm -0.5000mm 0 71 ""]
+Element["" "0603" "R222" "36" 37.8000mm 38.3000mm -0.6000mm 4.2000mm 1 71 ""]
 (
 	Pad[-0.0500mm 0.7500mm 0.0500mm 0.7500mm 0.9000mm 0.0000 1.0500mm "1" "1" "square"]
 	Pad[-0.0500mm -0.7500mm 0.0500mm -0.7500mm 0.9000mm 0.0000 1.0500mm "2" "2" "square"]
 
 	)
 
-Element["" "0603" "R219" "39" 70.3000mm 34.7000mm 1.7000mm 0.6000mm 2 71 ""]
+Element["" "0603" "R219" "39" 70.3000mm 34.7000mm 0.7000mm -5.1000mm 3 71 ""]
 (
 	Pad[-0.0500mm -0.7500mm 0.0500mm -0.7500mm 0.9000mm 0.0000 1.0500mm "1" "1" "square"]
 	Pad[-0.0500mm 0.7500mm 0.0500mm 0.7500mm 0.9000mm 0.0000 1.0500mm "2" "2" "square"]
 
 	)
 
-Element["" "0603" "R218" "39" 71.9000mm 38.3000mm -0.9000mm -0.5000mm 0 71 ""]
+Element["" "0603" "R218" "39" 71.9000mm 38.3000mm -1.1000mm 2.5000mm 0 71 ""]
 (
 	Pad[-0.0500mm 0.7500mm 0.0500mm 0.7500mm 0.9000mm 0.0000 1.0500mm "1" "1" "square"]
 	Pad[-0.0500mm -0.7500mm 0.0500mm -0.7500mm 0.9000mm 0.0000 1.0500mm "2" "2" "square"]
 
 	)
 
-Element["" "0603" "R215" "36" 68.7000mm 34.7000mm 0.9000mm 0.5000mm 2 71 ""]
+Element["" "0603" "R215" "36" 68.7000mm 34.7000mm 0.1000mm 2.3000mm 2 71 ""]
 (
 	Pad[-0.0500mm -0.7500mm 0.0500mm -0.7500mm 0.9000mm 0.0000 1.0500mm "1" "1" "square"]
 	Pad[-0.0500mm 0.7500mm 0.0500mm 0.7500mm 0.9000mm 0.0000 1.0500mm "2" "2" "square"]
 
 	)
 
-Element["" "0603" "R214" "36" 69.9000mm 38.3000mm -1.6000mm -0.4000mm 0 71 ""]
+Element["" "0603" "R214" "36" 69.9000mm 38.3000mm -1.8000mm 1.2000mm 1 71 ""]
 (
 	Pad[-0.0500mm 0.7500mm 0.0500mm 0.7500mm 0.9000mm 0.0000 1.0500mm "1" "1" "square"]
 	Pad[-0.0500mm -0.7500mm 0.0500mm -0.7500mm 0.9000mm 0.0000 1.0500mm "2" "2" "square"]
 
 	)
 
-Element["" "0603" "R221" "50" 72.3268mm 34.9000mm 1.6732mm -0.9000mm 2 71 ""]
+Element["" "0603" "R221" "50" 72.3268mm 34.9000mm 2.8732mm -1.7000mm 2 71 ""]
 (
 	Pad[0.3317mm -0.6745mm 0.4183mm -0.6245mm 0.9000mm 0.6000mm 1.0500mm "1" "1" "square"]
 	Pad[-0.4183mm 0.6245mm -0.3317mm 0.6745mm 0.9000mm 0.0000 1.0500mm "2" "2" "square,edge2"]
 
 	)
 
-Element["" "0603" "R216" "50" 35.8000mm 38.2000mm -1.2000mm -0.6000mm 0 71 ""]
+Element["" "0603" "R216" "50" 35.8000mm 38.2000mm -1.0000mm 3.9000mm 1 71 ""]
 (
 	Pad[-0.4183mm 0.6245mm -0.3317mm 0.6745mm 0.9000mm 0.6000mm 1.0500mm "1" "1" "square,edge2"]
 	Pad[0.3317mm -0.6745mm 0.4183mm -0.6245mm 0.9000mm 0.0000 1.0500mm "2" "2" "square"]
@@ -4031,40 +3982,20 @@ Element["" "0402" "C225" "1n" 95.8000mm 43.4000mm 1.9000mm -1.2000mm 3 64 ""]
 
 	)
 
-Element["" "0603" "R217" "270" 33.8000mm 38.2000mm -1.9663mm -0.1723mm 0 71 ""]
+Element["" "0603" "R217" "270" 33.8000mm 38.2000mm -0.4000mm 4.1000mm 1 71 ""]
 (
 	Pad[0.0155mm 0.7515mm 0.1151mm 29.24mil 0.9000mm 0.6000mm 1.0500mm "1" "1" "square,edge2"]
 	Pad[-0.1151mm -29.24mil -0.0155mm -0.7515mm 0.9000mm 0.6000mm 1.0500mm "2" "2" "square"]
 
 	)
 
-Element["hidename" "custom_pad1" "T32" "unknown" 123.9000mm 110.3000mm 0.0460mm 1.3460mm 0 100 ""]
+Element["hidename" "custom_pad1" "T32" "unknown" 123.7000mm 112.8000mm 1.3460mm -0.0460mm 1 100 ""]
 (
-	Pad[0.0500mm -0.2500mm 0.0500mm 0.2500mm 1.5000mm 0.6000mm 1.8000mm "terminal" "1" "square"]
+	Pad[-0.2500mm -0.0500mm 0.2500mm -0.0500mm 1.5000mm 0.6000mm 1.8000mm "terminal" "1" "square"]
 
 	)
 
-Element["onsolder" "custom_miniusb1" "CONN2" "unknown" 120.8000mm 108.2000mm 1.4000mm -2.0000mm 1 100 "auto"]
-(
-	Pin[-2.6000mm -5.6000mm 1.7000mm 0.0000 1.7500mm 0.8000mm "0" "0" ""]
-	Pin[-2.6000mm 5.6000mm 1.7000mm 0.0000 1.7500mm 0.8000mm "0" "0" ""]
-	Pin[3.0000mm 5.6000mm 1.7000mm 0.0000 1.7500mm 0.8000mm "0" "0" ""]
-	Pin[3.0000mm -5.6000mm 1.7000mm 0.0000 1.7500mm 0.8000mm "0" "0" ""]
-	Pin[0.0000 2.2000mm 1.5000mm 0.0000 1.6524mm 0.9000mm "0" "0" ""]
-	Pin[0.0000 -2.2000mm 1.5000mm 0.0000 1.6524mm 0.9000mm "0" "0" ""]
-	Pad[-3.6000mm 1.6000mm -1.7000mm 1.6000mm 0.5000mm 0.0000 0.6080mm "1" "1" "onsolder,square"]
-	Pad[-3.6000mm 0.8000mm -1.7000mm 0.8000mm 0.5000mm 20.00mil 0.6080mm "2" "2" "onsolder,square"]
-	Pad[-3.6000mm 0.0000 -1.7000mm 0.0000 0.5000mm 20.00mil 0.6080mm "3" "3" "onsolder,square"]
-	Pad[-3.6000mm -0.8000mm -1.7000mm -0.8000mm 0.5000mm 20.00mil 0.6080mm "4" "4" "onsolder,square"]
-	Pad[-3.6000mm -1.6000mm -1.7000mm -1.6000mm 0.5000mm 20.00mil 0.6080mm "5" "5" "onsolder,square"]
-	Pad[-2.5500mm 4.7500mm -2.5500mm 5.2500mm 2.5000mm 0.0000 2.5000mm "0" "0" "onsolder,square,edge2"]
-	Pad[-2.5500mm -5.2500mm -2.5500mm -4.7500mm 2.5000mm 0.0000 2.5000mm "0" "0" "onsolder,square"]
-	Pad[2.9500mm 4.7500mm 2.9500mm 5.2500mm 2.5000mm 0.0000 2.5000mm "0" "0" "onsolder,square,edge2"]
-	Pad[2.9500mm -5.2500mm 2.9500mm -4.7500mm 2.5000mm 0.0000 2.5000mm "0" "0" "onsolder,square"]
-
-	)
-
-Element["" "0603" "R27" "22k" 113.5721mm 104.3543mm 0.0279mm -0.3543mm 1 71 ""]
+Element["" "0603" "R27" "22k" 113.5721mm 104.3543mm 0.2279mm -0.5543mm 1 71 ""]
 (
 	Pad[0.5857mm 0.4711mm 0.6431mm 0.3892mm 0.9000mm 0.6000mm 1.0500mm "1" "1" "square,edge2"]
 	Pad[-0.6431mm -0.3892mm -0.5857mm -0.4711mm 0.9000mm 0.6000mm 1.0500mm "2" "2" "square"]
@@ -4078,7 +4009,7 @@ Element["" "0603" "R62" "100" 29.2000mm 104.3000mm -0.5000mm 0.9000mm 1 71 ""]
 
 	)
 
-Element["hidename" "custom_sma4" "CONN1" "unknown" 28.0000mm 112.4000mm 0.0000 0.0000 1 100 ""]
+Element["" "custom_sma4" "CONN1" "unknown" 28.0000mm 112.4000mm -1.5000mm 4.1000mm 0 100 ""]
 (
 	Pin[-1.8000mm 3.3000mm 1.4000mm 0.0000 1.5524mm 0.7000mm "0" "0" ""]
 	Pin[-1.8000mm 2.2000mm 1.4000mm 0.0000 1.5524mm 0.7000mm "0" "0" ""]
@@ -4110,7 +4041,7 @@ Element["" "0603" "R47" "100" 29.0000mm 106.9000mm -0.5000mm 0.9000mm 1 71 ""]
 
 	)
 
-Element["" "0603" "C142" "330p" 32.1000mm 111.3000mm -0.9000mm -0.5000mm 0 71 ""]
+Element["" "0603" "C142" "470p" 32.1000mm 111.3000mm -0.9000mm -0.5000mm 0 71 ""]
 (
 	Pad[-0.0500mm 0.7500mm 0.0500mm 0.7500mm 0.9000mm 0.6000mm 1.0500mm "1" "1" "square"]
 	Pad[-0.0500mm -0.7500mm 0.0500mm -0.7500mm 0.9000mm 0.6000mm 1.0500mm "2" "2" "square"]
@@ -4124,35 +4055,35 @@ Element["" "0603" "R61" "66" 31.5000mm 106.6000mm 0.9000mm 0.5000mm 2 71 ""]
 
 	)
 
-Element["" "0805" "L4" "2.2u" 40.6000mm 111.3000mm 0.9000mm 0.4000mm 2 71 ""]
+Element["" "0805" "L4" "2.2u" 40.6000mm 111.3000mm -1.1000mm -3.0000mm 0 71 ""]
 (
-	Pad[-0.1500mm 1.0500mm 0.1500mm 1.0500mm 1.3000mm 0.5000mm 1.4484mm "1" "1" "square"]
-	Pad[-0.1500mm -1.0500mm 0.1500mm -1.0500mm 1.3000mm 0.5000mm 1.4484mm "2" "2" "square"]
+	Pad[-0.1500mm 1.0500mm 0.1500mm 1.0500mm 1.3000mm 0.5000mm 1.3468mm "1" "1" "square"]
+	Pad[-0.1500mm -1.0500mm 0.1500mm -1.0500mm 1.3000mm 0.5000mm 1.3468mm "2" "2" "square"]
 
 	)
 
-Element["" "0603" "C22" "1u" 42.1000mm 108.2000mm 0.5000mm -0.9000mm 3 71 ""]
+Element["" "0603" "C22" "1u" 42.1000mm 108.2000mm -0.8000mm -1.7000mm 0 71 ""]
 (
-	Pad[-0.7500mm -0.0500mm -0.7500mm 0.0500mm 0.9000mm 0.6000mm 1.0500mm "1" "1" "square"]
-	Pad[0.7500mm -0.0500mm 0.7500mm 0.0500mm 0.9000mm 0.6000mm 1.0500mm "2" "2" "square"]
+	Pad[-0.7500mm -0.0500mm -0.7500mm 0.0500mm 0.9000mm 0.6000mm 0.9484mm "1" "1" "square"]
+	Pad[0.7500mm -0.0500mm 0.7500mm 0.0500mm 0.9000mm 0.6000mm 0.9484mm "2" "2" "square"]
 
 	)
 
-Element["" "0603" "C20" "330p" 38.4000mm 111.4000mm 0.9000mm 0.5000mm 2 71 ""]
+Element["" "0603" "C20" "470p" 38.4000mm 111.4000mm -0.9000mm -2.9000mm 0 71 ""]
 (
-	Pad[-0.0500mm -0.7500mm 0.0500mm -0.7500mm 0.9000mm 0.6000mm 1.0500mm "1" "1" "square"]
-	Pad[-0.0500mm 0.7500mm 0.0500mm 0.7500mm 0.9000mm 0.6000mm 1.0500mm "2" "2" "square"]
+	Pad[-0.0500mm -0.7500mm 0.0500mm -0.7500mm 0.9000mm 0.6000mm 0.9484mm "1" "1" "square"]
+	Pad[-0.0500mm 0.7500mm 0.0500mm 0.7500mm 0.9000mm 0.6000mm 0.9484mm "2" "2" "square"]
 
 	)
 
-Element["" "0603" "C21" "1n" 38.2000mm 117.8000mm -0.9000mm -0.5000mm 0 71 ""]
+Element["" "0603" "C21" "1n" 38.2000mm 117.8000mm 1.6000mm -0.9000mm 3 71 ""]
 (
-	Pad[-0.0500mm 0.7500mm 0.0500mm 0.7500mm 0.9000mm 0.6000mm 1.0500mm "1" "1" "square"]
-	Pad[-0.0500mm -0.7500mm 0.0500mm -0.7500mm 0.9000mm 0.6000mm 1.0500mm "2" "2" "square"]
+	Pad[-0.0500mm 0.7500mm 0.0500mm 0.7500mm 0.9000mm 0.6000mm 0.9484mm "1" "1" "square"]
+	Pad[-0.0500mm -0.7500mm 0.0500mm -0.7500mm 0.9000mm 0.6000mm 0.9484mm "2" "2" "square"]
 
 	)
 
-Element["" "custom_cmy211" "U3" "unknown" 39.4000mm 114.7000mm 0.5000mm 0.3000mm 3 77 ""]
+Element["" "custom_cmy211" "U3" "unknown" 39.4000mm 114.7000mm 0.6000mm 0.3000mm 3 77 ""]
 (
 	Pad[0.8500mm -0.9500mm 1.3500mm -0.9500mm 0.5000mm 0.6000mm 0.5920mm "out" "6" "square,edge2"]
 	Pad[1.0000mm 0.0000 1.2000mm 0.0000 0.8000mm 0.6000mm 0.8920mm "GND" "5" "square,edge2"]
@@ -4167,107 +4098,107 @@ Element["" "custom_cmy211" "U3" "unknown" 39.4000mm 114.7000mm 0.5000mm 0.3000mm
 
 	)
 
-Element["" "0603" "C13" "470p" 45.5000mm 108.2000mm -0.5000mm 0.9000mm 1 71 ""]
+Element["" "0603" "C13" "470p" 45.5000mm 108.2000mm -1.3000mm -1.7000mm 0 71 ""]
 (
-	Pad[0.7500mm -0.0500mm 0.7500mm 0.0500mm 0.9000mm 0.6000mm 1.0500mm "1" "1" "square"]
-	Pad[-0.7500mm -0.0500mm -0.7500mm 0.0500mm 0.9000mm 0.6000mm 1.0500mm "2" "2" "square"]
+	Pad[0.7500mm -0.0500mm 0.7500mm 0.0500mm 0.9000mm 0.6000mm 0.9484mm "1" "1" "square"]
+	Pad[-0.7500mm -0.0500mm -0.7500mm 0.0500mm 0.9000mm 0.6000mm 0.9484mm "2" "2" "square"]
 
 	)
 
-Element["onsolder" "0603" "C17" "100n" 47.8000mm 117.0000mm 0.9000mm 0.6000mm 0 71 "auto"]
+Element["onsolder" "0603" "C17" "100n" 47.8000mm 117.0000mm -2.9000mm 0.7000mm 0 93 "auto"]
 (
-	Pad[-0.0500mm -0.7500mm 0.0500mm -0.7500mm 0.9000mm 0.0000 1.0500mm "1" "1" "onsolder,square"]
-	Pad[-0.0500mm 0.7500mm 0.0500mm 0.7500mm 0.9000mm 0.6000mm 1.0500mm "2" "2" "onsolder,square"]
+	Pad[-0.0500mm -0.7500mm 0.0500mm -0.7500mm 0.9000mm 0.0000 0.9484mm "1" "1" "onsolder,square"]
+	Pad[-0.0500mm 0.7500mm 0.0500mm 0.7500mm 0.9000mm 0.6000mm 0.9484mm "2" "2" "onsolder,square"]
 
 	)
 
-Element["" "0603" "R2" "10k" 47.6000mm 116.4000mm -0.9000mm -0.5000mm 0 71 ""]
+Element["" "0603" "R2" "10k" 47.6000mm 116.4000mm 1.6000mm -0.9000mm 3 71 ""]
 (
 	Pad[-0.0500mm 0.7500mm 0.0500mm 0.7500mm 0.9000mm 0.6000mm 1.0500mm "1" "1" "square"]
 	Pad[-0.0500mm -0.7500mm 0.0500mm -0.7500mm 0.9000mm 0.6000mm 1.0500mm "2" "2" "square"]
 
 	)
 
-Element["" "0603" "R3" "82" 46.1000mm 118.8000mm -0.5000mm 0.9000mm 1 71 ""]
+Element["" "0603" "R3" "66" 46.1000mm 118.8000mm -0.5000mm 0.7000mm 0 71 ""]
 (
 	Pad[0.7500mm -0.0500mm 0.7500mm 0.0500mm 0.9000mm 0.6000mm 1.0500mm "1" "1" "square"]
 	Pad[-0.7500mm -0.0500mm -0.7500mm 0.0500mm 0.9000mm 0.6000mm 1.0500mm "2" "2" "square"]
 
 	)
 
-Element["" "0603" "C15" "470p" 45.4000mm 116.5000mm 0.9000mm 0.5000mm 2 71 ""]
+Element["" "0603" "C15" "470p" 45.4000mm 116.5000mm 1.7000mm -0.4000mm 3 71 ""]
 (
 	Pad[-0.0500mm -0.7500mm 0.0500mm -0.7500mm 0.9000mm 0.6000mm 1.0500mm "1" "1" "square"]
 	Pad[-0.0500mm 0.7500mm 0.0500mm 0.7500mm 0.9000mm 0.6000mm 1.0500mm "2" "2" "square"]
 
 	)
 
-Element["" "0805" "L3" "4.7u" 43.2000mm 117.6000mm -0.9000mm -0.4000mm 0 71 ""]
+Element["" "0805" "L3" "4.7u" 43.2000mm 117.6000mm -1.9000mm -1.8000mm 0 71 ""]
 (
-	Pad[-0.1500mm -1.0500mm 0.1500mm -1.0500mm 1.3000mm 0.5000mm 1.4484mm "1" "1" "square"]
-	Pad[-0.1500mm 1.0500mm 0.1500mm 1.0500mm 1.3000mm 0.5000mm 1.4484mm "2" "2" "square"]
+	Pad[-0.1500mm -1.0500mm 0.1500mm -1.0500mm 1.3000mm 0.5000mm 1.3468mm "1" "1" "square"]
+	Pad[-0.1500mm 1.0500mm 0.1500mm 1.0500mm 1.3000mm 0.5000mm 1.3468mm "2" "2" "square"]
 
 	)
 
-Element["" "0603" "R4" "22k" 49.2000mm 118.8000mm -0.9000mm -0.5000mm 0 71 ""]
+Element["" "0603" "R4" "22k" 49.2000mm 118.8000mm -0.6000mm 1.4000mm 0 71 ""]
 (
 	Pad[-0.0500mm 0.7500mm 0.0500mm 0.7500mm 0.9000mm 0.6000mm 1.0500mm "1" "1" "square"]
 	Pad[-0.0500mm -0.7500mm 0.0500mm -0.7500mm 0.9000mm 0.6000mm 1.0500mm "2" "2" "square"]
 
 	)
 
-Element["onsolder" "0603" "C18" "1u" 51.6000mm 113.1000mm -0.5000mm 0.9000mm 1 71 "auto"]
+Element["onsolder" "0603" "C18" "1u" 51.6000mm 113.1000mm -0.7000mm -0.7000mm 0 93 "auto"]
 (
-	Pad[0.7500mm -0.0500mm 0.7500mm 0.0500mm 0.9000mm 0.6000mm 1.0500mm "1" "1" "onsolder,square"]
-	Pad[-0.7500mm -0.0500mm -0.7500mm 0.0500mm 0.9000mm 0.0000 1.0500mm "2" "2" "onsolder,square"]
+	Pad[0.7500mm -0.0500mm 0.7500mm 0.0500mm 0.9000mm 0.6000mm 0.9484mm "1" "1" "onsolder,square"]
+	Pad[-0.7500mm -0.0500mm -0.7500mm 0.0500mm 0.9000mm 0.0000 0.9484mm "2" "2" "onsolder,square"]
 
 	)
 
-Element["" "0603" "C16" "1u" 46.4000mm 111.9000mm -0.5000mm 0.9000mm 1 71 ""]
+Element["" "0603" "C16" "1u" 46.4000mm 111.9000mm 2.4000mm -0.5000mm 3 71 ""]
+(
+	Pad[0.7500mm -0.0500mm 0.7500mm 0.0500mm 0.9000mm 0.6000mm 0.9484mm "1" "1" "square"]
+	Pad[-0.7500mm -0.0500mm -0.7500mm 0.0500mm 0.9000mm 0.6000mm 0.9484mm "2" "2" "square"]
+
+	)
+
+Element["" "0603" "R5" "100" 46.4000mm 113.7000mm 2.4000mm -0.5000mm 3 71 ""]
+(
+	Pad[0.7500mm -0.0500mm 0.7500mm 0.0500mm 0.9000mm 0.6000mm 0.9484mm "1" "1" "square"]
+	Pad[-0.7500mm -0.0500mm -0.7500mm 0.0500mm 0.9000mm 0.6000mm 0.9484mm "2" "2" "square"]
+
+	)
+
+Element["" "0603" "R6" "470" 51.5000mm 118.2000mm -0.5000mm 0.7000mm 0 71 ""]
 (
 	Pad[0.7500mm -0.0500mm 0.7500mm 0.0500mm 0.9000mm 0.6000mm 1.0500mm "1" "1" "square"]
 	Pad[-0.7500mm -0.0500mm -0.7500mm 0.0500mm 0.9000mm 0.6000mm 1.0500mm "2" "2" "square"]
 
 	)
 
-Element["" "0603" "R5" "220" 46.4000mm 113.7000mm -0.5000mm 0.9000mm 1 71 ""]
+Element["" "0603" "R7" "270" 49.4000mm 107.9000mm -0.4000mm -1.8000mm 0 71 ""]
 (
-	Pad[0.7500mm -0.0500mm 0.7500mm 0.0500mm 0.9000mm 0.6000mm 1.0500mm "1" "1" "square"]
-	Pad[-0.7500mm -0.0500mm -0.7500mm 0.0500mm 0.9000mm 0.6000mm 1.0500mm "2" "2" "square"]
+	Pad[0.7500mm -0.0500mm 0.7500mm 0.0500mm 0.9000mm 0.6000mm 0.9484mm "1" "1" "square"]
+	Pad[-0.7500mm -0.0500mm -0.7500mm 0.0500mm 0.9000mm 0.6000mm 0.9484mm "2" "2" "square"]
 
 	)
 
-Element["" "0603" "R6" "1k" 51.5000mm 118.2000mm -0.5000mm 0.9000mm 1 71 ""]
+Element["" "0603" "R8" "470" 52.5000mm 107.9000mm -0.5000mm -1.8000mm 0 71 ""]
 (
-	Pad[0.7500mm -0.0500mm 0.7500mm 0.0500mm 0.9000mm 0.6000mm 1.0500mm "1" "1" "square"]
-	Pad[-0.7500mm -0.0500mm -0.7500mm 0.0500mm 0.9000mm 0.6000mm 1.0500mm "2" "2" "square"]
+	Pad[-0.7500mm -0.0500mm -0.7500mm 0.0500mm 0.9000mm 0.6000mm 0.9484mm "1" "1" "square"]
+	Pad[0.7500mm -0.0500mm 0.7500mm 0.0500mm 0.9000mm 0.6000mm 0.9484mm "2" "2" "square"]
 
 	)
 
-Element["" "0603" "R7" "220" 49.4000mm 107.9000mm -0.5000mm 0.9000mm 1 71 ""]
+Element["" "SO8" "U2" "unknown" 51.4000mm 113.1000mm 1.0000mm -0.7000mm 3 100 ""]
 (
-	Pad[0.7500mm -0.0500mm 0.7500mm 0.0500mm 0.9000mm 0.6000mm 1.0500mm "1" "1" "square"]
-	Pad[-0.7500mm -0.0500mm -0.7500mm 0.0500mm 0.9000mm 0.6000mm 1.0500mm "2" "2" "square"]
-
-	)
-
-Element["" "0603" "R8" "470" 52.5000mm 107.9000mm 0.5000mm -0.7000mm 3 71 ""]
-(
-	Pad[-0.7500mm -0.0500mm -0.7500mm 0.0500mm 0.9000mm 0.6000mm 1.0500mm "1" "1" "square"]
-	Pad[0.7500mm -0.0500mm 0.7500mm 0.0500mm 0.9000mm 0.6000mm 1.0500mm "2" "2" "square"]
-
-	)
-
-Element["" "SO8" "U2" "unknown" 51.4000mm 113.1000mm 60.00mil -20.00mil 3 100 ""]
-(
-	Pad[75.00mil -135.00mil 75.00mil -70.00mil 20.00mil 10.00mil 30.00mil "outA" "1" "square"]
-	Pad[25.00mil -135.00mil 25.00mil -70.00mil 20.00mil 10.00mil 30.00mil "inAn" "2" "square"]
-	Pad[-25.00mil -135.00mil -25.00mil -70.00mil 20.00mil 10.00mil 30.00mil "inAp" "3" "square"]
-	Pad[-75.00mil -135.00mil -75.00mil -70.00mil 20.00mil 10.00mil 30.00mil "GND" "4" "square"]
-	Pad[-75.00mil 70.00mil -75.00mil 135.00mil 20.00mil 10.00mil 30.00mil "inBp" "5" "square,edge2"]
-	Pad[-25.00mil 70.00mil -25.00mil 135.00mil 20.00mil 10.00mil 30.00mil "inBn" "6" "square,edge2"]
-	Pad[25.00mil 70.00mil 25.00mil 135.00mil 20.00mil 10.00mil 30.00mil "outB" "7" "square,edge2"]
-	Pad[75.00mil 70.00mil 75.00mil 135.00mil 20.00mil 10.00mil 30.00mil "Vcc" "8" "square,edge2"]
+	Pad[75.00mil -135.00mil 75.00mil -70.00mil 20.00mil 10.00mil 24.00mil "outA" "1" "square"]
+	Pad[25.00mil -135.00mil 25.00mil -70.00mil 20.00mil 10.00mil 24.00mil "inAn" "2" "square"]
+	Pad[-25.00mil -135.00mil -25.00mil -70.00mil 20.00mil 10.00mil 24.00mil "inAp" "3" "square"]
+	Pad[-75.00mil -135.00mil -75.00mil -70.00mil 20.00mil 10.00mil 24.00mil "GND" "4" "square"]
+	Pad[-75.00mil 70.00mil -75.00mil 135.00mil 20.00mil 10.00mil 24.00mil "inBp" "5" "square,edge2"]
+	Pad[-25.00mil 70.00mil -25.00mil 135.00mil 20.00mil 10.00mil 24.00mil "inBn" "6" "square,edge2"]
+	Pad[25.00mil 70.00mil 25.00mil 135.00mil 20.00mil 10.00mil 24.00mil "outB" "7" "square,edge2"]
+	Pad[75.00mil 70.00mil 75.00mil 135.00mil 20.00mil 10.00mil 24.00mil "Vcc" "8" "square,edge2"]
 	ElementLine [-95.00mil -155.00mil 95.00mil -155.00mil 10.00mil]
 	ElementLine [-95.00mil -155.00mil -95.00mil 155.00mil 10.00mil]
 	ElementLine [-95.00mil 155.00mil 95.00mil 155.00mil 10.00mil]
@@ -4277,163 +4208,163 @@ Element["" "SO8" "U2" "unknown" 51.4000mm 113.1000mm 60.00mil -20.00mil 3 100 ""
 
 	)
 
-Element["" "0603" "C14" "470p" 43.3000mm 4500.00mil 0.5000mm -0.8000mm 3 71 ""]
+Element["" "0603" "C14" "470p" 43.3000mm 114.1000mm -0.8000mm 0.6000mm 0 71 ""]
 (
-	Pad[-0.7500mm -0.0500mm -0.7500mm 0.0500mm 0.9000mm 0.6000mm 1.0500mm "1" "1" "square"]
-	Pad[0.7500mm -0.0500mm 0.7500mm 0.0500mm 0.9000mm 0.6000mm 1.0500mm "2" "2" "square"]
+	Pad[-0.7500mm -0.0500mm -0.7500mm 0.0500mm 0.9000mm 0.6000mm 0.9484mm "1" "1" "square"]
+	Pad[0.7500mm -0.0500mm 0.7500mm 0.0500mm 0.9000mm 0.6000mm 0.9484mm "2" "2" "square"]
 
 	)
 
-Element["" "0805" "L2" "4.7u" 43.2000mm 111.2000mm -0.9000mm -0.4000mm 0 71 ""]
+Element["" "0805" "L2" "4.7u" 43.2000mm 111.2000mm 2.0000mm -0.6000mm 3 71 ""]
 (
-	Pad[-0.1500mm -1.0500mm 0.1500mm -1.0500mm 1.3000mm 0.5000mm 1.4484mm "1" "1" "square"]
-	Pad[-0.1500mm 1.0500mm 0.1500mm 1.0500mm 1.3000mm 0.5000mm 1.4484mm "2" "2" "square"]
+	Pad[-0.1500mm -1.0500mm 0.1500mm -1.0500mm 1.3000mm 0.5000mm 1.3468mm "1" "1" "square"]
+	Pad[-0.1500mm 1.0500mm 0.1500mm 1.0500mm 1.3000mm 0.5000mm 1.3468mm "2" "2" "square"]
 
 	)
 
-Element["" "0603" "C19" "2.2u" 46.8000mm 110.1000mm -0.4000mm 0.8000mm 1 71 ""]
+Element["" "0603" "C19" "2.2u" 46.8000mm 110.1000mm 2.3000mm -0.5000mm 3 71 ""]
 (
-	Pad[-0.7500mm -0.0500mm -0.7500mm 0.0500mm 0.9000mm 0.6000mm 1.0500mm "1" "1" "square"]
-	Pad[0.7500mm -0.0500mm 0.7500mm 0.0500mm 0.9000mm 0.6000mm 1.0500mm "2" "2" "square"]
+	Pad[-0.7500mm -0.0500mm -0.7500mm 0.0500mm 0.9000mm 0.6000mm 0.9484mm "1" "1" "square"]
+	Pad[0.7500mm -0.0500mm 0.7500mm 0.0500mm 0.9000mm 0.6000mm 0.9484mm "2" "2" "square"]
 
 	)
 
-Element["" "0603" "R55" "50" 38.5000mm 121.2000mm -0.9000mm -0.5000mm 0 71 ""]
+Element["" "0603" "R55" "50" 38.5000mm 121.2000mm 0.9000mm 0.8000mm 0 71 ""]
 (
 	Pad[-0.0500mm 0.7500mm 0.0500mm 0.7500mm 0.9000mm 0.6000mm 1.0500mm "1" "1" "square"]
 	Pad[-0.0500mm -0.7500mm 0.0500mm -0.7500mm 0.9000mm 0.6000mm 1.0500mm "2" "2" "square"]
 
 	)
 
-Element["" "0805" "L10" "2.2u" 40.6000mm 91.0000mm 0.9000mm 0.4000mm 2 71 ""]
+Element["" "0805" "L10" "2.2u" 40.6000mm 91.0000mm -1.5000mm -3.0000mm 0 71 ""]
 (
-	Pad[-0.1500mm 1.0500mm 0.1500mm 1.0500mm 1.3000mm 0.5000mm 1.4484mm "1" "1" "square"]
-	Pad[-0.1500mm -1.0500mm 0.1500mm -1.0500mm 1.3000mm 0.5000mm 1.4484mm "2" "2" "square"]
+	Pad[-0.1500mm 1.0500mm 0.1500mm 1.0500mm 1.3000mm 0.5000mm 1.3468mm "1" "1" "square"]
+	Pad[-0.1500mm -1.0500mm 0.1500mm -1.0500mm 1.3000mm 0.5000mm 1.3468mm "2" "2" "square"]
 
 	)
 
-Element["" "0603" "C26" "1u" 42.1000mm 87.9000mm 0.5000mm -0.9000mm 3 71 ""]
+Element["" "0603" "C26" "1u" 42.1000mm 87.9000mm -0.8000mm -1.8000mm 0 71 ""]
 (
-	Pad[-0.7500mm -0.0500mm -0.7500mm 0.0500mm 0.9000mm 0.6000mm 1.0500mm "1" "1" "square"]
-	Pad[0.7500mm -0.0500mm 0.7500mm 0.0500mm 0.9000mm 0.6000mm 1.0500mm "2" "2" "square"]
+	Pad[-0.7500mm -0.0500mm -0.7500mm 0.0500mm 0.9000mm 0.6000mm 0.9484mm "1" "1" "square"]
+	Pad[0.7500mm -0.0500mm 0.7500mm 0.0500mm 0.9000mm 0.6000mm 0.9484mm "2" "2" "square"]
 
 	)
 
-Element["" "0603" "C23" "330p" 38.4000mm 91.1000mm 0.9000mm 0.5000mm 2 71 ""]
+Element["" "0603" "C23" "470p" 38.4000mm 91.1000mm 0.2000mm -3.7000mm 3 71 ""]
 (
 	Pad[-0.0500mm -0.7500mm 0.0500mm -0.7500mm 0.9000mm 0.6000mm 1.0500mm "1" "1" "square"]
 	Pad[-0.0500mm 0.7500mm 0.0500mm 0.7500mm 0.9000mm 0.6000mm 1.0500mm "2" "2" "square"]
 
 	)
 
-Element["" "0603" "C24" "1n" 38.2000mm 97.5000mm -0.9000mm -0.5000mm 0 71 ""]
+Element["" "0603" "C24" "1n" 38.2000mm 97.5000mm 1.7000mm -0.9000mm 3 71 ""]
 (
 	Pad[-0.0500mm 0.7500mm 0.0500mm 0.7500mm 0.9000mm 0.6000mm 1.0500mm "1" "1" "square"]
 	Pad[-0.0500mm -0.7500mm 0.0500mm -0.7500mm 0.9000mm 0.6000mm 1.0500mm "2" "2" "square"]
 
 	)
 
-Element["" "0603" "C46" "470p" 45.5000mm 87.9000mm -0.5000mm 0.9000mm 1 71 ""]
+Element["" "0603" "C46" "470p" 45.5000mm 87.9000mm -1.5000mm -1.8000mm 0 71 ""]
+(
+	Pad[0.7500mm -0.0500mm 0.7500mm 0.0500mm 0.9000mm 0.6000mm 0.9484mm "1" "1" "square"]
+	Pad[-0.7500mm -0.0500mm -0.7500mm 0.0500mm 0.9000mm 0.6000mm 0.9484mm "2" "2" "square"]
+
+	)
+
+Element["onsolder" "0603" "C58" "100n" 47.8000mm 96.7000mm 1.0000mm 0.5000mm 0 93 "auto"]
+(
+	Pad[-0.0500mm -0.7500mm 0.0500mm -0.7500mm 0.9000mm 0.0000 0.9484mm "1" "1" "onsolder,square"]
+	Pad[-0.0500mm 0.7500mm 0.0500mm 0.7500mm 0.9000mm 0.6000mm 0.9484mm "2" "2" "onsolder,square"]
+
+	)
+
+Element["" "0603" "R9" "10k" 47.6000mm 96.1000mm 1.6000mm -0.7000mm 3 71 ""]
+(
+	Pad[-0.0500mm 0.7500mm 0.0500mm 0.7500mm 0.9000mm 0.6000mm 0.9484mm "1" "1" "square"]
+	Pad[-0.0500mm -0.7500mm 0.0500mm -0.7500mm 0.9000mm 0.6000mm 0.9484mm "2" "2" "square"]
+
+	)
+
+Element["" "0603" "R10" "66" 46.1000mm 98.5000mm -0.8000mm 0.7000mm 0 71 ""]
 (
 	Pad[0.7500mm -0.0500mm 0.7500mm 0.0500mm 0.9000mm 0.6000mm 1.0500mm "1" "1" "square"]
 	Pad[-0.7500mm -0.0500mm -0.7500mm 0.0500mm 0.9000mm 0.6000mm 1.0500mm "2" "2" "square"]
 
 	)
 
-Element["onsolder" "0603" "C58" "100n" 47.8000mm 96.7000mm 0.8000mm 0.5000mm 0 71 "auto"]
+Element["" "0603" "C48" "470p" 45.4000mm 96.2000mm 1.6000mm -0.6000mm 3 71 ""]
 (
-	Pad[-0.0500mm -0.7500mm 0.0500mm -0.7500mm 0.9000mm 0.0000 1.0500mm "1" "1" "onsolder,square"]
-	Pad[-0.0500mm 0.7500mm 0.0500mm 0.7500mm 0.9000mm 0.6000mm 1.0500mm "2" "2" "onsolder,square"]
+	Pad[-0.0500mm -0.7500mm 0.0500mm -0.7500mm 0.9000mm 0.6000mm 0.9484mm "1" "1" "square"]
+	Pad[-0.0500mm 0.7500mm 0.0500mm 0.7500mm 0.9000mm 0.6000mm 0.9484mm "2" "2" "square"]
 
 	)
 
-Element["" "0603" "R9" "10k" 47.6000mm 96.1000mm -0.9000mm -0.5000mm 0 71 ""]
-(
-	Pad[-0.0500mm 0.7500mm 0.0500mm 0.7500mm 0.9000mm 0.6000mm 1.0500mm "1" "1" "square"]
-	Pad[-0.0500mm -0.7500mm 0.0500mm -0.7500mm 0.9000mm 0.6000mm 1.0500mm "2" "2" "square"]
-
-	)
-
-Element["" "0603" "R10" "82" 46.1000mm 98.5000mm -0.5000mm 0.9000mm 1 71 ""]
-(
-	Pad[0.7500mm -0.0500mm 0.7500mm 0.0500mm 0.9000mm 0.6000mm 1.0500mm "1" "1" "square"]
-	Pad[-0.7500mm -0.0500mm -0.7500mm 0.0500mm 0.9000mm 0.6000mm 1.0500mm "2" "2" "square"]
-
-	)
-
-Element["" "0603" "C48" "470p" 45.4000mm 96.2000mm 0.9000mm 0.5000mm 2 71 ""]
-(
-	Pad[-0.0500mm -0.7500mm 0.0500mm -0.7500mm 0.9000mm 0.6000mm 1.0500mm "1" "1" "square"]
-	Pad[-0.0500mm 0.7500mm 0.0500mm 0.7500mm 0.9000mm 0.6000mm 1.0500mm "2" "2" "square"]
-
-	)
-
-Element["" "0805" "L13" "4.7u" 43.2000mm 97.3000mm -0.9000mm -0.4000mm 0 71 ""]
+Element["" "0805" "L13" "4.7u" 43.2000mm 97.3000mm -2.0000mm -0.5000mm 1 71 ""]
 (
 	Pad[-0.1500mm -1.0500mm 0.1500mm -1.0500mm 1.3000mm 0.5000mm 1.4484mm "1" "1" "square"]
 	Pad[-0.1500mm 1.0500mm 0.1500mm 1.0500mm 1.3000mm 0.5000mm 1.4484mm "2" "2" "square"]
 
 	)
 
-Element["" "0603" "R11" "22k" 49.2000mm 98.5000mm -0.9000mm -0.5000mm 0 71 ""]
+Element["" "0603" "R11" "22k" 49.2000mm 98.5000mm -0.8000mm 1.4000mm 0 71 ""]
 (
 	Pad[-0.0500mm 0.7500mm 0.0500mm 0.7500mm 0.9000mm 0.6000mm 1.0500mm "1" "1" "square"]
 	Pad[-0.0500mm -0.7500mm 0.0500mm -0.7500mm 0.9000mm 0.6000mm 1.0500mm "2" "2" "square"]
 
 	)
 
-Element["onsolder" "0603" "C61" "1u" 51.7000mm 92.7000mm -0.5000mm 0.8000mm 1 71 "auto"]
+Element["onsolder" "0603" "C61" "1u" 51.7000mm 92.7000mm -1.1000mm 2.1000mm 0 93 "auto"]
 (
-	Pad[0.7500mm -0.0500mm 0.7500mm 0.0500mm 0.9000mm 0.6000mm 1.0500mm "1" "1" "onsolder,square"]
-	Pad[-0.7500mm -0.0500mm -0.7500mm 0.0500mm 0.9000mm 0.0000 1.0500mm "2" "2" "onsolder,square"]
+	Pad[0.7500mm -0.0500mm 0.7500mm 0.0500mm 0.9000mm 0.6000mm 0.9992mm "1" "1" "onsolder,square"]
+	Pad[-0.7500mm -0.0500mm -0.7500mm 0.0500mm 0.9000mm 0.0000 0.9484mm "2" "2" "onsolder,square"]
 
 	)
 
-Element["" "0603" "C49" "1u" 46.4000mm 91.6000mm -0.5000mm 0.9000mm 1 71 ""]
+Element["" "0603" "C49" "1u" 46.4000mm 91.6000mm 2.4000mm -0.7000mm 3 71 ""]
+(
+	Pad[0.7500mm -0.0500mm 0.7500mm 0.0500mm 0.9000mm 0.6000mm 0.9484mm "1" "1" "square"]
+	Pad[-0.7500mm -0.0500mm -0.7500mm 0.0500mm 0.9000mm 0.6000mm 0.9484mm "2" "2" "square"]
+
+	)
+
+Element["" "0603" "R12" "100" 46.4000mm 93.4000mm 2.4000mm -0.6000mm 3 71 ""]
+(
+	Pad[0.7500mm -0.0500mm 0.7500mm 0.0500mm 0.9000mm 0.6000mm 0.9484mm "1" "1" "square"]
+	Pad[-0.7500mm -0.0500mm -0.7500mm 0.0500mm 0.9000mm 0.6000mm 0.9484mm "2" "2" "square"]
+
+	)
+
+Element["" "0603" "R13" "470" 51.5000mm 97.9000mm -0.7000mm 0.7000mm 0 71 ""]
 (
 	Pad[0.7500mm -0.0500mm 0.7500mm 0.0500mm 0.9000mm 0.6000mm 1.0500mm "1" "1" "square"]
 	Pad[-0.7500mm -0.0500mm -0.7500mm 0.0500mm 0.9000mm 0.6000mm 1.0500mm "2" "2" "square"]
 
 	)
 
-Element["" "0603" "R12" "220" 46.4000mm 93.4000mm -0.5000mm 0.9000mm 1 71 ""]
+Element["" "0603" "R14" "270" 49.4000mm 87.6000mm -0.8000mm -1.8000mm 0 71 ""]
 (
-	Pad[0.7500mm -0.0500mm 0.7500mm 0.0500mm 0.9000mm 0.6000mm 1.0500mm "1" "1" "square"]
-	Pad[-0.7500mm -0.0500mm -0.7500mm 0.0500mm 0.9000mm 0.6000mm 1.0500mm "2" "2" "square"]
+	Pad[0.7500mm -0.0500mm 0.7500mm 0.0500mm 0.9000mm 0.6000mm 0.9484mm "1" "1" "square"]
+	Pad[-0.7500mm -0.0500mm -0.7500mm 0.0500mm 0.9000mm 0.6000mm 0.9484mm "2" "2" "square"]
 
 	)
 
-Element["" "0603" "R13" "1k" 51.5000mm 97.9000mm -0.5000mm 0.9000mm 1 71 ""]
+Element["" "0603" "R15" "470" 52.5000mm 87.6000mm -0.7000mm -1.8000mm 0 71 ""]
 (
-	Pad[0.7500mm -0.0500mm 0.7500mm 0.0500mm 0.9000mm 0.6000mm 1.0500mm "1" "1" "square"]
-	Pad[-0.7500mm -0.0500mm -0.7500mm 0.0500mm 0.9000mm 0.6000mm 1.0500mm "2" "2" "square"]
-
-	)
-
-Element["" "0603" "R14" "220" 49.4000mm 87.6000mm -0.5000mm 0.9000mm 1 71 ""]
-(
-	Pad[0.7500mm -0.0500mm 0.7500mm 0.0500mm 0.9000mm 0.6000mm 1.0500mm "1" "1" "square"]
-	Pad[-0.7500mm -0.0500mm -0.7500mm 0.0500mm 0.9000mm 0.6000mm 1.0500mm "2" "2" "square"]
-
-	)
-
-Element["" "0603" "R15" "470" 52.5000mm 87.6000mm 0.5000mm -0.8000mm 3 71 ""]
-(
-	Pad[-0.7500mm -0.0500mm -0.7500mm 0.0500mm 0.9000mm 0.6000mm 1.0500mm "1" "1" "square"]
-	Pad[0.7500mm -0.0500mm 0.7500mm 0.0500mm 0.9000mm 0.6000mm 1.0500mm "2" "2" "square"]
+	Pad[-0.7500mm -0.0500mm -0.7500mm 0.0500mm 0.9000mm 0.6000mm 0.9484mm "1" "1" "square"]
+	Pad[0.7500mm -0.0500mm 0.7500mm 0.0500mm 0.9000mm 0.6000mm 0.9484mm "2" "2" "square"]
 
 	)
 
 Element["" "SO8" "U10" "unknown" 51.4000mm 92.8000mm 60.00mil -20.00mil 3 100 ""]
 (
-	Pad[75.00mil -135.00mil 75.00mil -70.00mil 20.00mil 10.00mil 30.00mil "outA" "1" "square"]
-	Pad[25.00mil -135.00mil 25.00mil -70.00mil 20.00mil 10.00mil 30.00mil "inAn" "2" "square"]
-	Pad[-25.00mil -135.00mil -25.00mil -70.00mil 20.00mil 10.00mil 30.00mil "inAp" "3" "square"]
-	Pad[-75.00mil -135.00mil -75.00mil -70.00mil 20.00mil 10.00mil 30.00mil "GND" "4" "square"]
-	Pad[-75.00mil 70.00mil -75.00mil 135.00mil 20.00mil 10.00mil 30.00mil "inBp" "5" "square,edge2"]
-	Pad[-25.00mil 70.00mil -25.00mil 135.00mil 20.00mil 10.00mil 30.00mil "inBn" "6" "square,edge2"]
-	Pad[25.00mil 70.00mil 25.00mil 135.00mil 20.00mil 10.00mil 30.00mil "outB" "7" "square,edge2"]
-	Pad[75.00mil 70.00mil 75.00mil 135.00mil 20.00mil 10.00mil 30.00mil "Vcc" "8" "square,edge2"]
+	Pad[75.00mil -135.00mil 75.00mil -70.00mil 20.00mil 10.00mil 24.00mil "outA" "1" "square"]
+	Pad[25.00mil -135.00mil 25.00mil -70.00mil 20.00mil 10.00mil 24.00mil "inAn" "2" "square"]
+	Pad[-25.00mil -135.00mil -25.00mil -70.00mil 20.00mil 10.00mil 24.00mil "inAp" "3" "square"]
+	Pad[-75.00mil -135.00mil -75.00mil -70.00mil 20.00mil 10.00mil 24.00mil "GND" "4" "square"]
+	Pad[-75.00mil 70.00mil -75.00mil 135.00mil 20.00mil 10.00mil 24.00mil "inBp" "5" "square,edge2"]
+	Pad[-25.00mil 70.00mil -25.00mil 135.00mil 20.00mil 10.00mil 24.00mil "inBn" "6" "square,edge2"]
+	Pad[25.00mil 70.00mil 25.00mil 135.00mil 20.00mil 10.00mil 24.00mil "outB" "7" "square,edge2"]
+	Pad[75.00mil 70.00mil 75.00mil 135.00mil 20.00mil 10.00mil 24.00mil "Vcc" "8" "square,edge2"]
 	ElementLine [-95.00mil -155.00mil 95.00mil -155.00mil 10.00mil]
 	ElementLine [-95.00mil -155.00mil -95.00mil 155.00mil 10.00mil]
 	ElementLine [-95.00mil 155.00mil 95.00mil 155.00mil 10.00mil]
@@ -4443,28 +4374,28 @@ Element["" "SO8" "U10" "unknown" 51.4000mm 92.8000mm 60.00mil -20.00mil 3 100 ""
 
 	)
 
-Element["" "0603" "C47" "470p" 43.3000mm 94.0000mm 0.5000mm -0.8000mm 3 71 ""]
+Element["" "0603" "C47" "470p" 43.3000mm 93.8000mm -0.8000mm 0.6000mm 0 71 ""]
 (
 	Pad[-0.7500mm -0.0500mm -0.7500mm 0.0500mm 0.9000mm 0.6000mm 1.0500mm "1" "1" "square"]
 	Pad[0.7500mm -0.0500mm 0.7500mm 0.0500mm 0.9000mm 0.6000mm 1.0500mm "2" "2" "square"]
 
 	)
 
-Element["" "0805" "L12" "4.7u" 43.2000mm 90.9000mm -0.9000mm -0.4000mm 0 71 ""]
+Element["" "0805" "L12" "4.7u" 43.2000mm 90.9000mm 1.9000mm -0.7000mm 3 71 ""]
 (
-	Pad[-0.1500mm -1.0500mm 0.1500mm -1.0500mm 1.3000mm 0.5000mm 1.4484mm "1" "1" "square"]
-	Pad[-0.1500mm 1.0500mm 0.1500mm 1.0500mm 1.3000mm 0.5000mm 1.4484mm "2" "2" "square"]
+	Pad[-0.1500mm -1.0500mm 0.1500mm -1.0500mm 1.3000mm 0.5000mm 1.3468mm "1" "1" "square"]
+	Pad[-0.1500mm 1.0500mm 0.1500mm 1.0500mm 1.3000mm 0.5000mm 1.3468mm "2" "2" "square"]
 
 	)
 
-Element["" "0603" "C62" "2.2u" 46.8000mm 89.8000mm -0.4000mm 0.8000mm 1 71 ""]
+Element["" "0603" "C62" "2.2u" 46.8000mm 89.8000mm 2.3000mm -0.9000mm 3 71 ""]
 (
-	Pad[-0.7500mm -0.0500mm -0.7500mm 0.0500mm 0.9000mm 0.6000mm 1.0500mm "1" "1" "square"]
-	Pad[0.7500mm -0.0500mm 0.7500mm 0.0500mm 0.9000mm 0.6000mm 1.0500mm "2" "2" "square"]
+	Pad[-0.7500mm -0.0500mm -0.7500mm 0.0500mm 0.9000mm 0.6000mm 0.9484mm "1" "1" "square"]
+	Pad[0.7500mm -0.0500mm 0.7500mm 0.0500mm 0.9000mm 0.6000mm 0.9484mm "2" "2" "square"]
 
 	)
 
-Element["" "custom_cmy211" "U4" "unknown" 39.4000mm 94.4000mm 0.5000mm 0.3000mm 3 77 ""]
+Element["" "custom_cmy211" "U4" "unknown" 39.4000mm 94.4000mm 0.6000mm 0.3000mm 3 77 ""]
 (
 	Pad[0.8500mm -0.9500mm 1.3500mm -0.9500mm 0.5000mm 0.6000mm 0.5920mm "out" "6" "square,edge2"]
 	Pad[1.0000mm 0.0000 1.2000mm 0.0000 0.8000mm 0.6000mm 0.8920mm "GND" "5" "square,edge2"]
@@ -4479,7 +4410,7 @@ Element["" "custom_cmy211" "U4" "unknown" 39.4000mm 94.4000mm 0.5000mm 0.3000mm 
 
 	)
 
-Element["" "0603" "L11" "fb" 40.6000mm 97.5000mm -0.9000mm -0.5000mm 0 71 ""]
+Element["" "0603" "L11" "fb" 40.6000mm 97.5000mm 1.7000mm 0.0000 3 71 ""]
 (
 	Pad[-0.0500mm 0.7500mm 0.0500mm 0.7500mm 0.9000mm 0.6000mm 1.0500mm "1" "1" "square"]
 	Pad[-0.0500mm -0.7500mm 0.0500mm -0.7500mm 0.9000mm 0.6000mm 1.0500mm "2" "2" "square"]
@@ -4493,14 +4424,14 @@ Element["" "0603" "R54" "10" 40.9000mm 100.2000mm -0.9000mm 0.5000mm 0 71 ""]
 
 	)
 
-Element["" "0603" "C115" "1n" 43.4000mm 100.9000mm -0.9000mm -0.5000mm 0 71 ""]
+Element["" "0603" "C115" "1n" 43.4000mm 100.9000mm 0.9000mm -0.7000mm 0 71 ""]
 (
 	Pad[-0.0500mm 0.7500mm 0.0500mm 0.7500mm 0.9000mm 0.6000mm 1.0500mm "1" "1" "square"]
 	Pad[-0.0500mm -0.7500mm 0.0500mm -0.7500mm 0.9000mm 0.6000mm 1.0500mm "2" "2" "square"]
 
 	)
 
-Element["" "0603" "R41" "50" 38.3000mm 100.9000mm -0.9000mm -0.5000mm 0 71 ""]
+Element["" "0603" "R41" "50" 38.3000mm 100.9000mm 0.8000mm 0.7000mm 0 71 ""]
 (
 	Pad[-0.0500mm 0.7500mm 0.0500mm 0.7500mm 0.9000mm 0.6000mm 1.0500mm "1" "1" "square"]
 	Pad[-0.0500mm -0.7500mm 0.0500mm -0.7500mm 0.9000mm 0.6000mm 1.0500mm "2" "2" "square"]
@@ -4521,17 +4452,17 @@ Element["" "0603" "C95" "1u" 42.1000mm 67.5000mm 0.5000mm -0.9000mm 3 71 ""]
 
 	)
 
-Element["" "0603" "C93" "330p" 38.4000mm 70.7000mm 0.9000mm 0.5000mm 2 71 ""]
+Element["" "0603" "C93" "470p" 38.4000mm 70.7000mm 0.9000mm 0.5000mm 2 71 ""]
 (
 	Pad[-0.0500mm -0.7500mm 0.0500mm -0.7500mm 0.9000mm 0.6000mm 1.0500mm "1" "1" "square"]
 	Pad[-0.0500mm 0.7500mm 0.0500mm 0.7500mm 0.9000mm 0.6000mm 1.0500mm "2" "2" "square"]
 
 	)
 
-Element["" "0603" "C94" "1n" 38.2000mm 77.1000mm -0.9000mm -0.5000mm 0 71 ""]
+Element["" "0603" "C94" "1n" 38.2000mm 77.1000mm 1.7000mm 0.1000mm 3 71 ""]
 (
-	Pad[-0.0500mm 0.7500mm 0.0500mm 0.7500mm 0.9000mm 0.6000mm 1.0500mm "1" "1" "square"]
-	Pad[-0.0500mm -0.7500mm 0.0500mm -0.7500mm 0.9000mm 0.6000mm 1.0500mm "2" "2" "square"]
+	Pad[-0.0500mm 0.7500mm 0.0500mm 0.7500mm 0.9000mm 0.6000mm 0.9484mm "1" "1" "square"]
+	Pad[-0.0500mm -0.7500mm 0.0500mm -0.7500mm 0.9000mm 0.6000mm 0.9484mm "2" "2" "square"]
 
 	)
 
@@ -4542,49 +4473,49 @@ Element["" "0603" "C96" "470p" 45.5000mm 67.5000mm -0.5000mm 0.9000mm 1 71 ""]
 
 	)
 
-Element["onsolder" "0603" "C100" "100n" 47.8000mm 76.3000mm 0.8000mm 0.5000mm 0 71 "auto"]
+Element["onsolder" "0603" "C100" "100n" 47.8000mm 76.3000mm 1.8000mm 1.0000mm 3 71 "auto"]
 (
 	Pad[-0.0500mm -0.7500mm 0.0500mm -0.7500mm 0.9000mm 0.0000 1.0500mm "1" "1" "onsolder,square"]
 	Pad[-0.0500mm 0.7500mm 0.0500mm 0.7500mm 0.9000mm 0.6000mm 1.0000mm "2" "2" "onsolder,square"]
 
 	)
 
-Element["" "0603" "R16" "10k" 47.6000mm 75.7000mm -0.9000mm -0.5000mm 0 71 ""]
+Element["" "0603" "R16" "10k" 47.6000mm 75.7000mm 1.6000mm -1.3000mm 3 71 ""]
 (
-	Pad[-0.0500mm 0.7500mm 0.0500mm 0.7500mm 0.9000mm 0.6000mm 1.0500mm "1" "1" "square"]
-	Pad[-0.0500mm -0.7500mm 0.0500mm -0.7500mm 0.9000mm 0.6000mm 1.0500mm "2" "2" "square"]
+	Pad[-0.0500mm 0.7500mm 0.0500mm 0.7500mm 0.9000mm 0.6000mm 0.9484mm "1" "1" "square"]
+	Pad[-0.0500mm -0.7500mm 0.0500mm -0.7500mm 0.9000mm 0.6000mm 0.9484mm "2" "2" "square"]
 
 	)
 
-Element["" "0603" "R18" "82" 46.1000mm 78.1000mm -0.5000mm 0.9000mm 1 71 ""]
+Element["" "0603" "R18" "66" 46.1000mm 78.1000mm -0.8000mm 0.7000mm 0 71 ""]
 (
 	Pad[0.7500mm -0.0500mm 0.7500mm 0.0500mm 0.9000mm 0.6000mm 1.0500mm "1" "1" "square"]
 	Pad[-0.7500mm -0.0500mm -0.7500mm 0.0500mm 0.9000mm 0.6000mm 1.0500mm "2" "2" "square"]
 
 	)
 
-Element["" "0603" "C98" "470p" 45.4000mm 75.8000mm 0.9000mm 0.5000mm 2 71 ""]
+Element["" "0603" "C98" "470p" 45.4000mm 75.8000mm 1.3000mm -0.3000mm 3 71 ""]
 (
-	Pad[-0.0500mm -0.7500mm 0.0500mm -0.7500mm 0.9000mm 0.6000mm 1.0500mm "1" "1" "square"]
-	Pad[-0.0500mm 0.7500mm 0.0500mm 0.7500mm 0.9000mm 0.6000mm 1.0500mm "2" "2" "square"]
+	Pad[-0.0500mm -0.7500mm 0.0500mm -0.7500mm 0.9000mm 0.6000mm 0.9484mm "1" "1" "square"]
+	Pad[-0.0500mm 0.7500mm 0.0500mm 0.7500mm 0.9000mm 0.6000mm 0.9484mm "2" "2" "square"]
 
 	)
 
-Element["" "0805" "L18" "4.7u" 43.2000mm 76.9000mm -0.9000mm -0.5000mm 0 71 ""]
+Element["" "0805" "L18" "4.7u" 43.2000mm 76.9000mm -2.0000mm -0.5000mm 1 71 ""]
 (
-	Pad[-0.1500mm -1.0500mm 0.1500mm -1.0500mm 1.3000mm 0.5000mm 1.4484mm "1" "1" "square"]
-	Pad[-0.1500mm 1.0500mm 0.1500mm 1.0500mm 1.3000mm 0.5000mm 1.4484mm "2" "2" "square"]
+	Pad[-0.1500mm -1.0500mm 0.1500mm -1.0500mm 1.3000mm 0.5000mm 1.3468mm "1" "1" "square"]
+	Pad[-0.1500mm 1.0500mm 0.1500mm 1.0500mm 1.3000mm 0.5000mm 1.3468mm "2" "2" "square"]
 
 	)
 
-Element["" "0603" "R19" "22k" 49.2000mm 78.1000mm -0.9000mm -0.5000mm 0 71 ""]
+Element["" "0603" "R19" "22k" 49.2000mm 78.1000mm -1.0000mm 1.4000mm 0 71 ""]
 (
 	Pad[-0.0500mm 0.7500mm 0.0500mm 0.7500mm 0.9000mm 0.6000mm 1.0500mm "1" "1" "square"]
 	Pad[-0.0500mm -0.7500mm 0.0500mm -0.7500mm 0.9000mm 0.6000mm 1.0500mm "2" "2" "square"]
 
 	)
 
-Element["onsolder" "0603" "C101" "1u" 51.7000mm 72.3000mm -0.6000mm 0.8000mm 1 71 "auto"]
+Element["onsolder" "0603" "C101" "1u" 51.7000mm 72.3000mm -1.3000mm 1.8000mm 0 71 "auto"]
 (
 	Pad[0.7500mm -0.0500mm 0.7500mm 0.0500mm 0.9000mm 0.6000mm 1.0000mm "1" "1" "onsolder,square"]
 	Pad[-0.7500mm -0.0500mm -0.7500mm 0.0500mm 0.9000mm 0.0000 1.0500mm "2" "2" "onsolder,square"]
@@ -4598,21 +4529,21 @@ Element["" "0603" "C99" "1u" 46.4000mm 71.2000mm -0.5000mm 0.9000mm 1 71 ""]
 
 	)
 
-Element["" "0603" "R21" "220" 46.4000mm 73.0000mm -0.5000mm 0.9000mm 1 71 ""]
+Element["" "0603" "R21" "100" 46.4000mm 73.0000mm -0.5000mm 0.9000mm 1 71 ""]
 (
 	Pad[0.7500mm -0.0500mm 0.7500mm 0.0500mm 0.9000mm 0.6000mm 1.0500mm "1" "1" "square"]
 	Pad[-0.7500mm -0.0500mm -0.7500mm 0.0500mm 0.9000mm 0.6000mm 1.0500mm "2" "2" "square"]
 
 	)
 
-Element["" "0603" "R22" "1k" 51.5000mm 77.5000mm -0.5000mm 0.9000mm 1 71 ""]
+Element["" "0603" "R22" "470" 51.5000mm 77.5000mm -0.7000mm 0.7000mm 0 71 ""]
 (
 	Pad[0.7500mm -0.0500mm 0.7500mm 0.0500mm 0.9000mm 0.6000mm 1.0500mm "1" "1" "square"]
 	Pad[-0.7500mm -0.0500mm -0.7500mm 0.0500mm 0.9000mm 0.6000mm 1.0500mm "2" "2" "square"]
 
 	)
 
-Element["" "0603" "R24" "220" 49.4000mm 67.2000mm -0.5000mm 0.9000mm 1 71 ""]
+Element["" "0603" "R24" "270" 49.4000mm 67.2000mm -0.5000mm 0.9000mm 1 71 ""]
 (
 	Pad[0.7500mm -0.0500mm 0.7500mm 0.0500mm 0.9000mm 0.6000mm 1.0500mm "1" "1" "square"]
 	Pad[-0.7500mm -0.0500mm -0.7500mm 0.0500mm 0.9000mm 0.6000mm 1.0500mm "2" "2" "square"]
@@ -4628,14 +4559,14 @@ Element["" "0603" "R25" "470" 52.5000mm 67.2000mm 0.5000mm -0.8000mm 3 71 ""]
 
 Element["" "SO8" "U13" "unknown" 51.4000mm 72.4000mm 1.5000mm -0.5000mm 3 100 ""]
 (
-	Pad[75.00mil -135.00mil 75.00mil -70.00mil 20.00mil 10.00mil 30.00mil "outA" "1" "square"]
-	Pad[25.00mil -135.00mil 25.00mil -70.00mil 20.00mil 10.00mil 30.00mil "inAn" "2" "square"]
-	Pad[-25.00mil -135.00mil -25.00mil -70.00mil 20.00mil 10.00mil 30.00mil "inAp" "3" "square"]
-	Pad[-75.00mil -135.00mil -75.00mil -70.00mil 20.00mil 10.00mil 30.00mil "GND" "4" "square"]
-	Pad[-75.00mil 70.00mil -75.00mil 135.00mil 20.00mil 10.00mil 30.00mil "inBp" "5" "square,edge2"]
-	Pad[-25.00mil 70.00mil -25.00mil 135.00mil 20.00mil 10.00mil 30.00mil "inBn" "6" "square,edge2"]
-	Pad[25.00mil 70.00mil 25.00mil 135.00mil 20.00mil 10.00mil 30.00mil "outB" "7" "square,edge2"]
-	Pad[75.00mil 70.00mil 75.00mil 135.00mil 20.00mil 10.00mil 30.00mil "Vcc" "8" "square,edge2"]
+	Pad[75.00mil -135.00mil 75.00mil -70.00mil 20.00mil 10.00mil 24.00mil "outA" "1" "square"]
+	Pad[25.00mil -135.00mil 25.00mil -70.00mil 20.00mil 10.00mil 24.00mil "inAn" "2" "square"]
+	Pad[-25.00mil -135.00mil -25.00mil -70.00mil 20.00mil 10.00mil 24.00mil "inAp" "3" "square"]
+	Pad[-75.00mil -135.00mil -75.00mil -70.00mil 20.00mil 10.00mil 24.00mil "GND" "4" "square"]
+	Pad[-75.00mil 70.00mil -75.00mil 135.00mil 20.00mil 10.00mil 24.00mil "inBp" "5" "square,edge2"]
+	Pad[-25.00mil 70.00mil -25.00mil 135.00mil 20.00mil 10.00mil 24.00mil "inBn" "6" "square,edge2"]
+	Pad[25.00mil 70.00mil 25.00mil 135.00mil 20.00mil 10.00mil 24.00mil "outB" "7" "square,edge2"]
+	Pad[75.00mil 70.00mil 75.00mil 135.00mil 20.00mil 10.00mil 24.00mil "Vcc" "8" "square,edge2"]
 	ElementLine [-95.00mil -155.00mil 95.00mil -155.00mil 10.00mil]
 	ElementLine [-95.00mil -155.00mil -95.00mil 155.00mil 10.00mil]
 	ElementLine [-95.00mil 155.00mil 95.00mil 155.00mil 10.00mil]
@@ -4645,7 +4576,7 @@ Element["" "SO8" "U13" "unknown" 51.4000mm 72.4000mm 1.5000mm -0.5000mm 3 100 ""
 
 	)
 
-Element["" "0603" "C97" "470p" 43.3000mm 73.6000mm 0.5000mm -0.8000mm 3 71 ""]
+Element["" "0603" "C97" "470p" 43.3000mm 73.4000mm -0.7000mm 0.6000mm 0 71 ""]
 (
 	Pad[-0.7500mm -0.0500mm -0.7500mm 0.0500mm 0.9000mm 0.6000mm 1.0500mm "1" "1" "square"]
 	Pad[0.7500mm -0.0500mm 0.7500mm 0.0500mm 0.9000mm 0.6000mm 1.0500mm "2" "2" "square"]
@@ -4681,17 +4612,17 @@ Element["" "custom_cmy211" "U12" "unknown" 39.4000mm 74.0000mm 0.5000mm 0.3000mm
 
 	)
 
-Element["" "0603" "R28" "50" 38.4000mm 80.5000mm -0.9000mm -0.5000mm 0 71 ""]
+Element["" "0603" "R28" "50" 38.4000mm 80.5000mm 0.8000mm 0.8000mm 0 71 ""]
 (
-	Pad[-0.0500mm 0.7500mm 0.0500mm 0.7500mm 0.9000mm 0.6000mm 1.0500mm "1" "1" "square"]
-	Pad[-0.0500mm -0.7500mm 0.0500mm -0.7500mm 0.9000mm 0.6000mm 1.0500mm "2" "2" "square"]
+	Pad[-0.0500mm 0.7500mm 0.0500mm 0.7500mm 0.9000mm 0.6000mm 0.9484mm "1" "1" "square"]
+	Pad[-0.0500mm -0.7500mm 0.0500mm -0.7500mm 0.9000mm 0.6000mm 0.9484mm "2" "2" "square"]
 
 	)
 
-Element["" "0603" "L26" "fb" 118.7000mm 61.9000mm 0.5000mm -0.9000mm 3 71 ""]
+Element["" "0603" "L26" "fb" 118.7000mm 61.9000mm -1.0000mm 0.7000mm 0 71 ""]
 (
-	Pad[-0.7500mm -0.0500mm -0.7500mm 0.0500mm 0.9000mm 0.6000mm 1.0500mm "1" "1" "square"]
-	Pad[0.7500mm -0.0500mm 0.7500mm 0.0500mm 0.9000mm 0.6000mm 1.0500mm "2" "2" "square"]
+	Pad[-0.7500mm -0.0500mm -0.7500mm 0.0500mm 0.9000mm 0.6000mm 0.9992mm "1" "1" "square"]
+	Pad[0.7500mm -0.0500mm 0.7500mm 0.0500mm 0.9000mm 0.6000mm 0.9992mm "2" "2" "square"]
 
 	)
 
@@ -4702,9 +4633,9 @@ Element["" "0603" "L202" "fb" 120.0000mm 53.3000mm 1.7000mm -0.7000mm 3 71 ""]
 
 	)
 
-Element["hidename" "custom_pad1" "T25" "unknown" 123.9000mm 106.2000mm -1.0000mm 1.3000mm 0 100 ""]
+Element["hidename" "custom_pad1" "T25" "unknown" 123.7000mm 115.7000mm 1.3000mm 1.0000mm 1 100 ""]
 (
-	Pad[0.0500mm -0.2500mm 0.0500mm 0.2500mm 1.5000mm 0.6000mm 1.8000mm "terminal" "1" "square"]
+	Pad[-0.2500mm -0.0500mm 0.2500mm -0.0500mm 1.5000mm 0.6000mm 1.8000mm "terminal" "1" "square"]
 
 	)
 
@@ -4715,7 +4646,7 @@ Element["" "0603" "L201" "fb" 115.3000mm 32.2000mm -0.2000mm 0.7000mm 0 71 ""]
 
 	)
 
-Element["" "0805" "C137" "10u" 117.7000mm 59.1000mm -0.6000mm 0.5000mm 1 71 ""]
+Element["" "0805" "C137" "10u" 117.7000mm 59.1000mm -1.1000mm -2.1000mm 0 71 ""]
 (
 	Pad[-1.0500mm -0.1500mm -1.0500mm 0.1500mm 1.3000mm 0.5000mm 1.4484mm "1" "1" "square"]
 	Pad[1.0500mm -0.1500mm 1.0500mm 0.1500mm 1.3000mm 0.5000mm 1.4484mm "2" "2" "square"]
@@ -4729,7 +4660,7 @@ Element["" "0603" "L25" "fb" 90.3000mm 82.3000mm -1.7000mm 0.8000mm 1 71 ""]
 
 	)
 
-Element["" "0603" "LED201" "blue" 117.2000mm 51.1000mm -1.7000mm 0.6000mm 0 71 ""]
+Element["" "0603" "LED201" "blue" 117.2000mm 51.1000mm -1.7000mm 0.7000mm 0 71 ""]
 (
 	Pad[0.7500mm -0.0500mm 0.7500mm 0.0500mm 0.9000mm 0.6000mm 1.0500mm "A" "1" "square"]
 	Pad[-0.7500mm -0.0500mm -0.7500mm 0.0500mm 0.9000mm 0.6000mm 1.0500mm "K" "2" "square"]
@@ -4743,14 +4674,14 @@ Element["" "0603" "LED1" "blue" 75.2000mm 64.5000mm -1.2000mm -1.5000mm 0 71 ""]
 
 	)
 
-Element["onsolder" "0805" "C37" "10u" 84.0000mm 104.1000mm 0.7000mm -0.6000mm 2 71 "auto"]
+Element["onsolder" "0805" "C37" "10u" 84.0000mm 104.1000mm -2.0000mm -1.5000mm 1 71 "auto"]
 (
 	Pad[-0.1500mm -1.0500mm 0.1500mm -1.0500mm 1.3000mm 0.0000 1.4484mm "1" "1" "onsolder,square"]
 	Pad[-0.1500mm 1.0500mm 0.1500mm 1.0500mm 1.3000mm 0.5000mm 1.3984mm "2" "2" "onsolder,square"]
 
 	)
 
-Element["" "SOT26" "U8" "unknown" 117.8000mm 71.4000mm -3.2000mm 0.5000mm 3 100 ""]
+Element["" "SOT26" "U8" "unknown" 117.8000mm 71.4000mm -2.7000mm 1.0000mm 3 100 ""]
 (
 	Pad[-1.2032mm -1.0000mm -0.7968mm -1.0000mm 24.00mil 30.00mil 0.7216mm "EN" "1" "square"]
 	Pad[-1.2032mm -0.0094mm -0.7968mm -0.0094mm 24.00mil 30.00mil 0.7216mm "GND" "2" "square"]
@@ -4780,7 +4711,7 @@ Element["" "SOT26" "U5" "unknown" 111.8000mm 115.9000mm -0.4000mm 2.0000mm 3 100
 
 	)
 
-Element["" "0603" "C2" "100n" 59.0000mm 113.6000mm -1.1000mm -1.8000mm 0 71 ""]
+Element["" "0603" "C2" "100n" 59.0000mm 113.6000mm -0.9000mm -1.9000mm 0 71 ""]
 (
 	Pad[-0.7219mm 0.2096mm -0.6876mm 0.3036mm 0.9000mm 0.6000mm 1.0500mm "1" "1" "square,edge2"]
 	Pad[0.6876mm -0.3036mm 0.7219mm -0.2096mm 0.9000mm 0.6000mm 1.0500mm "2" "2" "square"]
@@ -4842,7 +4773,7 @@ Element["" "custom_button2" "S2" "unknown" 85.5000mm 120.3000mm -1.0000mm -1.400
 
 	)
 
-Element["" "0603" "C208" "30p" 118.0000mm 44.3000mm 2.3000mm -0.7000mm 0 71 ""]
+Element["" "0603" "C208" "30p" 118.0000mm 44.3000mm 2.2000mm -0.7000mm 0 71 ""]
 (
 	Pad[0.7115mm -0.2424mm 29.03mil -0.1458mm 0.9000mm 0.6000mm 0.9500mm "1" "1" "square"]
 	Pad[-29.03mil 0.1458mm -0.7115mm 0.2424mm 0.9000mm 0.6000mm 0.9000mm "2" "2" "square,edge2"]
@@ -4935,44 +4866,35 @@ Element["onsolder" "0805" "C145" "10u" 53.1000mm 119.1000mm -2.4000mm -1.3000mm 
 
 	)
 
-Element["onsolder" "0603" "R63" "1" 53.3000mm 115.6000mm 2.4000mm 1.3000mm 3 100 "auto"]
+Element["onsolder" "0603" "R63" "1" 53.3000mm 115.6000mm -2.2000mm -1.0000mm 1 97 "auto"]
 (
-	Pad[-0.0500mm 0.7500mm 0.0500mm 0.7500mm 0.9000mm 0.6000mm 1.2000mm "1" "1" "onsolder,square"]
-	Pad[-0.0500mm -0.7500mm 0.0500mm -0.7500mm 0.9000mm 0.6000mm 1.2000mm "2" "2" "onsolder,square"]
+	Pad[-0.0500mm 0.7500mm 0.0500mm 0.7500mm 0.9000mm 0.6000mm 0.9968mm "1" "1" "onsolder,square"]
+	Pad[-0.0500mm -0.7500mm 0.0500mm -0.7500mm 0.9000mm 0.6000mm 0.9968mm "2" "2" "onsolder,square"]
 
 	)
 
-Element["onsolder" "0603" "C144" "100n" 49.5000mm 106.6000mm -1.9000mm 2.1000mm 0 100 "auto"]
+Element["onsolder" "0603" "C144" "100n" 49.5000mm 106.6000mm -0.5000mm 2.2000mm 0 100 "auto"]
 (
-	Pad[-0.7500mm -0.0500mm -0.7500mm 0.0500mm 0.9000mm 0.6000mm 1.2000mm "1" "1" "onsolder,square"]
-	Pad[0.7500mm -0.0500mm 0.7500mm 0.0500mm 0.9000mm 0.0000 1.2000mm "2" "2" "onsolder,square"]
+	Pad[-0.7500mm -0.0500mm -0.7500mm 0.0500mm 0.9000mm 0.6000mm 0.9968mm "1" "1" "onsolder,square"]
+	Pad[0.7500mm -0.0500mm 0.7500mm 0.0500mm 0.9000mm 0.0000 0.9968mm "2" "2" "onsolder,square"]
 
 	)
 
-Element["onsolder" "0603" "C143" "30p" 47.5000mm 101.4000mm 1.2000mm 0.1000mm 2 100 "auto"]
+Element["onsolder" "0603" "C143" "30p" 47.5000mm 101.4000mm -1.5000mm -0.7000mm 0 99 "auto"]
 (
-	Pad[0.7500mm -0.0500mm 0.7500mm 0.0500mm 0.9000mm 0.6000mm 1.2000mm "1" "1" "onsolder,square"]
-	Pad[-0.7500mm -0.0500mm -0.7500mm 0.0500mm 0.9000mm 0.0000 1.2000mm "2" "2" "onsolder,square"]
+	Pad[0.7500mm -0.0500mm 0.7500mm 0.0500mm 0.9000mm 0.6000mm 0.9968mm "1" "1" "onsolder,square"]
+	Pad[-0.7500mm -0.0500mm -0.7500mm 0.0500mm 0.9000mm 0.0000 0.9460mm "2" "2" "onsolder,square"]
 
 	)
 
-Element["onsolder" "0603" "L7" "fb" 51.5000mm 100.8000mm -1.2000mm -0.1000mm 0 100 "auto"]
+Element["onsolder" "0603" "L7" "fb" 51.5000mm 100.8000mm -0.7000mm -0.7000mm 0 99 "auto"]
 (
-	Pad[-0.7500mm -0.0500mm -0.7500mm 0.0500mm 0.9000mm 0.6000mm 1.2000mm "1" "1" "onsolder,square"]
-	Pad[0.7500mm -0.0500mm 0.7500mm 0.0500mm 0.9000mm 0.6000mm 1.2000mm "2" "2" "onsolder,square"]
+	Pad[-0.7500mm -0.0500mm -0.7500mm 0.0500mm 0.9000mm 0.6000mm 0.9968mm "1" "1" "onsolder,square"]
+	Pad[0.7500mm -0.0500mm 0.7500mm 0.0500mm 0.9000mm 0.6000mm 0.9968mm "2" "2" "onsolder,square"]
 
 	)
 
-Element["hidename" "lp0603" "U206" "unknown" 93.0000mm 44.2000mm 0.0000 -0.1000mm 0 100 ""]
-(
-	Pad[-0.6000mm -0.3000mm -0.5000mm -0.3000mm 0.4000mm 0.6000mm 0.5500mm "OUT" "1" "square"]
-	Pad[0.6500mm -0.3000mm 0.7500mm -0.3000mm 0.4000mm 0.6000mm 0.5500mm "IN" "4" "square,edge2"]
-	Pad[-0.6000mm 0.4000mm -0.5000mm 0.4000mm 0.4000mm 0.6000mm 0.5500mm "GND" "3" "square"]
-	Pad[0.6500mm 0.4000mm 0.7500mm 0.4000mm 0.4000mm 0.6000mm 0.5500mm "GND" "3" "square,edge2"]
-
-	)
-
-Element["hidename" "lp0603" "U204" "unknown" 95.1000mm 46.9000mm 0.0000 -0.1000mm 0 100 ""]
+Element["" "lp0603" "U206" "unknown" 93.0000mm 44.2000mm -1.2000mm 0.7000mm 0 77 ""]
 (
 	Pad[-0.6000mm -0.3000mm -0.5000mm -0.3000mm 0.4000mm 0.6000mm 0.5500mm "OUT" "1" "square"]
 	Pad[0.6500mm -0.3000mm 0.7500mm -0.3000mm 0.4000mm 0.6000mm 0.5500mm "IN" "4" "square,edge2"]
@@ -4981,7 +4903,16 @@ Element["hidename" "lp0603" "U204" "unknown" 95.1000mm 46.9000mm 0.0000 -0.1000m
 
 	)
 
-Element["hidename" "lp0603" "U205" "unknown" 91.7000mm 46.9000mm 0.0460mm -0.0540mm 0 100 ""]
+Element["" "lp0603" "U204" "unknown" 95.1000mm 46.9000mm -1.2000mm 1.8000mm 0 77 ""]
+(
+	Pad[-0.6000mm -0.3000mm -0.5000mm -0.3000mm 0.4000mm 0.6000mm 0.5500mm "OUT" "1" "square"]
+	Pad[0.6500mm -0.3000mm 0.7500mm -0.3000mm 0.4000mm 0.6000mm 0.5500mm "IN" "4" "square,edge2"]
+	Pad[-0.6000mm 0.4000mm -0.5000mm 0.4000mm 0.4000mm 0.6000mm 0.5500mm "GND" "3" "square"]
+	Pad[0.6500mm 0.4000mm 0.7500mm 0.4000mm 0.4000mm 0.6000mm 0.5500mm "GND" "3" "square,edge2"]
+
+	)
+
+Element["" "lp0603" "U205" "unknown" 91.7000mm 46.9000mm -1.0000mm 1.2000mm 0 77 ""]
 (
 	Pad[-0.6000mm -0.3000mm -0.5000mm -0.3000mm 0.4000mm 0.6000mm 0.5500mm "OUT" "1" "square"]
 	Pad[0.6500mm -0.3000mm 0.7500mm -0.3000mm 0.4000mm 0.6000mm 0.5500mm "IN" "4" "square,edge2"]
@@ -5004,42 +4935,42 @@ Element["" "0603" "C146" "100n" 61.6000mm 2500.00mil -1.2000mm -1.7000mm 0 77 ""
 
 	)
 
-Element["" "0603" "L5" "fb" 40.6000mm 117.8000mm -0.9000mm -0.5000mm 0 71 ""]
+Element["" "0603" "L5" "fb" 40.6000mm 117.8000mm 1.6000mm -0.4000mm 3 71 ""]
 (
-	Pad[-0.0500mm 0.7500mm 0.0500mm 0.7500mm 0.9000mm 0.6000mm 1.0500mm "1" "1" "square"]
-	Pad[-0.0500mm -0.7500mm 0.0500mm -0.7500mm 0.9000mm 0.6000mm 1.0500mm "2" "2" "square"]
+	Pad[-0.0500mm 0.7500mm 0.0500mm 0.7500mm 0.9000mm 0.6000mm 0.9484mm "1" "1" "square"]
+	Pad[-0.0500mm -0.7500mm 0.0500mm -0.7500mm 0.9000mm 0.6000mm 0.9484mm "2" "2" "square"]
 
 	)
 
-Element["" "0603" "R59" "10" 40.9000mm 120.5000mm -0.9000mm 0.5000mm 0 71 ""]
-(
-	Pad[-0.7500mm -0.0500mm -0.7500mm 0.0500mm 0.9000mm 0.6000mm 1.0500mm "1" "1" "square"]
-	Pad[0.7500mm -0.0500mm 0.7500mm 0.0500mm 0.9000mm 0.6000mm 1.0500mm "2" "2" "square"]
-
-	)
-
-Element["" "0603" "C140" "1n" 43.4000mm 121.2000mm -0.9000mm -0.5000mm 0 71 ""]
-(
-	Pad[-0.0500mm 0.7500mm 0.0500mm 0.7500mm 0.9000mm 0.6000mm 1.0500mm "1" "1" "square"]
-	Pad[-0.0500mm -0.7500mm 0.0500mm -0.7500mm 0.9000mm 0.6000mm 1.0500mm "2" "2" "square"]
-
-	)
-
-Element["" "0603" "L16" "fb" 40.6000mm 77.1000mm -0.9000mm -0.5000mm 0 71 ""]
-(
-	Pad[-0.0500mm 0.7500mm 0.0500mm 0.7500mm 0.9000mm 0.6000mm 1.0500mm "1" "1" "square"]
-	Pad[-0.0500mm -0.7500mm 0.0500mm -0.7500mm 0.9000mm 0.6000mm 1.0500mm "2" "2" "square"]
-
-	)
-
-Element["" "0603" "R37" "10" 40.9000mm 79.8000mm -0.9000mm 0.5000mm 0 71 ""]
+Element["" "0603" "R59" "10" 40.9000mm 120.5000mm -0.9000mm 0.6000mm 0 71 ""]
 (
 	Pad[-0.7500mm -0.0500mm -0.7500mm 0.0500mm 0.9000mm 0.6000mm 1.0500mm "1" "1" "square"]
 	Pad[0.7500mm -0.0500mm 0.7500mm 0.0500mm 0.9000mm 0.6000mm 1.0500mm "2" "2" "square"]
 
 	)
 
-Element["" "0603" "C75" "1n" 43.4000mm 80.5000mm -0.9000mm -0.5000mm 0 71 ""]
+Element["" "0603" "C140" "1n" 43.4000mm 121.2000mm 1.0000mm -0.5000mm 0 71 ""]
+(
+	Pad[-0.0500mm 0.7500mm 0.0500mm 0.7500mm 0.9000mm 0.6000mm 1.0500mm "1" "1" "square"]
+	Pad[-0.0500mm -0.7500mm 0.0500mm -0.7500mm 0.9000mm 0.6000mm 1.0500mm "2" "2" "square"]
+
+	)
+
+Element["" "0603" "L16" "fb" 40.6000mm 77.1000mm 1.7000mm 0.1000mm 3 71 ""]
+(
+	Pad[-0.0500mm 0.7500mm 0.0500mm 0.7500mm 0.9000mm 0.6000mm 0.9484mm "1" "1" "square"]
+	Pad[-0.0500mm -0.7500mm 0.0500mm -0.7500mm 0.9000mm 0.6000mm 0.9484mm "2" "2" "square"]
+
+	)
+
+Element["" "0603" "R37" "10" 40.9000mm 79.8000mm -0.9000mm 0.6000mm 0 71 ""]
+(
+	Pad[-0.7500mm -0.0500mm -0.7500mm 0.0500mm 0.9000mm 0.6000mm 0.9484mm "1" "1" "square"]
+	Pad[0.7500mm -0.0500mm 0.7500mm 0.0500mm 0.9000mm 0.6000mm 0.9484mm "2" "2" "square"]
+
+	)
+
+Element["" "0603" "C75" "1n" 43.4000mm 80.5000mm 0.9000mm -0.5000mm 0 71 ""]
 (
 	Pad[-0.0500mm 0.7500mm 0.0500mm 0.7500mm 0.9000mm 0.6000mm 1.0500mm "1" "1" "square"]
 	Pad[-0.0500mm -0.7500mm 0.0500mm -0.7500mm 0.9000mm 0.6000mm 1.0500mm "2" "2" "square"]
@@ -5092,7 +5023,7 @@ Element["" "custom_so8" "U6" "unknown" 97.9000mm 117.5000mm 28.99mil 0.2222mm 0 
 
 	)
 
-Element["hidename" "custom_sma4" "CONN4" "unknown" 28.0000mm 54.0000mm 0.0000 0.0000 1 100 ""]
+Element["" "custom_sma4" "CONN4" "unknown" 28.0000mm 54.0000mm 3.4000mm 5.1000mm 1 100 ""]
 (
 	Pin[-1.8000mm 3.3000mm 1.4000mm 0.0000 1.5524mm 0.7000mm "0" "0" ""]
 	Pin[-1.8000mm 2.2000mm 1.4000mm 0.0000 1.5524mm 0.7000mm "0" "0" ""]
@@ -5110,10 +5041,10 @@ Element["hidename" "custom_sma4" "CONN4" "unknown" 28.0000mm 54.0000mm 0.0000 0.
 	Pin[0.6000mm -3.3000mm 1.4000mm 0.0000 1.5524mm 0.7000mm "0" "0" ""]
 	Pin[1.8000mm -2.2000mm 1.4000mm 0.0000 1.5524mm 0.7000mm "0" "0" ""]
 	Pin[1.8000mm -3.3000mm 1.4000mm 0.0000 1.5524mm 0.7000mm "0" "0" ""]
-	Pad[-1.5000mm 0.0000 1.5000mm 0.0000 2.0000mm 0.6000mm 2.2000mm "1" "1" "square"]
-	Pad[-1.2500mm 2.7500mm 1.2500mm 2.7500mm 2.5000mm 0.6000mm 2.7000mm "0" "0" "square"]
-	Pad[-1.2500mm -2.7500mm 1.2500mm -2.7500mm 2.5000mm 0.6000mm 2.7000mm "0" "0" "square"]
-	Pad[0.0000 -1.5000mm 0.0000 1.5000mm 5.0000mm 0.0000 5.0000mm "0" "0" "onsolder,square"]
+	Pad[-1.5000mm 0.0000 1.5000mm 0.0000 2.0000mm 0.6000mm 2.2000mm "1" "1" "square,nopaste"]
+	Pad[-1.2500mm 2.7500mm 1.2500mm 2.7500mm 2.5000mm 0.6000mm 2.7000mm "0" "0" "square,nopaste"]
+	Pad[-1.2500mm -2.7500mm 1.2500mm -2.7500mm 2.5000mm 0.6000mm 2.7000mm "0" "0" "square,nopaste"]
+	Pad[0.0000 -1.5000mm 0.0000 1.5000mm 5.0000mm 0.0000 5.0000mm "0" "0" "onsolder,square,nopaste"]
 
 	)
 
@@ -5139,41 +5070,92 @@ Element["hidename" "adhoc" "G2" "unknown" 40.0000mm 26.5000mm 0.0000 0.0000 0 10
 
 	)
 
-Element["" "" "" "" 112.3000mm 136.3000mm 0.0000 0.0000 0 100 ""]
+Element["hidename" "custom_pad1" "T15" "unknown" 124.0000mm 105.3000mm -1.0000mm 1.3000mm 0 100 ""]
 (
-	Pad[-4.1074mm -1.9102mm -1.8468mm -1.9102mm 20.00mil 10.00mil 30.00mil "" "1" "square"]
-	Pad[-4.1074mm -0.6402mm -1.8468mm -0.6402mm 20.00mil 10.00mil 30.00mil "" "2" "square"]
-	Pad[-4.1074mm 0.6298mm -1.8468mm 0.6298mm 20.00mil 10.00mil 30.00mil "" "3" "square"]
-	Pad[-4.1074mm 1.8998mm -1.8468mm 1.8998mm 20.00mil 10.00mil 30.00mil "" "4" "square"]
-	Pad[1.7600mm 1.8998mm 4.0206mm 1.8998mm 20.00mil 10.00mil 30.00mil "" "5" "square,edge2"]
-	Pad[1.7600mm 0.6298mm 4.0206mm 0.6298mm 20.00mil 10.00mil 30.00mil "" "6" "square,edge2"]
-	Pad[1.7600mm -0.6402mm 4.0206mm -0.6402mm 20.00mil 10.00mil 30.00mil "" "7" "square,edge2"]
-	Pad[1.7600mm -1.9102mm 4.0206mm -1.9102mm 20.00mil 10.00mil 30.00mil "" "8" "square,edge2"]
-	ElementLine [-4.6154mm -2.4182mm -4.6154mm 2.4078mm 10.00mil]
-	ElementLine [-4.6154mm 2.4078mm 4.5286mm 2.4078mm 10.00mil]
-	ElementLine [4.5286mm 2.4078mm 4.5286mm -2.4182mm 10.00mil]
-	ElementLine [-4.6154mm -2.4182mm -0.6784mm -2.4182mm 10.00mil]
-	ElementLine [4.5286mm -2.4182mm 0.5916mm -2.4182mm 10.00mil]
-	ElementArc [-0.0434mm -2.4182mm 25.00mil 25.00mil 0 180 10.00mil]
+	Pad[0.0500mm -0.2500mm 0.0500mm 0.2500mm 1.5000mm 0.6000mm 1.8000mm "terminal" "1" "square"]
 
 	)
 
-Element["" "Small outline package, narrow (150mil)" "" "SO8" 4304.00mil 5069.00mil -20.00mil -60.00mil 0 100 ""]
+Element["hidename" "custom_pad1" "T11" "unknown" 123.6000mm 55.4000mm 1.3000mm 1.0000mm 1 100 ""]
 (
-	Pad[-135.00mil -75.00mil -70.00mil -75.00mil 20.00mil 10.00mil 30.00mil "1" "1" "square"]
-	Pad[-135.00mil -25.00mil -70.00mil -25.00mil 20.00mil 10.00mil 30.00mil "2" "2" "square"]
-	Pad[-135.00mil 25.00mil -70.00mil 25.00mil 20.00mil 10.00mil 30.00mil "3" "3" "square"]
-	Pad[-135.00mil 75.00mil -70.00mil 75.00mil 20.00mil 10.00mil 30.00mil "4" "4" "square"]
-	Pad[70.00mil 75.00mil 135.00mil 75.00mil 20.00mil 10.00mil 30.00mil "5" "5" "square,edge2"]
-	Pad[70.00mil 25.00mil 135.00mil 25.00mil 20.00mil 10.00mil 30.00mil "6" "6" "square,edge2"]
-	Pad[70.00mil -25.00mil 135.00mil -25.00mil 20.00mil 10.00mil 30.00mil "7" "7" "square,edge2"]
-	Pad[70.00mil -75.00mil 135.00mil -75.00mil 20.00mil 10.00mil 30.00mil "8" "8" "square,edge2"]
-	ElementLine [-155.00mil -95.00mil -155.00mil 95.00mil 10.00mil]
-	ElementLine [-155.00mil 95.00mil 155.00mil 95.00mil 10.00mil]
-	ElementLine [155.00mil 95.00mil 155.00mil -95.00mil 10.00mil]
-	ElementLine [-155.00mil -95.00mil -25.00mil -95.00mil 10.00mil]
-	ElementLine [155.00mil -95.00mil 25.00mil -95.00mil 10.00mil]
-	ElementArc [0.0000 -95.00mil 25.00mil 25.00mil 0 180 10.00mil]
+	Pad[-0.2500mm -0.0500mm 0.2500mm -0.0500mm 1.5000mm 0.6000mm 1.8000mm "terminal" "1" "square"]
+
+	)
+
+Element["onsolder" "custom_microusb1" "CONN2" "unknown" 123.0000mm 105.3000mm -2.9000mm 7.0000mm 0 100 "auto"]
+(
+	Pin[1.2000mm -3.6500mm 2.0000mm 0.0000 2.1524mm 1.2000mm "0" "0" ""]
+	Pin[1.2000mm 3.6500mm 2.0000mm 0.0000 2.1524mm 1.2000mm "0" "0" ""]
+	Pad[-1.2000mm -3.3000mm -1.2000mm -3.1000mm 1.4000mm 0.0000 1.4500mm "0" "0" "onsolder,square"]
+	Pad[-1.2000mm 3.1000mm -1.2000mm 3.3000mm 1.4000mm 0.0000 1.4500mm "0" "0" "onsolder,square,edge2"]
+	Pad[-2.3000mm -1.3000mm -1.0000mm -1.3000mm 0.4000mm 0.6000mm 0.4500mm "5" "5" "onsolder,square"]
+	Pad[-2.3000mm 1.3000mm -1.0000mm 1.3000mm 0.4000mm 0.0000 0.4500mm "1" "1" "onsolder,square"]
+	Pad[-2.3000mm -0.6500mm -1.0000mm -0.6500mm 0.4000mm 0.6000mm 0.4500mm "4" "4" "onsolder,square"]
+	Pad[-2.3000mm 0.6500mm -1.0000mm 0.6500mm 0.4000mm 0.5000mm 0.4500mm "2" "2" "onsolder,square"]
+	Pad[-2.3000mm 0.0000 -1.0000mm 0.0000 0.4000mm 0.6000mm 0.4500mm "3" "3" "onsolder,square"]
+	Pad[1.2500mm -1.2000mm 1.2500mm -1.2000mm 1.9000mm 0.0000 1.9500mm "0" "0" "onsolder,square,edge2"]
+	Pad[1.2500mm 1.2000mm 1.2500mm 1.2000mm 1.9000mm 0.0000 1.9500mm "0" "0" "onsolder,square,edge2"]
+
+	)
+
+Element["" "0603" "R56" "10" 110.6000mm 77.7000mm 1.7000mm -0.7000mm 0 77 ""]
+(
+	Pad[0.7500mm -0.0500mm 0.7500mm 0.0500mm 0.9000mm 0.6000mm 0.9968mm "1" "1" "square"]
+	Pad[-0.7500mm -0.0500mm -0.7500mm 0.0500mm 0.9000mm 0.6000mm 0.9968mm "2" "2" "square"]
+
+	)
+
+Element["" "0603" "R35" "10" 63.7000mm 66.3000mm 1.8000mm -0.9000mm 3 77 ""]
+(
+	Pad[-0.0500mm -0.7500mm 0.0500mm -0.7500mm 0.9000mm 0.6000mm 0.9968mm "1" "1" "square"]
+	Pad[-0.0500mm 0.7500mm 0.0500mm 0.7500mm 0.9000mm 0.6000mm 0.9968mm "2" "2" "square"]
+
+	)
+
+Element["" "0603" "R65" "2.2k" 72.0000mm 68.6000mm 0.8000mm 0.1000mm 0 77 ""]
+(
+	Pad[-0.0500mm 0.7500mm 0.0500mm 0.7500mm 0.9000mm 0.6000mm 0.9968mm "1" "1" "square"]
+	Pad[-0.0500mm -0.7500mm 0.0500mm -0.7500mm 0.9000mm 0.6000mm 0.9968mm "2" "2" "square"]
+
+	)
+
+Element["" "SC70_5" "U207" "unknown" 91.8000mm 39.1000mm -1.2000mm -1.2000mm 3 76 ""]
+(
+	Pad[-0.7000mm 0.5460mm -0.7000mm 1.0540mm 15.00mil 30.00mil 19.00mil "OUT" "4" "square,edge2"]
+	Pad[0.5954mm 0.5460mm 0.5954mm 1.0540mm 15.00mil 30.00mil 19.00mil "VCC" "5" "square,edge2"]
+	Pad[0.5954mm -1.2320mm 0.5954mm -0.7240mm 15.00mil 30.00mil 19.00mil "NC" "1" "square"]
+	Pad[-0.0396mm -1.2320mm -0.0396mm -0.7240mm 15.00mil 30.00mil 19.00mil "IN" "2" "square"]
+	Pad[-0.7000mm -1.2320mm -0.7000mm -0.7240mm 15.00mil 30.00mil 19.00mil "GND" "3" "square"]
+	ElementLine [-1.0556mm -1.5876mm -1.0556mm 1.4350mm 10.00mil]
+	ElementLine [-1.0556mm 1.4350mm 0.9764mm 1.4350mm 10.00mil]
+	ElementLine [0.9764mm -1.5876mm 0.9764mm 1.4350mm 10.00mil]
+	ElementLine [-1.0556mm -1.5876mm 0.9764mm -1.5876mm 10.00mil]
+
+	)
+
+Element["" "SC70_5" "U17" "unknown" 61.2000mm 70.1000mm 0.3000mm 0.8000mm 0 77 ""]
+(
+	Pad[0.5460mm 0.7000mm 1.0540mm 0.7000mm 15.00mil 30.00mil 19.00mil "OUT" "4" "square,edge2"]
+	Pad[0.5460mm -0.5954mm 1.0540mm -0.5954mm 15.00mil 30.00mil 19.00mil "VCC" "5" "square,edge2"]
+	Pad[-1.2320mm -0.5954mm -0.7240mm -0.5954mm 15.00mil 30.00mil 19.00mil "NC" "1" "square"]
+	Pad[-1.2320mm 0.0396mm -0.7240mm 0.0396mm 15.00mil 30.00mil 19.00mil "IN" "2" "square"]
+	Pad[-1.2320mm 0.7000mm -0.7240mm 0.7000mm 15.00mil 30.00mil 19.00mil "GND" "3" "square"]
+	ElementLine [-1.5876mm 1.0556mm 1.4350mm 1.0556mm 10.00mil]
+	ElementLine [1.4350mm -0.9764mm 1.4350mm 1.0556mm 10.00mil]
+	ElementLine [-1.5876mm -0.9764mm 1.4350mm -0.9764mm 10.00mil]
+	ElementLine [-1.5876mm -0.9764mm -1.5876mm 1.0556mm 10.00mil]
+
+	)
+
+Element["hidename,onsolder" "adhoc" "G4" "unknown" 124.2000mm 101.7000mm -1.3000mm -0.8000mm 0 100 "auto"]
+(
+	Pad[0.0000 -0.1000mm 0.0000 0.0000 2.0000mm 0.0000 2.0460mm "terminal" "1" "onsolder"]
+
+	)
+
+Element["hidename,onsolder" "adhoc" "G5" "unknown" 124.2000mm 109.0000mm -0.8000mm -1.3000mm 0 100 "auto"]
+(
+	Pad[0.0000 -0.1000mm 0.0000 0.0000 2.0000mm 0.0000 2.0460mm "terminal" "1" "onsolder"]
 
 	)
 Layer(1 "top")
@@ -5677,9 +5659,8 @@ Layer(1 "top")
 	Line[75.0000mm 83.2000mm 73.6000mm 81.8000mm 0.2500mm 0.4000mm "clearline"]
 	Line[62.0000mm 69.3000mm 62.2000mm 68.7000mm 0.7000mm 0.6000mm "clearline"]
 	Line[66.9000mm 68.1000mm 69.8000mm 68.1000mm 0.3000mm 0.6000mm "clearline"]
-	Line[63.9000mm 65.3000mm 64.1000mm 65.3000mm 0.3000mm 0.6000mm "clearline"]
-	Line[64.1000mm 65.3000mm 66.3000mm 67.5000mm 0.3000mm 0.6000mm "clearline"]
-	Line[66.3000mm 67.5000mm 66.9000mm 68.1000mm 0.3000mm 0.6000mm "clearline"]
+	Line[64.4000mm 65.6000mm 63.7000mm 65.6000mm 0.3000mm 0.6000mm "clearline"]
+	Line[64.4000mm 65.6000mm 66.9000mm 68.1000mm 0.3000mm 0.6000mm "clearline"]
 	Line[60.2000mm 70.8000mm 59.4000mm 71.6000mm 0.3000mm 0.6000mm "clearline"]
 	Line[58.0000mm 70.7000mm 58.0000mm 71.9000mm 0.3000mm 0.6000mm "clearline"]
 	Line[58.0000mm 71.9000mm 58.8000mm 72.7000mm 0.3000mm 0.6000mm "clearline"]
@@ -5694,8 +5675,8 @@ Layer(1 "top")
 	Line[66.5752mm 2737.20mil 67.0000mm 69.1000mm 0.3000mm 0.6000mm "clearline"]
 	Line[64.0000mm 71.1000mm 64.0000mm 71.9000mm 1.1000mm 0.6000mm "clearline"]
 	Line[60.9000mm 67.2000mm 63.3000mm 67.2000mm 0.8460mm 0.6000mm "clearline"]
-	Line[63.3000mm 67.2000mm 63.7000mm 67.6000mm 0.8460mm 0.6000mm "clearline"]
-	Line[64.0000mm 68.7000mm 64.0000mm 67.8000mm 1.1000mm 0.6000mm "clearline"]
+	Line[63.3000mm 67.2000mm 64.0000mm 67.4000mm 0.8460mm 0.6000mm "clearline"]
+	Line[64.0000mm 68.7000mm 64.0000mm 67.5000mm 1.1000mm 0.6000mm "clearline"]
 	Line[67.8751mm 70.8500mm 67.8751mm 2869.10mil 0.3000mm 0.6000mm "clearline"]
 	Line[67.8751mm 2869.10mil 68.4000mm 73.4000mm 0.3000mm 0.6000mm "clearline"]
 	Line[67.2251mm 70.8500mm 67.2251mm 73.2749mm 0.3000mm 0.6000mm "clearline"]
@@ -5849,10 +5830,9 @@ Layer(1 "top")
 	Line[84.7502mm 73.6501mm 85.0000mm 73.9000mm 0.2500mm 0.4000mm "clearline"]
 	Line[84.2500mm 72.7501mm 84.2500mm 74.3500mm 0.2500mm 0.4000mm "clearline"]
 	Line[90.1000mm 72.0000mm 90.3000mm 72.0000mm 0.2500mm 0.4000mm "clearline"]
-	Line[74.1000mm 67.9000mm 74.1000mm 68.0000mm 0.3000mm 0.6000mm "clearline"]
 	Line[78.0000mm 70.6000mm 75.9000mm 70.6000mm 0.2800mm 0.4000mm "clearline"]
 	Line[75.9000mm 70.6000mm 74.1000mm 68.8000mm 0.2800mm 0.4000mm "clearline"]
-	Line[74.1000mm 68.8000mm 74.1000mm 68.0000mm 0.2800mm 0.4000mm "clearline"]
+	Line[74.1000mm 68.8000mm 73.7000mm 68.0000mm 0.2800mm 0.4000mm "clearline"]
 	Line[86.1501mm 71.3498mm 87.0498mm 71.3498mm 0.2800mm 0.4000mm "clearline"]
 	Line[87.0498mm 71.3498mm 88.3000mm 72.6000mm 0.2800mm 0.4000mm "clearline"]
 	Line[88.3000mm 74.0000mm 88.3000mm 72.6000mm 0.2800mm 0.4000mm "clearline"]
@@ -5882,13 +5862,7 @@ Layer(1 "top")
 	Line[72.0000mm 63.8000mm 72.0000mm 64.6000mm 0.6000mm 0.6000mm "clearline"]
 	Line[76.1000mm 64.6000mm 76.1000mm 66.0000mm 0.3000mm 0.6000mm "clearline"]
 	Line[74.0000mm 66.3000mm 72.1000mm 66.3000mm 0.3000mm 0.6000mm "clearline"]
-	Line[74.1000mm 68.0000mm 69.8000mm 68.0000mm 0.3000mm 0.6000mm "clearline"]
-	Line[72.3000mm 70.1000mm 72.3000mm 69.0000mm 0.3000mm 0.6000mm "clearline"]
-	Line[72.3000mm 70.1000mm 70.9000mm 70.1000mm 0.3000mm 0.6000mm "clearline"]
-	Line[70.9000mm 70.1000mm 70.5000mm 70.5000mm 0.3000mm 0.6000mm "clearline"]
-	Line[70.5000mm 70.5000mm 70.5000mm 71.0000mm 0.3000mm 0.6000mm "clearline"]
-	Line[72.3000mm 70.9000mm 73.8000mm 70.9000mm 0.3000mm 0.6000mm "clearline"]
-	Line[73.8000mm 70.9000mm 74.1000mm 70.6000mm 0.3000mm 0.6000mm "clearline"]
+	Line[73.8000mm 68.0000mm 69.8000mm 68.0000mm 0.3000mm 0.6000mm "clearline"]
 	Line[64.1206mm 79.8000mm 60.3000mm 79.8000mm 0.3000mm 0.6000mm "clearline"]
 	Line[60.3000mm 79.8000mm 60.2000mm 79.9000mm 0.3000mm 0.6000mm "clearline"]
 	Line[64.1206mm 81.1000mm 62.4000mm 81.1000mm 0.3000mm 0.6000mm "clearline"]
@@ -6165,10 +6139,6 @@ Layer(1 "top")
 	Line[105.5000mm 122.3000mm 105.5000mm 123.2000mm 0.6000mm 0.6000mm "clearline"]
 	Line[105.4000mm 120.5000mm 104.0000mm 120.5000mm 0.6000mm 0.6000mm "clearline"]
 	Line[108.3000mm 113.2000mm 108.8000mm 111.8000mm 1.2000mm 0.6000mm "clearline"]
-	Line[121.7000mm 104.0000mm 122.4000mm 104.0000mm 1.4000mm 0.6000mm "clearline"]
-	Line[122.4000mm 104.0000mm 124.0000mm 105.6000mm 1.4000mm 0.6000mm "clearline"]
-	Line[124.0000mm 105.6000mm 124.0000mm 110.8000mm 1.4000mm 0.6000mm "clearline"]
-	Line[124.0000mm 110.8000mm 121.9000mm 112.9000mm 1.4000mm 0.6000mm "clearline"]
 	Line[118.9000mm 69.8000mm 120.8000mm 69.8000mm 0.2800mm 0.6000mm "clearline"]
 	Line[120.8000mm 71.7000mm 121.6000mm 71.7000mm 0.2800mm 0.6000mm "clearline"]
 	Line[122.4000mm 70.9000mm 121.6000mm 71.7000mm 0.2800mm 0.6000mm "clearline"]
@@ -6390,8 +6360,7 @@ Layer(1 "top")
 	Line[37.2000mm 58.9000mm 94.7000mm 58.9000mm 1.0000mm 0.6000mm "clearline"]
 	Line[94.7000mm 58.9000mm 97.3000mm 61.5000mm 1.0000mm 0.6000mm "clearline"]
 	Line[31.2000mm 61.7000mm 36.2000mm 56.7000mm 1.0000mm 0.6000mm "clearline"]
-	Line[36.2000mm 56.7000mm 40.1000mm 56.7000mm 1.0000mm 0.6000mm "clearline"]
-	Line[40.1000mm 56.7000mm 95.7000mm 56.7000mm 1.0000mm 0.6000mm "clearline"]
+	Line[36.2000mm 56.7000mm 95.7000mm 56.7000mm 1.0000mm 0.6000mm "clearline"]
 	Line[95.7000mm 56.7000mm 99.5000mm 60.5000mm 1.0000mm 0.6000mm "clearline"]
 	Line[32.3000mm 62.2000mm 36.7000mm 57.8000mm 0.3000mm 0.6000mm "clearline"]
 	Line[36.7000mm 57.8000mm 95.2000mm 57.8000mm 0.3000mm 0.6000mm "clearline"]
@@ -6492,7 +6461,7 @@ Layer(1 "top")
 	Line[4500.00mil 118.9000mm 115.6000mm 118.9000mm 1.0000mm 0.6000mm "clearline"]
 	Line[116.2000mm 118.7000mm 116.2000mm 118.9000mm 0.4000mm 0.6000mm "clearline"]
 	Line[115.3000mm 118.9000mm 116.4000mm 118.9000mm 1.4000mm 0.6000mm "clearline"]
-	Line[115.3000mm 122.6000mm 115.3000mm 121.8000mm 1.4000mm 0.6000mm "clearline"]
+	Line[115.3000mm 122.7000mm 115.3000mm 121.8000mm 1.4000mm 0.6000mm "clearline"]
 	Line[109.6000mm 111.0000mm 108.9000mm 111.7000mm 1.4000mm 0.6000mm "clearline"]
 	Line[109.6000mm 111.0000mm 111.3000mm 111.0000mm 1.4000mm 0.6000mm "clearline"]
 	Line[110.6000mm 109.9000mm 110.6000mm 111.0000mm 1.4000mm 0.6000mm "clearline"]
@@ -6504,7 +6473,7 @@ Layer(1 "top")
 	Line[116.9000mm 74.9000mm 117.2000mm 74.6000mm 1.4000mm 0.6000mm "clearline"]
 	Line[115.5000mm 73.8000mm 116.4000mm 73.8000mm 1.4000mm 0.6000mm "clearline"]
 	Line[116.4000mm 73.8000mm 117.2000mm 74.6000mm 1.4000mm 0.6000mm "clearline"]
-	Line[109.8000mm 72.0000mm 111.8000mm 72.0000mm 1.4000mm 0.6000mm "clearline"]
+	Line[109.8000mm 71.9000mm 111.8000mm 71.9000mm 1.6000mm 0.6000mm "clearline"]
 	Line[111.8000mm 72.0000mm 112.1000mm 71.7000mm 1.4000mm 0.6000mm "clearline"]
 	Line[104.6000mm 117.1000mm 104.6000mm 118.1000mm 1.4000mm 0.6000mm "clearline"]
 	Line[106.8000mm 118.2000mm 106.8000mm 117.0000mm 1.4000mm 0.6000mm "clearline"]
@@ -6538,14 +6507,9 @@ Layer(1 "top")
 	Line[112.7000mm 81.5000mm 109.9000mm 81.5000mm 0.3000mm 0.6000mm "clearline"]
 	Line[109.9000mm 81.5000mm 109.2000mm 82.2000mm 0.3000mm 0.6000mm "clearline"]
 	Line[109.2000mm 82.2000mm 109.2000mm 83.1500mm 0.3000mm 0.6000mm "clearline"]
-	Line[114.6000mm 82.6000mm 111.6000mm 82.6000mm 0.6000mm 0.6000mm "clearline"]
-	Line[109.7000mm 72.1000mm 109.2000mm 72.6000mm 0.6000mm 0.6000mm "clearline"]
-	Line[109.2000mm 72.6000mm 109.2000mm 78.3000mm 0.6000mm 0.6000mm "clearline"]
-	Line[109.2000mm 78.3000mm 111.1000mm 80.2000mm 0.6000mm 0.6000mm "clearline"]
-	Line[111.1000mm 80.2000mm 111.6000mm 80.2000mm 0.6000mm 0.6000mm "clearline"]
+	Line[109.2000mm 72.6000mm 109.2000mm 77.0000mm 0.8000mm 0.6000mm "clearline"]
 	Line[118.9000mm 75.0000mm 118.9000mm 76.3000mm 1.0000mm 0.6000mm "clearline"]
 	Line[118.9000mm 76.3000mm 119.2000mm 76.6000mm 1.0000mm 0.6000mm "clearline"]
-	Line[121.4000mm 100.9000mm 121.4000mm 103.7000mm 2.0000mm 0.6000mm "clearline"]
 	Line[112.2000mm 90.1000mm 114.6000mm 90.1000mm 0.2800mm 0.4000mm "clearline"]
 	Line[110.2500mm 85.1000mm 114.6000mm 85.1000mm 0.2800mm 0.4000mm "clearline"]
 	Line[123.6000mm 67.7000mm 123.6000mm 63.1000mm 2.0000mm 0.6000mm "clearline"]
@@ -6661,17 +6625,8 @@ Layer(1 "top")
 	Line[88.3000mm 51.4000mm 89.7000mm 52.8000mm 0.3000mm 0.6000mm "clearline"]
 	Line[97.8000mm 52.8000mm 89.7000mm 52.8000mm 0.3000mm 0.6000mm "clearline"]
 	Line[114.4000mm 103.0000mm 113.3000mm 101.9000mm 0.3000mm 0.6000mm "clearline"]
-	Line[110.1000mm 104.0000mm 114.8000mm 108.7000mm 0.3000mm 0.6000mm "clearline"]
-	Line[114.8000mm 108.7000mm 116.3000mm 108.7000mm 0.3000mm 0.6000mm "clearline"]
-	Line[110.6000mm 103.7000mm 114.2000mm 107.3000mm 0.3000mm 0.6000mm "clearline"]
-	Line[114.2000mm 107.3000mm 116.3000mm 107.3000mm 0.3000mm 0.6000mm "clearline"]
-	Line[114.4000mm 103.0000mm 116.2000mm 103.0000mm 0.3000mm 0.6000mm "clearline"]
-	Line[116.2000mm 103.0000mm 118.8000mm 105.6000mm 0.3000mm 0.6000mm "clearline"]
-	Line[118.8000mm 105.6000mm 118.8000mm 107.6000mm 0.3000mm 0.6000mm "clearline"]
-	Line[118.8000mm 107.6000mm 120.0000mm 108.8000mm 0.3000mm 0.6000mm "clearline"]
-	Line[120.0000mm 108.8000mm 120.4000mm 108.8000mm 0.3000mm 0.6000mm "clearline"]
-	Line[115.5000mm 104.6000mm 115.5000mm 105.7000mm 0.6000mm 0.6000mm "clearline"]
-	Line[115.3000mm 105.1000mm 4500.00mil 104.9000mm 1.0000mm 0.6000mm "clearline"]
+	Line[110.1000mm 104.0000mm 113.2000mm 107.1000mm 0.3000mm 0.6000mm "clearline"]
+	Line[110.6000mm 103.7000mm 113.4000mm 106.5000mm 0.3000mm 0.6000mm "clearline"]
 	Line[1500.00mil 61.1000mm 36.4000mm 62.8000mm 1.0000mm 0.6000mm "clearline"]
 	Line[36.4000mm 62.8000mm 36.4000mm 64.7000mm 1.0000mm 0.6000mm "clearline"]
 	Line[99.5000mm 60.5000mm 99.5000mm 67.3000mm 1.0000mm 0.6000mm "clearline"]
@@ -6713,8 +6668,6 @@ Layer(1 "top")
 	Line[28.2000mm 104.1000mm 27.5000mm 104.8000mm 1.0000mm 0.6000mm "clearline"]
 	Line[80.9000mm 38.7000mm 82.7000mm 36.9000mm 0.6000mm 0.6000mm "clearline"]
 	Line[82.7000mm 36.9000mm 82.7000mm 35.8000mm 0.6000mm 0.6000mm "clearline"]
-	Line[121.9000mm 112.9000mm 121.9000mm 113.4000mm 1.4000mm 0.6000mm "clearline"]
-	Line[121.9000mm 113.4000mm 116.4000mm 118.9000mm 1.4000mm 0.6000mm "clearline"]
 	Line[122.6000mm 81.5000mm 121.8000mm 81.5000mm 0.6000mm 0.6000mm "clearline"]
 	Line[121.8000mm 81.5000mm 121.4000mm 81.9000mm 0.6000mm 0.6000mm "clearline"]
 	Line[119.7000mm 55.3000mm 119.7000mm 54.4000mm 0.6000mm 0.6000mm "clearline"]
@@ -6723,11 +6676,7 @@ Layer(1 "top")
 	Line[115.8000mm 53.5000mm 116.9000mm 53.5000mm 0.6000mm 0.6000mm "clearline"]
 	Line[116.8000mm 55.3000mm 117.6000mm 55.3000mm 0.6000mm 0.6000mm "clearline"]
 	Line[114.7000mm 59.1000mm 116.4000mm 59.1000mm 0.6000mm 0.6000mm "clearline"]
-	Line[122.7000mm 55.2000mm 122.7000mm 60.3000mm 1.4000mm 0.6000mm "clearline"]
-	Line[123.5000mm 60.3000mm 123.5000mm 55.2000mm 1.4000mm 0.6000mm "clearline"]
-	Line[123.5000mm 55.2000mm 122.7000mm 55.2000mm 1.4000mm 0.6000mm "clearline"]
-	Line[114.2000mm 62.3000mm 113.5000mm 62.3000mm 0.6000mm 0.6000mm "clearline"]
-	Line[113.5000mm 62.3000mm 113.2000mm 62.6000mm 0.6000mm 0.6000mm "clearline"]
+	Line[113.0000mm 62.0000mm 4500.00mil 62.2000mm 0.6000mm 0.6000mm "clearline"]
 	Line[116.5000mm 59.3000mm 116.5000mm 60.7000mm 0.6000mm 0.6000mm "clearline"]
 	Line[116.5000mm 60.7000mm 117.7000mm 61.9000mm 0.6000mm 0.6000mm "clearline"]
 	Line[108.2000mm 55.4000mm 104.7000mm 51.9000mm 0.6000mm 0.6000mm "clearline"]
@@ -6740,8 +6689,7 @@ Layer(1 "top")
 	Line[101.8000mm 45.2000mm 102.4000mm 45.2000mm 1.0000mm 0.6000mm "clearline"]
 	Line[103.9000mm 46.7000mm 102.0000mm 46.7000mm 0.6000mm 0.6000mm "clearline"]
 	Line[102.0000mm 46.7000mm 101.7000mm 47.0000mm 0.6000mm 0.6000mm "clearline"]
-	Line[110.4000mm 32.2000mm 113.9000mm 32.2000mm 0.6000mm 0.6000mm "clearline"]
-	Line[113.9000mm 32.2000mm 114.4000mm 32.2000mm 0.6000mm 0.6000mm "clearline"]
+	Line[110.4000mm 32.2000mm 114.4000mm 32.2000mm 0.6000mm 0.6000mm "clearline"]
 	Line[115.0000mm 30.5000mm 115.0000mm 29.7000mm 0.6000mm 0.6000mm "clearline"]
 	Line[113.2000mm 29.7000mm 111.2000mm 29.7000mm 0.6000mm 0.6000mm "clearline"]
 	Line[111.2000mm 29.7000mm 110.0000mm 28.5000mm 0.6000mm 0.6000mm "clearline"]
@@ -7105,7 +7053,7 @@ Layer(1 "top")
 	Line[62.8000mm 63.6000mm 65.5000mm 63.6000mm 0.3000mm 0.6000mm "clearline"]
 	Line[65.5000mm 63.6000mm 65.9000mm 64.0000mm 0.3000mm 0.6000mm "clearline"]
 	Line[65.9000mm 64.0000mm 65.9000mm 65.1000mm 0.3000mm 0.6000mm "clearline"]
-	Line[62.6000mm 65.2000mm 2500.00mil 65.2000mm 1.0000mm 0.6000mm "clearline"]
+	Line[62.6000mm 65.2000mm 63.7000mm 65.5000mm 1.0000mm 0.6000mm "clearline"]
 	Line[56.7000mm 65.5000mm 57.9000mm 65.5000mm 0.6000mm 0.6000mm "clearline"]
 	Line[56.7000mm 64.1000mm 57.2000mm 64.1000mm 0.6000mm 0.6000mm "clearline"]
 	Line[57.2000mm 64.1000mm 57.9000mm 63.4000mm 0.6000mm 0.6000mm "clearline"]
@@ -7139,14 +7087,39 @@ Layer(1 "top")
 	Line[54.7000mm 52.9000mm 32.5000mm 52.9000mm 0.3000mm 0.6000mm "clearline"]
 	Line[32.5000mm 52.9000mm 31.5000mm 53.9000mm 0.3000mm 0.6000mm "clearline"]
 	Line[31.5000mm 53.9000mm 28.0000mm 53.9000mm 0.3000mm 0.6000mm "clearline"]
-	Line[102.3130mm 133.9950mm 103.9640mm 133.9950mm 20.00mil 10.00mil ""]
-	Line[102.3130mm 135.2650mm 103.9640mm 135.2650mm 20.00mil 10.00mil ""]
-	Line[102.3130mm 136.5350mm 103.9640mm 136.5350mm 20.00mil 10.00mil ""]
-	Line[102.3130mm 137.8050mm 103.9640mm 137.8050mm 20.00mil 10.00mil ""]
-	Line[95.8360mm 137.8050mm 97.4870mm 137.8050mm 20.00mil 10.00mil ""]
-	Line[95.8360mm 136.5350mm 97.4870mm 136.5350mm 20.00mil 10.00mil ""]
-	Line[95.8360mm 135.2650mm 97.4870mm 135.2650mm 20.00mil 10.00mil ""]
-	Line[95.8360mm 133.9950mm 97.4870mm 133.9950mm 20.00mil 10.00mil ""]
+	Line[113.4000mm 106.5000mm 115.6000mm 106.5000mm 0.3000mm 0.6000mm "clearline"]
+	Line[115.6000mm 106.5000mm 117.6000mm 104.5000mm 0.3000mm 0.6000mm "clearline"]
+	Line[117.6000mm 104.5000mm 118.5000mm 104.5000mm 0.3000mm 0.6000mm "clearline"]
+	Line[113.2000mm 107.1000mm 115.8000mm 107.1000mm 0.3000mm 0.6000mm "clearline"]
+	Line[115.8000mm 107.1000mm 117.0000mm 105.9000mm 0.3000mm 0.6000mm "clearline"]
+	Line[117.0000mm 105.9000mm 118.6000mm 105.9000mm 0.3000mm 0.6000mm "clearline"]
+	Line[114.4000mm 103.0000mm 119.4000mm 103.0000mm 0.3000mm 0.6000mm "clearline"]
+	Line[119.4000mm 103.0000mm 119.9000mm 103.5000mm 0.3000mm 0.6000mm "clearline"]
+	Line[119.9000mm 103.5000mm 119.9000mm 106.6000mm 0.3000mm 0.6000mm "clearline"]
+	Line[119.9000mm 106.6000mm 119.4000mm 107.1000mm 0.3000mm 0.6000mm "clearline"]
+	Line[115.4000mm 104.6000mm 114.4000mm 104.6000mm 0.6000mm 0.6000mm "clearline"]
+	Line[114.4000mm 104.6000mm 114.2000mm 104.8000mm 0.6000mm 0.6000mm "clearline"]
+	Line[119.3000mm 100.0000mm 121.6000mm 102.3000mm 2.0000mm 0.6000mm "clearline"]
+	Line[121.6000mm 102.3000mm 121.6000mm 4500.00mil 2.0000mm 0.6000mm "clearline"]
+	Line[121.6000mm 114.4000mm 122.6000mm 115.4000mm 2.0000mm 0.6000mm "clearline"]
+	Line[122.6000mm 115.4000mm 123.7000mm 115.4000mm 2.0000mm 0.6000mm "clearline"]
+	Line[123.7000mm 112.7000mm 121.6000mm 112.7000mm 2.0000mm 0.6000mm "clearline"]
+	Line[116.4000mm 118.9000mm 121.6000mm 113.7000mm 1.4000mm 0.6000mm "clearline"]
+	Line[121.8000mm 56.5000mm 121.2000mm 57.7000mm 1.4000mm 0.6000mm "clearline"]
+	Line[121.2000mm 57.7000mm 121.8000mm 58.9000mm 1.4000mm 0.6000mm "clearline"]
+	Line[124.2000mm 101.7000mm 124.2000mm 109.0000mm 1.4000mm 0.6000mm "clearline"]
+	Line[111.6000mm 79.3000mm 111.6000mm 77.7000mm 1.4000mm 0.6000mm "clearline"]
+	Line[109.2000mm 72.6000mm 109.6000mm 72.2000mm 0.8000mm 0.6000mm "clearline"]
+	Line[109.2000mm 77.0000mm 109.9000mm 77.7000mm 0.8000mm 0.6000mm "clearline"]
+	Line[72.2000mm 69.4000mm 72.2000mm 70.2000mm 0.3000mm 0.6000mm "clearline"]
+	Line[72.2000mm 70.2000mm 72.6000mm 70.6000mm 0.3000mm 0.6000mm "clearline"]
+	Line[72.6000mm 70.6000mm 72.6000mm 70.9000mm 0.3000mm 0.6000mm "clearline"]
+	Line[70.5000mm 71.2000mm 70.5000mm 70.0000mm 0.3000mm 0.6000mm "clearline"]
+	Line[70.5000mm 70.0000mm 71.0000mm 69.5000mm 0.3000mm 0.6000mm "clearline"]
+	Line[71.0000mm 69.5000mm 72.2000mm 69.5000mm 0.3000mm 0.6000mm "clearline"]
+	Line[73.4000mm 70.8000mm 73.4000mm 70.9000mm 0.3000mm 0.6000mm "clearline"]
+	Line[73.4000mm 70.9000mm 74.5000mm 72.0000mm 0.3000mm 0.6000mm "clearline"]
+	Line[74.5000mm 72.0000mm 74.5000mm 72.5000mm 0.3000mm 0.6000mm "clearline"]
 	Arc[85.7000mm 39.7000mm 0.4000mm 0.4000mm 0.2000mm 0.4000mm -90 90 "clearline"]
 	Arc[74.4000mm 37.3000mm 0.8000mm 0.8000mm 0.3000mm 0.6000mm -180 90 "clearline"]
 	Arc[29.9000mm 109.1000mm 2.2000mm 2.2000mm 0.3000mm 0.6000mm -180 90 "clearline"]
@@ -7318,12 +7291,18 @@ Layer(1 "top")
 		[45.6000mm 79.4000mm] [48.2000mm 79.4000mm] [48.9000mm 78.7000mm] [54.2000mm 78.7000mm] [54.2000mm 82.0000mm] 
 		[45.6000mm 82.0000mm] 
 	)
+	Polygon("")
+	(
+		[124.6000mm 53.8000mm] [124.4000mm 53.6000mm] [122.4000mm 53.6000mm] [121.8000mm 54.2000mm] [121.8000mm 61.0000mm] 
+		[122.0000mm 61.2000mm] [124.4000mm 61.2000mm] [124.6000mm 61.0000mm] 
+	)
 )
 Layer(2 "in1")
 (
 	Line[34.5000mm 36.5000mm 41.0000mm 36.5000mm 0.3000mm 0.6000mm "clearline"]
-	Line[67.0000mm 36.5000mm 73.5000mm 36.5000mm 0.3000mm 0.6000mm "clearline"]
+	Line[67.0000mm 36.5000mm 73.2000mm 36.5000mm 0.3000mm 0.6000mm "clearline"]
 	Line[41.0000mm 36.5000mm 67.0000mm 36.5000mm 0.2000mm 0.4000mm "clearline"]
+	Text[58.1000mm 121.1000mm 0 150 "xaVNA T/R R002" "clearline"]
 	Polygon("clearpoly")
 	(
 		[125.0000mm 63.0000mm] [108.5000mm 63.0000mm] [108.5000mm 77.0000mm] [125.0000mm 77.0000mm] 
@@ -7479,8 +7458,7 @@ Layer(3 "in2")
 	Line[116.5000mm 93.2000mm 116.5000mm 99.8000mm 0.6000mm 0.6000mm "clearline"]
 	Line[116.5000mm 99.8000mm 116.0000mm 100.3000mm 0.6000mm 0.6000mm "clearline"]
 	Line[116.0000mm 100.3000mm 114.6000mm 100.3000mm 0.6000mm 0.6000mm "clearline"]
-	Line[119.2000mm 76.6000mm 119.2000mm 98.7000mm 2.0000mm 0.6000mm "clearline"]
-	Line[119.2000mm 98.7000mm 121.4000mm 100.9000mm 2.0000mm 0.6000mm "clearline"]
+	Line[119.2000mm 76.6000mm 119.2000mm 100.5000mm 2.0000mm 0.6000mm "clearline"]
 	Line[119.2000mm 73.3000mm 119.2000mm 76.6000mm 1.4000mm 0.6000mm "clearline"]
 	Line[120.5000mm 61.4000mm 120.5000mm 72.0000mm 1.4000mm 0.6000mm "clearline"]
 	Line[120.5000mm 72.0000mm 119.2000mm 73.3000mm 1.4000mm 0.6000mm "clearline"]
@@ -7489,10 +7467,9 @@ Layer(3 "in2")
 	Line[112.9000mm 70.3000mm 112.9000mm 67.3000mm 0.6000mm 0.6000mm "clearline"]
 	Line[112.9000mm 67.3000mm 113.6000mm 66.6000mm 0.6000mm 0.6000mm "clearline"]
 	Line[113.6000mm 66.6000mm 113.6000mm 64.7000mm 0.6000mm 0.6000mm "clearline"]
-	Line[114.8000mm 2500.00mil 116.3000mm 62.0000mm 0.6000mm 0.6000mm "clearline"]
 	Line[116.3000mm 62.0000mm 116.3000mm 58.1000mm 0.6000mm 0.6000mm "clearline"]
 	Line[116.3000mm 58.1000mm 119.1000mm 55.3000mm 0.6000mm 0.6000mm "clearline"]
-	Line[113.6000mm 64.7000mm 114.8000mm 2500.00mil 0.6000mm 0.6000mm "clearline"]
+	Line[116.3000mm 62.0000mm 113.6000mm 64.7000mm 0.6000mm 0.6000mm "clearline"]
 	Line[32.3000mm 44.0000mm 32.3000mm 87.8000mm 0.2000mm 1.0000mm "clearline"]
 	Line[33.4000mm 44.5000mm 33.4000mm 87.8000mm 1.0000mm 0.6000mm ""]
 	Line[73.4000mm 31.2000mm 76.3000mm 31.2000mm 0.2000mm 1.0000mm "clearline"]
@@ -7534,11 +7511,6 @@ Layer(3 "in2")
 	Line[91.6000mm 49.3000mm 92.0000mm 49.7000mm 0.3000mm 0.6000mm "clearline"]
 	Line[83.1000mm 47.3000mm 87.2000mm 51.4000mm 0.3000mm 0.6000mm "clearline"]
 	Line[87.2000mm 51.4000mm 88.3000mm 51.4000mm 0.3000mm 0.6000mm "clearline"]
-	Line[115.5000mm 104.6000mm 115.5000mm 105.7000mm 1.0000mm 0.6000mm "clearline"]
-	Line[115.7000mm 105.1000mm 118.5000mm 105.1000mm 1.4000mm 0.6000mm "clearline"]
-	Line[118.5000mm 105.1000mm 120.4000mm 103.7000mm 1.4000mm 0.6000mm "clearline"]
-	Line[120.4000mm 103.7000mm 121.3000mm 101.8000mm 1.4000mm 0.6000mm "clearline"]
-	Line[121.3000mm 101.8000mm 121.4000mm 101.0000mm 1.4000mm 0.6000mm "clearline"]
 	Line[31.2000mm 89.8000mm 31.2000mm 43.5000mm 1.0000mm 0.6000mm ""]
 	Line[35.1000mm 108.4000mm 35.1000mm 106.7000mm 0.2000mm 1.0000mm "clearline"]
 	Line[33.3000mm 104.9000mm 31.0000mm 104.9000mm 0.2000mm 1.0000mm "clearline"]
@@ -7620,6 +7592,9 @@ Layer(3 "in2")
 	Line[75.1000mm 49.3000mm 46.5000mm 49.3000mm 0.6000mm 0.6000mm "clearline"]
 	Line[46.5000mm 49.3000mm 45.7000mm 50.1000mm 0.6000mm 0.6000mm "clearline"]
 	Line[45.7000mm 56.8000mm 45.7000mm 50.1000mm 0.6000mm 0.6000mm "clearline"]
+	Line[111.6000mm 79.3000mm 111.6000mm 81.6000mm 1.4000mm 0.6000mm "clearline"]
+	Line[111.6000mm 81.6000mm 112.6000mm 82.6000mm 1.4000mm 0.6000mm "clearline"]
+	Line[112.6000mm 82.6000mm 114.6000mm 82.6000mm 1.4000mm 0.6000mm "clearline"]
 	Arc[76.3000mm 32.4000mm 1.2000mm 1.2000mm 0.2000mm 1.0000mm -180 90 "clearline"]
 	Arc[36.4000mm 118.2000mm 1.3000mm 1.3000mm 0.2000mm 1.0000mm 0 90 "clearline"]
 	Arc[33.3000mm 106.7000mm 1.8000mm 1.8000mm 0.2000mm 1.0000mm 180 90 "clearline"]
@@ -7689,8 +7664,40 @@ Layer(3 "in2")
 		[125.0000mm 54.0000mm] [74.0000mm 54.0000mm] [74.0000mm 25.5000mm] [125.0000mm 25.5000mm] 
 	)
 )
-Layer(4 "signal3")
+Layer(4 "scratch")
 (
+	Line[29.0000mm 127.5000mm 29.0000mm 136.0000mm 0.3000mm 0.6000mm "clearline"]
+	Line[122.0000mm 127.5000mm 122.0000mm 136.0000mm 0.3000mm 0.6000mm "clearline"]
+	Line[30.5000mm 132.0000mm 68.5000mm 132.0000mm 0.3000mm 0.6000mm "clearline"]
+	Line[82.0000mm 132.0000mm 121.0000mm 132.0000mm 0.3000mm 0.6000mm "clearline"]
+	Line[25.5000mm 127.5000mm 25.5000mm 147.0000mm 0.3000mm 0.6000mm "clearline"]
+	Line[125.5000mm 127.5000mm 125.5000mm 147.5000mm 0.3000mm 0.6000mm "clearline"]
+	Line[26.5000mm 141.0000mm 72.5000mm 141.0000mm 0.3000mm 0.6000mm "clearline"]
+	Line[85.0000mm 141.0000mm 124.5000mm 141.0000mm 0.3000mm 0.6000mm "clearline"]
+	Line[24.0000mm 125.0000mm 16.5000mm 125.0000mm 0.3000mm 0.6000mm "clearline"]
+	Line[24.0000mm 112.5000mm 16.5000mm 112.5000mm 0.3000mm 0.6000mm "clearline"]
+	Line[128.0000mm 25.0000mm 147.5000mm 25.0000mm 0.3000mm 0.6000mm "clearline"]
+	Line[128.0000mm 125.0000mm 155.0000mm 125.0000mm 0.3000mm 0.6000mm "clearline"]
+	Line[143.5000mm 72.0000mm 143.5000mm 26.0000mm 0.3000mm 0.6000mm "clearline"]
+	Line[143.5000mm 124.0000mm 143.5000mm 84.5000mm 0.3000mm 0.6000mm "clearline"]
+	Line[128.0000mm 28.5000mm 136.5000mm 28.5000mm 0.3000mm 0.6000mm "clearline"]
+	Line[128.0000mm 121.5000mm 136.5000mm 121.5000mm 0.3000mm 0.6000mm "clearline"]
+	Line[132.0000mm 68.0000mm 132.0000mm 30.0000mm 0.3000mm 0.6000mm "clearline"]
+	Line[132.0000mm 120.5000mm 132.0000mm 81.5000mm 0.3000mm 0.6000mm "clearline"]
+	Line[128.0000mm 105.3000mm 155.0000mm 105.3000mm 0.3000mm 0.6000mm "clearline"]
+	Line[24.0000mm 36.5000mm 16.5000mm 36.5000mm 0.3000mm 0.6000mm "clearline"]
+	Line[23.5000mm 25.0000mm 8.5000mm 25.0000mm 0.3000mm 0.6000mm "clearline"]
+	Line[24.0000mm 54.0000mm 8.5000mm 54.0000mm 0.3000mm 0.6000mm "clearline"]
+	Line[10.5000mm 36.5000mm 10.5000mm 26.5000mm 0.3000mm 0.6000mm "clearline"]
+	Line[10.5000mm 45.0000mm 10.5000mm 52.5000mm 0.3000mm 0.6000mm "clearline"]
+	Text[73.5000mm 129.0000mm 0 372 "93" "clearline"]
+	Text[74.5000mm 138.0000mm 0 372 "100" "clearline"]
+	Text[22.5000mm 113.5000mm 3 372 "12.5" "clearline"]
+	Text[146.5000mm 74.0000mm 3 372 "100" "clearline"]
+	Text[135.0000mm 73.0000mm 3 372 "93" "clearline"]
+	Text[155.0000mm 109.8000mm 3 372 "19.7" "clearline"]
+	Text[22.0000mm 26.5000mm 3 372 "11.5" "clearline"]
+	Text[13.5000mm 38.0000mm 3 372 "29" "clearline"]
 )
 Layer(5 "power")
 (
@@ -7781,16 +7788,6 @@ Layer(6 "bottom")
 	Line[94.3000mm 39.9000mm 93.5000mm 39.9000mm 0.3000mm 0.6000mm "clearline"]
 	Line[93.5000mm 39.9000mm 91.8000mm 38.2000mm 0.3000mm 0.6000mm "clearline"]
 	Line[91.8000mm 38.2000mm 91.8000mm 37.1000mm 0.3000mm 0.6000mm "clearline"]
-	Line[118.5000mm 107.4000mm 116.0000mm 107.4000mm 0.3000mm 0.6000mm "clearline"]
-	Line[116.0000mm 107.4000mm 115.9000mm 107.3000mm 0.3000mm 0.6000mm "clearline"]
-	Line[120.2000mm 109.0000mm 118.1000mm 109.0000mm 0.5000mm 0.6000mm "clearline"]
-	Line[118.0000mm 108.2000mm 116.5000mm 108.2000mm 0.3000mm 0.6000mm "clearline"]
-	Line[116.5000mm 108.2000mm 116.0000mm 108.7000mm 0.3000mm 0.6000mm "clearline"]
-	Line[116.0000mm 108.7000mm 115.8000mm 108.7000mm 0.3000mm 0.6000mm "clearline"]
-	Line[118.3000mm 106.3000mm 117.2000mm 106.3000mm 1.0000mm 0.6000mm "clearline"]
-	Line[117.2000mm 106.3000mm 115.6000mm 104.7000mm 1.0000mm 0.6000mm "clearline"]
-	Line[115.6000mm 104.7000mm 115.6000mm 105.7000mm 1.0000mm 0.6000mm "clearline"]
-	Line[115.6000mm 105.7000mm 116.6000mm 105.7000mm 1.0000mm 0.6000mm "clearline"]
 	Line[89.2000mm 90.1000mm 89.2000mm 91.2000mm 0.6000mm 0.6000mm "clearline"]
 	Line[89.2000mm 91.2000mm 89.3000mm 91.3000mm 0.6000mm 0.6000mm "clearline"]
 	Line[53.2000mm 113.9000mm 52.5000mm 113.1000mm 0.5000mm 0.6000mm "clearline"]
@@ -7817,6 +7814,19 @@ Layer(6 "bottom")
 	Line[47.8000mm 106.5000mm 48.6000mm 106.5000mm 0.6000mm 0.6000mm "clearline"]
 	Line[53.2000mm 113.9000mm 53.2000mm 114.8000mm 0.6000mm 0.6000mm "clearline"]
 	Line[53.3000mm 117.9000mm 53.3000mm 116.4000mm 0.6000mm 0.6000mm "clearline"]
+	Line[121.8000mm 103.8000mm 120.0000mm 103.8000mm 0.8000mm 0.6000mm "clearline"]
+	Line[120.0000mm 103.6000mm 119.3000mm 102.8000mm 1.2000mm 0.6000mm "clearline"]
+	Line[121.4000mm 104.6000mm 118.6000mm 104.6000mm 0.3000mm 0.6000mm "clearline"]
+	Line[118.6000mm 104.6000mm 118.5000mm 104.5000mm 0.3000mm 0.6000mm "clearline"]
+	Line[121.3000mm 105.3000mm 119.4000mm 105.3000mm 0.3000mm 0.6000mm "clearline"]
+	Line[119.4000mm 105.3000mm 118.8000mm 105.9000mm 0.3000mm 0.6000mm "clearline"]
+	Line[118.8000mm 105.9000mm 118.6000mm 105.9000mm 0.3000mm 0.6000mm "clearline"]
+	Line[121.3000mm 106.0000mm 120.1000mm 106.0000mm 0.3000mm 0.5000mm "clearline"]
+	Line[120.1000mm 106.0000mm 119.4000mm 106.7000mm 0.3000mm 0.6000mm "clearline"]
+	Line[119.4000mm 106.7000mm 119.4000mm 107.1000mm 0.3000mm 0.6000mm "clearline"]
+	Line[117.9000mm 102.1000mm 115.4000mm 104.6000mm 0.6000mm 0.6000mm "clearline"]
+	Line[119.4000mm 100.1000mm 118.9000mm 100.6000mm 3.0000mm 0.6000mm "clearline"]
+	Line[118.9000mm 100.6000mm 118.9000mm 102.1000mm 3.0000mm 0.6000mm "clearline"]
 	Polygon("clearpoly")
 	(
 		[125.0000mm 63.0000mm] [108.5000mm 63.0000mm] [108.5000mm 77.0000mm] [125.0000mm 77.0000mm] 
@@ -7883,7 +7893,7 @@ Layer(7 "outline")
 	Line[125.5000mm 125.0000mm 25.5000mm 125.0000mm 0.3000mm 0.6000mm "clearline"]
 	Line[25.5000mm 125.0000mm 25.5000mm 25.0000mm 0.3000mm 0.6000mm "clearline"]
 	Line[25.5000mm 25.0000mm 125.5000mm 25.0000mm 0.3000mm 0.6000mm "clearline"]
-	Line[125.5000mm 125.0000mm 125.5000mm 25.0000mm 0.3000mm 0.6000mm "clearline"]
+	Line[125.5000mm 125.0000mm 125.5000mm 25.0000mm 0.3000mm 0.5500mm "clearline"]
 	Line[40.5000mm 39.5000mm 40.5000mm 46.0000mm 0.3000mm 0.6000mm "clearline"]
 	Line[67.5000mm 46.0000mm 67.5000mm 39.5000mm 0.3000mm 0.6000mm "clearline"]
 	Line[66.5000mm 38.5000mm 41.5000mm 38.5000mm 0.3000mm 0.6000mm "clearline"]
@@ -7918,9 +7928,9 @@ Layer(9 "silk")
 Layer(10 "silk")
 (
 	Line[80.5000mm 73.1000mm 79.8000mm 73.8000mm 0.2800mm 0.4000mm "clearline"]
-	Line[59.6000mm 69.2000mm 59.2000mm 68.8000mm 0.2800mm 0.4000mm "clearline"]
-	Line[62.2000mm 64.1000mm 61.6000mm 64.1000mm 0.2800mm 0.4000mm "clearline"]
-	Line[62.2000mm 64.1000mm 62.2000mm 64.7000mm 0.2800mm 0.4000mm "clearline"]
+	Line[59.6000mm 69.2000mm 59.1000mm 68.7000mm 0.2800mm 0.4000mm "clearline"]
+	Line[61.9000mm 64.4000mm 61.3000mm 64.4000mm 0.2800mm 0.4000mm "clearline"]
+	Line[61.9000mm 64.4000mm 61.9000mm 65.0000mm 0.2800mm 0.4000mm "clearline"]
 	Line[116.1000mm 69.9000mm 115.6000mm 69.4000mm 0.2800mm 0.4000mm "clearline"]
 	Line[116.8000mm 37.3000mm 117.7000mm 36.4000mm 0.2000mm 0.6000mm "clearline"]
 	Line[110.1000mm 114.4000mm 109.4000mm 113.7000mm 0.2800mm 0.4000mm "clearline"]
@@ -7942,36 +7952,11 @@ Layer(10 "silk")
 	Line[53.8000mm 68.5000mm 54.4000mm 67.9000mm 0.3000mm 0.6000mm "clearline"]
 	Line[70.9000mm 64.0000mm 71.5000mm 63.4000mm 0.3000mm 0.6000mm "clearline"]
 	Line[80.2000mm 90.5000mm 79.0000mm 89.3000mm 0.3000mm 0.6000mm "clearline"]
-	Line[62.2000mm 64.1000mm 62.7000mm 63.6000mm 0.3000mm 0.6000mm "clearline"]
-	Line[128.0000mm 25.0000mm 147.5000mm 25.0000mm 0.3000mm 0.6000mm "clearline"]
-	Line[128.0000mm 125.0000mm 155.0000mm 125.0000mm 0.3000mm 0.6000mm "clearline"]
-	Line[143.5000mm 72.0000mm 143.5000mm 26.0000mm 0.3000mm 0.6000mm "clearline"]
-	Line[143.5000mm 124.0000mm 143.5000mm 84.5000mm 0.3000mm 0.6000mm "clearline"]
-	Line[128.0000mm 28.5000mm 136.5000mm 28.5000mm 0.3000mm 0.6000mm "clearline"]
-	Line[128.0000mm 121.5000mm 136.5000mm 121.5000mm 0.3000mm 0.6000mm "clearline"]
-	Line[132.0000mm 68.0000mm 132.0000mm 30.0000mm 0.3000mm 0.6000mm "clearline"]
-	Line[132.0000mm 120.5000mm 132.0000mm 81.5000mm 0.3000mm 0.6000mm "clearline"]
-	Line[128.0000mm 108.3000mm 155.0000mm 108.3000mm 0.3000mm 0.6000mm "clearline"]
-	Line[29.0000mm 127.5000mm 29.0000mm 136.0000mm 0.3000mm 0.6000mm "clearline"]
-	Line[122.0000mm 127.5000mm 122.0000mm 136.0000mm 0.3000mm 0.6000mm "clearline"]
-	Line[30.5000mm 132.0000mm 68.5000mm 132.0000mm 0.3000mm 0.6000mm "clearline"]
-	Line[82.0000mm 132.0000mm 121.0000mm 132.0000mm 0.3000mm 0.6000mm "clearline"]
-	Line[25.5000mm 127.5000mm 25.5000mm 147.0000mm 0.3000mm 0.6000mm "clearline"]
-	Line[125.5000mm 127.5000mm 125.5000mm 147.5000mm 0.3000mm 0.6000mm "clearline"]
-	Line[26.5000mm 141.0000mm 72.5000mm 141.0000mm 0.3000mm 0.6000mm "clearline"]
-	Line[85.0000mm 141.0000mm 124.5000mm 141.0000mm 0.3000mm 0.6000mm "clearline"]
-	Line[24.0000mm 125.0000mm 16.5000mm 125.0000mm 0.3000mm 0.6000mm "clearline"]
-	Line[24.0000mm 112.5000mm 16.5000mm 112.5000mm 0.3000mm 0.6000mm "clearline"]
-	Line[24.0000mm 36.5000mm 16.5000mm 36.5000mm 0.3000mm 0.6000mm "clearline"]
-	Line[23.5000mm 25.0000mm 16.0000mm 25.0000mm 0.3000mm 0.6000mm "clearline"]
-	Line[104.4720mm 133.4870mm 100.5350mm 133.4870mm 10.00mil 0.0000 ""]
-	Line[95.3280mm 133.4870mm 99.2650mm 133.4870mm 10.00mil 0.0000 ""]
-	Line[104.4720mm 138.3130mm 104.4720mm 133.4870mm 10.00mil 0.0000 ""]
-	Line[95.3280mm 138.3130mm 104.4720mm 138.3130mm 10.00mil 0.0000 ""]
-	Line[95.3280mm 133.4870mm 95.3280mm 138.3130mm 10.00mil 0.0000 ""]
-	Arc[99.9000mm 133.4870mm 25.00mil 25.00mil 10.00mil 0.0000 0 180 ""]
-	Text[73.2000mm 68.6000mm 0 59 "INT" "clearline"]
-	Text[73.2000mm 70.4000mm 0 59 "EXT" "clearline"]
+	Line[61.7000mm 64.6000mm 62.2000mm 64.1000mm 0.3000mm 0.6000mm "clearline"]
+	Line[90.4000mm 46.1000mm 90.4000mm 46.1000mm 0.5540mm 0.6000mm "clearline"]
+	Line[93.8000mm 46.3000mm 93.8000mm 46.3000mm 0.5540mm 0.6000mm "clearline"]
+	Line[91.8000mm 43.2000mm 91.8000mm 43.2000mm 0.5540mm 0.6000mm "clearline"]
+	Text[74.2000mm 70.3000mm 0 59 "EXT" "clearline"]
 	Text[102.4000mm 81.7000mm 0 100 "TDI" "clearline"]
 	Text[102.3000mm 84.3000mm 0 100 "TCK" "clearline"]
 	Text[101.9000mm 86.8000mm 0 100 "TMS" "clearline"]
@@ -7982,15 +7967,12 @@ Layer(10 "silk")
 	Text[32.9000mm 113.3000mm 3 122 "S21" "clearline"]
 	Text[110.2000mm 91.9000mm 1 122 "LCD" "clearline"]
 	Text[77.5000mm 27.0000mm 0 122 "github.com/xaxaxa/vna" "clearline"]
-	Text[146.5000mm 74.0000mm 3 372 "100" "clearline"]
-	Text[135.0000mm 73.0000mm 3 372 "93" "clearline"]
-	Text[156.0000mm 112.0000mm 3 372 "16.7" "clearline"]
-	Text[73.5000mm 129.0000mm 0 372 "93" "clearline"]
-	Text[74.5000mm 138.0000mm 0 372 "100" "clearline"]
-	Text[22.5000mm 113.5000mm 3 372 "12.5" "clearline"]
-	Text[22.0000mm 26.5000mm 3 372 "11.5" "clearline"]
 	Text[31.5000mm 50.3000mm 0 100 "REF IN" "clearline"]
 	Text[31.6000mm 52.2000mm 0 100 "19.2MHz" "clearline"]
+	Text[123.2000mm 72.0000mm 1 100 "3.3V" "clearline"]
+	Text[122.7000mm 53.1000mm 1 100 "GND" "clearline"]
+	Text[120.8000mm 114.5000mm 1 100 "5V" "clearline"]
+	Text[121.4000mm 106.5000mm 1 100 "GND" "clearline"]
 )
 NetList()
 (
@@ -8147,6 +8129,8 @@ NetList()
 		Connect("G1-1")
 		Connect("G2-1")
 		Connect("G3-1")
+		Connect("G4-1")
+		Connect("G5-1")
 		Connect("LED1-2")
 		Connect("LED4-2")
 		Connect("LED5-2")
@@ -8188,8 +8172,10 @@ NetList()
 		Connect("T1-1")
 		Connect("T2-1")
 		Connect("T3-1")
+		Connect("T11-1")
 		Connect("T12-1")
 		Connect("T13-1")
+		Connect("T15-1")
 		Connect("U1-1")
 		Connect("U1-14")
 		Connect("U1-16")
@@ -9511,7 +9497,6 @@ NetList()
 	)
 	Net("unnamed_net203" "(unknown)")
 	(
-		Connect("B1-1")
 		Connect("C59-2")
 		Connect("C119-1")
 		Connect("C135-1")
@@ -9520,6 +9505,7 @@ NetList()
 		Connect("L20-2")
 		Connect("R35-1")
 		Connect("R49-1")
+		Connect("R65-2")
 		Connect("U15-26")
 		Connect("U15-28")
 		Connect("U15-32")
@@ -9602,8 +9588,8 @@ NetList()
 	)
 	Net("unnamed_net218" "(unknown)")
 	(
-		Connect("B1-2")
 		Connect("B2-1")
+		Connect("R65-1")
 		Connect("U18-16")
 	)
 	Net("unnamed_net219" "(unknown)")
