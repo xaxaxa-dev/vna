@@ -12,6 +12,8 @@
 #include <stdarg.h>
 #include <termios.h>
 #include <fftw3.h>
+#include <array>
+#include "include/xavna.h"
 
 //#include "adf4350_board.H"
 
@@ -25,18 +27,18 @@ using namespace std;
 
 // settings
 int nPoints=50;
-int startFreq=17000;
-int freqStep=200;
-double freqMultiplier=0.1; //19.2/4;
+int startFreq=1700000;
+int freqStep=20000;
+double freqMultiplier=0.001;
 bool timeDomain = false;
 bool showCursor = true;
+bool newBoard = true;
+int timeScale=3;
 
-int nWait=50;		//number of data points to skip after changing frequency
-int nValues=150;	//number of data points to integrate over
-int nWaitExtended=150;
-int nValuesExtended=250;
+int nValues=100;	//number of data points to integrate over
+int nValuesExtended=100;
 
-int reflIndex=3, thruIndex=4;
+int reflIndex=0, thruIndex=1;
 
 
 // globals
@@ -45,7 +47,7 @@ int reflIndex=3, thruIndex=4;
 extern unsigned char vna_glade[];
 extern unsigned int vna_glade_len;
 
-int ttyFD=-1;
+void* xavna_dev=NULL;
 Glib::RefPtr<Gtk::Builder> builder;
 xaxaxa::PolarView* polarView=NULL;
 xaxaxa::GraphView* graphView=NULL;
@@ -59,10 +61,9 @@ bool use_cal=false;
 vector<complex<double> > cal_oc,cal_sc,cal_t;	// measured raw values for the 3 calib references
 vector<complex<double> > cal_X,cal_Y,cal_Z;		// the 3 calibration terms
 vector<complex<double> > cal_thru;				// the raw value for the thru reference
+vector<complex<double> > cal_thru_leak;			// leakage from port 1 to 2
 
-struct complex5 {
-	complex<double> val[5];
-};
+typedef array<complex<double>,2> complex2;
 
 // forward declarations
 void updateFreqButton();
@@ -86,7 +87,8 @@ double gauss(double x, double m, double s) {
 }
 
 int timePoints() {
-	return (nPoints*3-1);
+	//return (nPoints*3-1);
+	return nPoints*timeScale;
 }
 
 // returns MHz
@@ -101,171 +103,52 @@ double timeAt(int i) {
 }
 
 
-//writes the commands in the buffer to stdout
-void doWriteSPI(string buf) {
-	//fill in the register address in every byte and set the data enable bit
-	for(int i=0;i<(int)buf.length();i++)
-		buf[i] |= 2 << 4 | 1<<3;
-	assert(write(ttyFD,buf.data(),buf.length())==(int)buf.length());
-}
-
-u64 sx(u64 data, int bits) {
-	u64 mask=~u64(u64(1LL<<bits) - 1);
-	return data|((data>>(bits-1))?mask:0);
-}
-
-void setFrequency(int N) {
-	int attenuation=0;
-	double freq = N*freqMultiplier;
-	
-	if(freq<400) attenuation=20;
-	else if(freq<1000) attenuation=18;
-	else if(freq<2000) attenuation=14;
-	else if(freq<3000) attenuation=8;
-	else attenuation=2;
-	
-	u8 buf[10] = {
-		1, u8(N>>8),
-		2, u8(N),
-		4, u8(attenuation*2),
-		0, 0,
-		3, 1
-	};
-	assert(write(ttyFD,buf,sizeof(buf))==(int)sizeof(buf));
-}
-
 double avgRe=0,avgIm=0;
-complex<double> processValue(u64 data1,u64 data2) {
-	data1=sx(data1,35);
-	data2=sx(data2,35);
-	
-	return {double((ll)data2), double((ll)data1)};
-}
-
-complex<double> readValue(int cnt) {
-	complex<double> result=0;
-	int bufsize=1024;
-	u8 buf[bufsize];
-	int br;
-	u64 data1,data2;
-	u64* curData=&data1;
-	int n=0,j=0;
-	
-	u8 msb=1<<7;
-	u8 mask=msb-1;
-	while((br=read(ttyFD,buf,sizeof(buf)))>0) {
-		for(int i=0;i<br;i++) {
-			if((buf[i]&msb)==0) {
-				result+=processValue(data1,data2);
-				if(++n >= cnt) return result;
-				data1=0;
-				data2=0;
-				curData=&data1;
-				j=0;
-			}
-			(*curData)|=u64(buf[i]&mask) << j;
-			j+=7;
-			if(j>=35) {
-				j=0;
-				curData=&data2;
-			}
-		}
-	}
-	return 0;
-}
-
-// returns [adc0, adc1, adc2, adc1/adc0, adc2/adc0]
-complex5 readValue3(int cnt) {
-	complex5 result=complex5{{0,0,0,0,0}};
-	int bufsize=1024;
-	u8 buf[bufsize];
-	int br;
-	u64 values[7];
-	int n=0;	// how many sample groups we've read so far
-	int j=0;	// bit offset into current value
-	int k=0;	// which value in the sample group we are currently expecting
-	
-	u8 msb=1<<7;
-	u8 mask=msb-1;
-	u8 checksum = 0;
-	while((br=read(ttyFD,buf,sizeof(buf)))>0) {
-		for(int i=0;i<br;i++) {
-			if((buf[i]&msb)==0) {
-				if(k == 6 && j == 7) {
-					checksum &= 0b1111111;
-					if(checksum != u8(values[6])) {
-						printf("ERROR: checksum should be %d, is %d\n", (int)checksum, (int)(u8)values[6]);
-					}
-					for(int g=0;g<3;g++)
-						result.val[g] += processValue(values[g*2],values[g*2+1]);
-					result.val[3] += result.val[1]/result.val[0];
-					result.val[4] += result.val[2]/result.val[0];
-					if(++n >= cnt) {
-						for(int g=0;g<5;g++)
-							result.val[g] /= cnt;
-						return result;
-					}
-				}
-				values[0]=values[1]=values[2]=0;
-				values[3]=values[4]=values[5]=0;
-				values[6]=0;
-				j=0;
-				k=0;
-				checksum=0b01000110;
-			}
-			if(k<6) checksum = (checksum xor ((checksum<<1) | 1)) xor buf[i];
-			if(k < 7)
-				values[k] |= u64(buf[i]&mask) << j;
-			j+=7;
-			if(j>=35) {
-				j=0;
-				k++;
-			}
-		}
-	}
-	return result;
-}
 
 
 // increment this variable to request the thread take an extended measurement (for when more accuracy is required)
 volatile int requestedMeasurements=0;
 // function to be called from the main thread when a requested measurement is complete
-function<void(vector<complex5>)>* volatile measurementCallback;
+function<void(vector<complex2>)>* volatile measurementCallback;
 
 void* thread1(void* v) {
 	int requestedMeasurementsPrev=requestedMeasurements;
 	
-	complex<double>* reflArray = (complex<double>*)FFTWFUNC(malloc)(nPoints*3*sizeof(complex<double>));
-	complex<double>* thruArray = (complex<double>*)FFTWFUNC(malloc)(nPoints*3*sizeof(complex<double>));
-	double* reflTD = (double*)FFTWFUNC(malloc)(timePoints()*2*sizeof(double));
-	double* thruTD = (double*)FFTWFUNC(malloc)(timePoints()*2*sizeof(double));
+	complex<double>* reflArray = (complex<double>*)FFTWFUNC(malloc)(timePoints()*sizeof(complex<double>));
+	complex<double>* thruArray = (complex<double>*)FFTWFUNC(malloc)(timePoints()*sizeof(complex<double>));
+	//double* reflTD = (double*)FFTWFUNC(malloc)(timePoints()*2*sizeof(double));
+	//double* thruTD = (double*)FFTWFUNC(malloc)(timePoints()*2*sizeof(double));
+	complex<double>* reflTD = (complex<double>*)FFTWFUNC(malloc)(timePoints()*sizeof(complex<double>));
+	complex<double>* thruTD = (complex<double>*)FFTWFUNC(malloc)(timePoints()*sizeof(complex<double>));
 	
 	FFTWFUNC(plan) p1, p2;
-	p1 = fftw_plan_dft_c2r_1d(timePoints()*2, (fftw_complex*)reflArray, reflTD, 0);
-	p2 = fftw_plan_dft_c2r_1d(timePoints()*2, (fftw_complex*)thruArray, thruTD, 0);
+	p1 = fftw_plan_dft_1d(timePoints(), (fftw_complex*)reflArray, (fftw_complex*)reflTD, FFTW_FORWARD, FFTW_ESTIMATE);
+	p2 = fftw_plan_dft_1d(timePoints(), (fftw_complex*)thruArray, (fftw_complex*)thruTD, FFTW_FORWARD, FFTW_ESTIMATE);
+	//p1 = fftw_plan_dft_c2r_1d(timePoints()*2, (fftw_complex*)reflArray, reflTD, 0);
+	//p2 = fftw_plan_dft_c2r_1d(timePoints()*2, (fftw_complex*)thruArray, thruTD, 0);
 	
 	while(true) {
-		memset(reflArray, 0, nPoints*3*sizeof(complex<double>));
-		memset(thruArray, 0, nPoints*3*sizeof(complex<double>));
+		memset(reflArray, 0, timePoints()*sizeof(complex<double>));
+		memset(thruArray, 0, timePoints()*sizeof(complex<double>));
 		
-		int N=startFreq;
+		int freq_kHz=startFreq;
 		for(int i=0;i<nPoints;i++) {
-			printf("%d\n",N);
-			setFrequency(N);
-			readValue3(nWait);
+			printf("%d\n",freq_kHz);
+			xavna_set_frequency(xavna_dev, freq_kHz);
 			
+			complex2 values;
+			xavna_read_values(xavna_dev, (double*)&values, nValues);
 			
-			complex5 values=readValue3(nValues);
-			complex<double> reflValue=values.val[reflIndex];
-			complex<double> thruValue=values.val[thruIndex];
-			printf("%7.2f %20lf %10lf %20lf %10lf\n",N*freqMultiplier,
-				abs(values.val[2]),arg(values.val[2]),abs(values.val[0]),arg(values.val[0]));
+			complex<double> reflValue=values[reflIndex];
+			complex<double> thruValue=values[thruIndex];
+			printf("%7.2f %20lf %10lf %20lf %10lf\n",freq_kHz/1000.,
+				abs(reflValue),arg(reflValue),abs(thruValue),arg(thruValue));
 			auto refl = reflValue;
 			auto thru = thruValue;
 			if(use_cal) {
 				//auto refl=(cal_X[i]*cal_Y[i]-value*cal_Z[i])/(value-cal_X[i]);
-				refl=(cal_X[i]*cal_Y[i]-reflValue)/(reflValue*cal_Z[i]-cal_X[i]);
-				thru=thruValue/cal_thru[i];
+				//refl=(cal_X[i]*cal_Y[i]-reflValue)/(reflValue*cal_Z[i]-cal_X[i]);
+				thru=(thruValue-cal_thru_leak[i])/(cal_thru[i]-cal_thru_leak[i]);
 			}
 			
 			reflArray[i] = refl * gauss(double(i)/nPoints, 0, 0.7);
@@ -276,7 +159,7 @@ void* thread1(void* v) {
 			graphView->lines[2][i] = dB(norm(refl));
 			graphView->lines[3][i] = dB(norm(thru));
 			
-			N+=freqStep;
+			freq_kHz += freqStep;
 			if(requestedMeasurements>requestedMeasurementsPrev) break;
 			if(refreshThreadShouldExit) return NULL;
 		}
@@ -284,11 +167,12 @@ void* thread1(void* v) {
 		FFTWFUNC(execute)(p1);
 		FFTWFUNC(execute)(p2);
 		int tPoints = timePoints();
+		double scale=1./nPoints;
 		for(int i=0;i<tPoints;i++) {
-			auto refl = reflTD[i]/nPoints;
-			auto thru = thruTD[i]/nPoints;
-			timeGraphView->lines[0][i] = dB(refl*refl);
-			timeGraphView->lines[1][i] = dB(thru*thru);
+			auto refl = reflTD[i]*scale;
+			auto thru = thruTD[i]*scale;
+			timeGraphView->lines[0][i] = dB(norm(refl));
+			timeGraphView->lines[1][i] = dB(norm(thru));
 			printf("%d %.10lf\n",i,reflTD[i]);
 		}
 		
@@ -303,26 +187,27 @@ void* thread1(void* v) {
 			__sync_synchronize();
 			
 			printf("taking extended measurement...\n");
-			vector<complex5> results;
-			N=startFreq;
+			vector<complex2> results;
+			freq_kHz=startFreq;
 			for(int i=0;i<nPoints;i++) {
-				setFrequency(N);
-				readValue3(nWaitExtended);
-				complex5 values=readValue3(nValuesExtended);
+				xavna_set_frequency(xavna_dev, freq_kHz);
+				complex2 values;
+				xavna_read_values(xavna_dev, (double*)&values, nValuesExtended);
+				
 				results.push_back(values);
 				
-				printf("%7.2f %20lf %10lf %20lf %10lf\n",N*freqMultiplier,
-					abs(values.val[2]),arg(values.val[2]),abs(values.val[0]),arg(values.val[0]));
+				printf("%7.2f %20lf %10lf %20lf %10lf\n",freq_kHz/1000.,
+					abs(values[0]),arg(values[0]),abs(values[1]),arg(values[1]));
 				
-				polarView->points[i]=values.val[reflIndex];
-				graphView->lines[1][i] = arg(values.val[thruIndex]);
-				graphView->lines[3][i] = dB(norm(values.val[thruIndex]));
+				polarView->points[i]=values[reflIndex];
+				graphView->lines[1][i] = arg(values[thruIndex]);
+				graphView->lines[3][i] = dB(norm(values[thruIndex]));
 				
-				N+=freqStep;
+				freq_kHz+=freqStep;
 			}
 			printf("done.\n");
 			Glib::signal_idle().connect([results]() {
-				function<void(vector<complex5>)> cb = *measurementCallback;
+				function<void(vector<complex2>)> cb = *measurementCallback;
 				delete measurementCallback;
 				measurementCallback = NULL;
 				cb(results);
@@ -332,8 +217,8 @@ void* thread1(void* v) {
 	}
 }
 
-void takeMeasurement(function<void(vector<complex5>)> cb) {
-	function<void(vector<complex5>)>* cbNew = new function<void(vector<complex5>)>();
+void takeMeasurement(function<void(vector<complex2>)> cb) {
+	function<void(vector<complex2>)>* cbNew = new function<void(vector<complex2>)>();
 	*cbNew = cb;
 	__sync_synchronize();
 	measurementCallback = cbNew;
@@ -411,36 +296,38 @@ void addButtonHandlers() {
 	b_oc->signal_clicked().connect([window1]() {
 		for(int i=0;i<nPoints;i++) polarView->points[i] = NAN;
 		window1->set_sensitive(false);
-		takeMeasurement([window1](vector<complex5> values) {
+		takeMeasurement([window1](vector<complex2> values) {
 			for(int i=0;i<nPoints;i++)
-				cal_oc[i] = values[i].val[reflIndex];
+				cal_oc[i] = values[i][reflIndex];
 			window1->set_sensitive(true);
 		});
 	});
 	b_sc->signal_clicked().connect([window1]() {
 		for(int i=0;i<nPoints;i++) polarView->points[i] = NAN;
 		window1->set_sensitive(false);
-		takeMeasurement([window1](vector<complex5> values) {
+		takeMeasurement([window1](vector<complex2> values) {
 			for(int i=0;i<nPoints;i++)
-				cal_sc[i] = values[i].val[reflIndex];
+				cal_sc[i] = values[i][reflIndex];
 			window1->set_sensitive(true);
 		});
 	});
 	b_t->signal_clicked().connect([window1]() {
 		for(int i=0;i<nPoints;i++) polarView->points[i] = NAN;
 		window1->set_sensitive(false);
-		takeMeasurement([window1](vector<complex5> values) {
+		takeMeasurement([window1](vector<complex2> values) {
 			for(int i=0;i<nPoints;i++)
-				cal_t[i] = values[i].val[reflIndex];
+				cal_t[i] = values[i][reflIndex];
+			for(int i=0;i<nPoints;i++)
+				cal_thru_leak[i] = values[i][thruIndex];
 			window1->set_sensitive(true);
 		});
 	});
 	b_thru->signal_clicked().connect([window1]() {
 		for(int i=0;i<nPoints;i++) graphView->lines[3][i] = NAN;
 		window1->set_sensitive(false);
-		takeMeasurement([window1](vector<complex5> values) {
+		takeMeasurement([window1](vector<complex2> values) {
 			for(int i=0;i<nPoints;i++)
-				cal_thru[i] = values[i].val[thruIndex];
+				cal_thru[i] = values[i][thruIndex];
 			window1->set_sensitive(true);
 		});
 	});
@@ -685,6 +572,7 @@ void resizeVectors() {
 	cal_sc.resize(nPoints, 0);
 	cal_t.resize(nPoints, 0);
 	cal_thru = vector<complex<double> >(nPoints, 1);
+	cal_thru_leak = vector<complex<double> >(nPoints, 0);
 	s_freq->set_range(0, nPoints-1);
 	s_time->set_range(0, timePoints()-1);
 	polarView->points.resize(nPoints);
@@ -699,27 +587,12 @@ int main(int argc, char** argv) {
 		fprintf(stderr,"usage: %s /PATH/TO/TTY\n",argv[0]);
 		return 1;
 	}
-	ttyFD=open(argv[1],O_RDWR);
-	if(ttyFD<0) {
-		perror("open");
+	xavna_dev = xavna_open(argv[1]);
+	if(xavna_dev == NULL) {
+		perror("xavna_open");
 		return 1;
 	}
 	
-	struct termios tc;
-	/* Set TTY mode. */
-	if (tcgetattr(ttyFD, &tc) < 0) {
-		perror("tcgetattr");
-		goto skip_tcsetaddr;
-	}
-	tc.c_iflag &= ~(INLCR|IGNCR|ICRNL|IGNBRK|IUCLC|INPCK|ISTRIP|IXON|IXOFF|IXANY);
-	tc.c_oflag &= ~OPOST;
-	tc.c_cflag &= ~(CSIZE|CSTOPB|PARENB|PARODD|CRTSCTS);
-	tc.c_cflag |= CS8 | CREAD | CLOCAL;
-	tc.c_lflag &= ~(ICANON|ECHO|ECHOE|ECHOK|ECHONL|ISIG|IEXTEN);
-	tc.c_cc[VMIN] = 1;
-	tc.c_cc[VTIME] = 0;
-	tcsetattr(ttyFD, TCSANOW, &tc);
-skip_tcsetaddr:
 	
 	// set up UI
 	int argc1=1;
