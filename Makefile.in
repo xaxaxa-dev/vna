@@ -8,8 +8,8 @@ INSTALL_INCLUDEDIR = @prefix@@includedir@
 
 all: vna_main
 
-vna_main: vna_main.C vna.glade.c
-	$(CXX) vna_main.C vna.glade.c -o $@ $(LDFLAGS) @GTK_CFLAGS@ @GTK_LIBS@ @FFTW_CFLAGS@ @FFTW_LIBS@ -lpthread
+vna_main: vna_main.C vna.glade.c libxavna/xavna.C
+	$(CXX) vna_main.C vna.glade.c libxavna/xavna.C -Iinclude -o $@ $(LDFLAGS) @GTK_CFLAGS@ @GTK_LIBS@ @FFTW_CFLAGS@ @FFTW_LIBS@ -lpthread
 
 vna.glade.c: vna.glade
 	xxd -i vna.glade > $@

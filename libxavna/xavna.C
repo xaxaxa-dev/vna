@@ -14,9 +14,6 @@
 using namespace std;
 
 extern "C" {
-	
-	
-	
 	int nWait=100;		//number of data points to skip after changing frequency
 	
 	struct complex5 {
@@ -71,11 +68,19 @@ extern "C" {
 		double freq = double(freq_khz)/1000.;
 		int N = (int)round(freq*10);
 		
+		//attenuation = 20;
+		
+		if(freq<1000) attenuation=20;
+		else if(freq<1500) attenuation=14;
+		else if(freq<3000) attenuation=10;
+		else attenuation=6;
+		
+		/*
 		if(freq<400) attenuation=20;
 		else if(freq<1000) attenuation=18;
 		else if(freq<2000) attenuation=14;
 		else if(freq<3000) attenuation=8;
-		else attenuation=0;
+		else attenuation=4;*/
 		
 		u8 buf[10] = {
 			1, u8(N>>8),

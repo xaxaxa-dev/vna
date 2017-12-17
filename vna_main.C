@@ -13,7 +13,8 @@
 #include <termios.h>
 #include <fftw3.h>
 #include <array>
-#include "include/xavna.h"
+#include <xavna/xavna.h>
+#include <xavna/calibration.H>
 
 //#include "adf4350_board.H"
 
@@ -26,9 +27,9 @@ using namespace std;
 #define FFTWFUNC(x) fftw_ ## x
 
 // settings
-int nPoints=50;
-int startFreq=1700000;
-int freqStep=20000;
+int nPoints=100;
+int startFreq=200000;
+int freqStep=29000;
 double freqMultiplier=0.001;
 bool timeDomain = false;
 bool showCursor = true;
@@ -59,7 +60,7 @@ double Z0=50.;
 bool use_cal=false;
 
 vector<complex<double> > cal_oc,cal_sc,cal_t;	// measured raw values for the 3 calib references
-vector<complex<double> > cal_X,cal_Y,cal_Z;		// the 3 calibration terms
+vector<array<complex<double>,3> > cal_coeffs;	// the 3 calibration terms
 vector<complex<double> > cal_thru;				// the raw value for the thru reference
 vector<complex<double> > cal_thru_leak;			// leakage from port 1 to 2
 
@@ -122,8 +123,8 @@ void* thread1(void* v) {
 	complex<double>* thruTD = (complex<double>*)FFTWFUNC(malloc)(timePoints()*sizeof(complex<double>));
 	
 	FFTWFUNC(plan) p1, p2;
-	p1 = fftw_plan_dft_1d(timePoints(), (fftw_complex*)reflArray, (fftw_complex*)reflTD, FFTW_FORWARD, FFTW_ESTIMATE);
-	p2 = fftw_plan_dft_1d(timePoints(), (fftw_complex*)thruArray, (fftw_complex*)thruTD, FFTW_FORWARD, FFTW_ESTIMATE);
+	p1 = fftw_plan_dft_1d(timePoints(), (fftw_complex*)reflArray, (fftw_complex*)reflTD, FFTW_BACKWARD, FFTW_ESTIMATE);
+	p2 = fftw_plan_dft_1d(timePoints(), (fftw_complex*)thruArray, (fftw_complex*)thruTD, FFTW_BACKWARD, FFTW_ESTIMATE);
 	//p1 = fftw_plan_dft_c2r_1d(timePoints()*2, (fftw_complex*)reflArray, reflTD, 0);
 	//p2 = fftw_plan_dft_c2r_1d(timePoints()*2, (fftw_complex*)thruArray, thruTD, 0);
 	
@@ -148,6 +149,7 @@ void* thread1(void* v) {
 			if(use_cal) {
 				//auto refl=(cal_X[i]*cal_Y[i]-value*cal_Z[i])/(value-cal_X[i]);
 				//refl=(cal_X[i]*cal_Y[i]-reflValue)/(reflValue*cal_Z[i]-cal_X[i]);
+				refl = SOL_compute_reflection(cal_coeffs[i], reflValue);
 				thru=(thruValue-cal_thru_leak[i])/(cal_thru[i]-cal_thru_leak[i]);
 			}
 			
@@ -237,27 +239,26 @@ void alert(string msg) {
 
 string saveCalibration() {
 	string tmp;
-	tmp += '\x02';		// file format version
+	tmp += '\x03';		// file format version
 	tmp.append((char*)&nPoints, sizeof(nPoints));
 	tmp.append((char*)&startFreq, sizeof(startFreq));
 	tmp.append((char*)&freqStep, sizeof(freqStep));
-	tmp.append((char*)cal_X.data(), sizeof(cal_X[0]) * nPoints);
-	tmp.append((char*)cal_Y.data(), sizeof(cal_Y[0]) * nPoints);
-	tmp.append((char*)cal_Z.data(), sizeof(cal_Z[0]) * nPoints);
+	tmp.append((char*)cal_coeffs.data(), sizeof(cal_coeffs[0]) * nPoints);
 	tmp.append((char*)cal_thru.data(), sizeof(cal_thru[0]) * nPoints);
 	return tmp;
 }
 bool loadCalibration(char* data, int size) {
-	int calSize=sizeof(cal_X[0]) * nPoints;
+	int calSize=sizeof(cal_coeffs[0]) * nPoints;
+	int calSize2=sizeof(cal_thru[0]) * nPoints;
 	if(size<=0) {
 		alert("invalid/corrupt calibration file; file is empty");
 		return false;
 	}
-	if(data[0] != 2) {
+	if(data[0] != 3) {
 		alert("incorrect calibration file version; should be 1, is " + to_string((int)data[0]));
 		return false;
 	}
-	if(size < 13+calSize*4) {
+	if(size < 13+calSize+calSize2) {
 		alert("file corrupt; length too short");
 		return false;
 	}
@@ -271,10 +272,8 @@ bool loadCalibration(char* data, int size) {
 	}
 	
 	
-	memcpy(cal_X.data(), data+13, calSize);
-	memcpy(cal_Y.data(), data+13+calSize, calSize);
-	memcpy(cal_Z.data(), data+13+calSize*2, calSize);
-	memcpy(cal_thru.data(), data+13+calSize*3, calSize);
+	memcpy(cal_coeffs.data(), data+13, calSize);
+	memcpy(cal_thru.data(), data+13+calSize, calSize2);
 	use_cal = true;
 	return true;
 }
@@ -333,19 +332,7 @@ void addButtonHandlers() {
 	});
 	b_apply->signal_clicked().connect([]() {
 		for(int i=0;i<nPoints;i++) {
-			complex<double> a=cal_t[i], b=cal_oc[i], c=cal_sc[i];
-			/*
-			cal_Z[i]=(c-b)/(b+c-2.d*a);
-			cal_X[i]=cal_Z[i]*(a-c) + c;
-			cal_Y[i]=a*cal_Z[i]/cal_X[i];
-			*/
-			cal_Z[i]=(2.d*a-b-c)/(b-c);
-			cal_X[i]=a-c*(1.d-cal_Z[i]);
-			cal_Y[i]=a/cal_X[i];
-			printf("%.f: X=(%lf, %lf) Y=(%lf, %lf), Z=(%lf, %lf)\n", freqAt(i), 
-					cal_X[i].real(), cal_X[i].imag(),
-					cal_Y[i].real(), cal_Y[i].imag(), 
-					cal_Z[i].real(), cal_Z[i].imag());
+			cal_coeffs[i] = SOL_compute_coefficients(cal_sc[i], cal_oc[i], cal_t[i]);
 		}
 		use_cal=true;
 	});
@@ -501,12 +488,15 @@ void updateLabels() {
 	double freq=freqAt(freqIndex);
 	c_freq->set_label(ssprintf(20, "%.1f MHz", freq));
 	
-	// impedance display panel (left side)
+	
+	complex<double> reflCoeff = polarView->points[freqIndex];
+	l_refl->set_text(ssprintf(20, "%.1f dB", dB(norm(reflCoeff))));
+	l_refl_phase->set_text(ssprintf(20, "%.1f °", arg(reflCoeff)*180/M_PI));
+	
+	l_through->set_text(ssprintf(20, "%.1f dB", graphView->lines[3][freqIndex]));
+	l_through_phase->set_text(ssprintf(20, "%.1f °", graphView->lines[1][freqIndex]*180/M_PI));
+	
 	if(!use_cal) {
-		l_refl->set_text("");
-		l_refl_phase->set_text("");
-		l_through->set_text("");
-		l_through_phase->set_text("");
 		l_impedance->set_text("");
 		l_admittance->set_text("");
 		l_s_admittance->set_text("");
@@ -515,12 +505,8 @@ void updateLabels() {
 		l_parallel->set_text("");
 		return;
 	}
-	complex<double> reflCoeff = polarView->points[freqIndex];
-	l_refl->set_text(ssprintf(20, "%.1f dB", dB(norm(reflCoeff))));
-	l_refl_phase->set_text(ssprintf(20, "%.1f °", arg(reflCoeff)*180/M_PI));
 	
-	l_through->set_text(ssprintf(20, "%.1f dB", graphView->lines[3][freqIndex]));
-	l_through_phase->set_text(ssprintf(20, "%.1f °", graphView->lines[1][freqIndex]*180/M_PI));
+	// impedance display panel (left side)
 	
 	complex<double> Z = -Z0*(reflCoeff+1.)/(reflCoeff-1.);
 	complex<double> Y = -(reflCoeff-1.)/(Z0*(reflCoeff+1.));
@@ -565,9 +551,7 @@ void updateFreqButton() {
 void resizeVectors() {
 	Gtk::Scale *s_freq,*s_time;
 	GETWIDGET(s_freq); GETWIDGET(s_time);
-	cal_X.resize(nPoints);
-	cal_Y.resize(nPoints);
-	cal_Z.resize(nPoints);
+	cal_coeffs.resize(nPoints);
 	cal_oc.resize(nPoints, 0);
 	cal_sc.resize(nPoints, 0);
 	cal_t.resize(nPoints, 0);
