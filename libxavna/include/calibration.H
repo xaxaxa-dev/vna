@@ -1,3 +1,6 @@
+#include <array>
+#include <complex>
+using namespace std;
 
 // given the measured raw values for short, open, and load, compute the 3 calibration coefficients
 inline array<complex<double>, 3> SOL_compute_coefficients(complex<double> sc, complex<double> oc, complex<double> load) {
