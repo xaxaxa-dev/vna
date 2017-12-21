@@ -1682,7 +1682,7 @@ refdes=L5
 T 22200 18700 5 10 0 0 90 0 1
 symversion=0.1
 T 23000 18800 5 10 1 1 90 0 1
-value=fb
+value=rffb
 T 22600 18800 5 10 1 1 90 0 1
 footprint=0603
 }
@@ -2233,7 +2233,7 @@ symversion=0.1
 T 22100 26000 5 10 1 1 90 0 1
 refdes=L11
 T 22500 26300 5 10 1 1 90 0 1
-value=fb
+value=rffb
 T 22100 26300 5 10 1 1 90 0 1
 footprint=0603
 }
@@ -2811,7 +2811,7 @@ symversion=0.1
 T 21800 34600 5 10 1 1 90 0 1
 refdes=L16
 T 22200 34900 5 10 1 1 90 0 1
-value=fb
+value=rffb
 T 21800 35000 5 10 1 1 90 0 1
 footprint=0603
 }
@@ -3001,7 +3001,7 @@ symversion=0.1
 T 60100 46500 5 10 1 1 90 0 1
 refdes=L21
 T 60100 46000 5 10 1 1 90 0 1
-value=fb
+value=rffb
 T 59800 46300 5 10 1 1 90 0 1
 footprint=0603
 }
@@ -3014,7 +3014,7 @@ symversion=0.1
 T 61400 46500 5 10 1 1 90 0 1
 refdes=L22
 T 61400 46100 5 10 1 1 90 0 1
-value=fb
+value=rffb
 T 61100 46300 5 10 1 1 90 0 1
 footprint=0603
 }
@@ -3027,7 +3027,7 @@ symversion=0.1
 T 60100 48500 5 10 1 1 90 0 1
 refdes=L23
 T 60100 48000 5 10 1 1 90 0 1
-value=fb
+value=rffb
 T 59800 48300 5 10 1 1 90 0 1
 footprint=0603
 }
@@ -3040,7 +3040,7 @@ symversion=0.1
 T 61400 48500 5 10 1 1 90 0 1
 refdes=L24
 T 61400 48000 5 10 1 1 90 0 1
-value=fb
+value=rffb
 T 61100 48300 5 10 1 1 90 0 1
 footprint=0603
 }
@@ -4210,7 +4210,7 @@ symversion=0.1
 T 31400 76600 5 10 1 1 0 0 1
 refdes=L203
 T 30900 76600 5 10 1 1 0 0 1
-value=fb
+value=rffb
 T 31200 76900 5 10 1 1 0 0 1
 footprint=0603
 }
@@ -4527,7 +4527,7 @@ symversion=0.1
 T 43600 73800 5 10 1 1 90 0 1
 refdes=L206
 T 43600 73300 5 10 1 1 90 0 1
-value=fb
+value=rffb
 T 43300 73600 5 10 1 1 90 0 1
 footprint=0603
 }
@@ -4751,7 +4751,7 @@ symversion=0.1
 T 32700 76600 5 10 1 1 0 0 1
 refdes=L204
 T 32300 76600 5 10 1 1 0 0 1
-value=fb
+value=rffb
 T 32500 76900 5 10 1 1 0 0 1
 footprint=0603
 }
@@ -5478,3 +5478,28 @@ refdes=G5
 T 24700 13200 5 10 0 1 90 0 1
 footprint=adhoc
 }
+C 45800 51200 1 0 1 connector_coaxial.sym
+{
+T 45450 51850 5 10 0 0 0 6 1
+device=BNC
+T 45800 52000 5 10 1 1 0 6 1
+refdes=CONN5
+T 45800 51200 5 10 0 0 0 6 1
+footprint=custom_coax1_1
+T 46400 51600 5 10 1 0 0 6 1
+dni=1
+}
+C 45600 50900 1 0 0 gnd-1.sym
+C 44400 51000 1 270 0 resistor-1.sym
+{
+T 44800 50700 5 10 0 0 270 0 1
+device=RESISTOR
+T 44600 51000 5 10 1 1 270 0 1
+refdes=R66
+T 44300 50800 5 10 1 1 270 0 1
+footprint=0603
+T 44600 50500 5 10 1 1 270 0 1
+value=36
+}
+N 44500 51000 44500 51700 4
+N 44500 51700 45300 51700 4
