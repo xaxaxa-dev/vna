@@ -28,6 +28,7 @@ use work.ulpi_serial;
 use work.dcfifo;
 use work.spiDataTx;
 use work.slow_clock;
+use work.slow_clock_odd;
 use work.resetGenerator;
 use work.configRegisterTypes.all;
 use work.serialConfigRegister;
@@ -36,11 +37,21 @@ use work.ejxGenerator;
 use work.adf4350_calc;
 use work.pulseExtenderCounted;
 use work.cic_lpf_2_nd;
+use work.ili9341Out;
+use work.bounce_sprite;
+use work.graphics_types.all;
 
 -- register map:
--- 00: pll N [15..8]
--- 01: pll N [7..0]
--- 02: pll update trigger; write 1 to update all plls
+-- 00: pll_frequency [23..16]
+-- 01: pll_frequency [15..8]
+-- 02: pll_frequency [7..0]
+-- 03: update_trigger; write 1 to update all plls
+-- 04: attenuation, in 0.5dB increments
+-- 05: 
+--   [1..0]: signal generator output power
+--   [3..2]: LO output power
+--   [5..4]: filter bank select: 00 - no filter, 01 - 110MHz, 10 - 2.5GHz, 11 - 1.1GHz
+-- note: the output signal frequency is pll_frequency * 10kHz
 
 entity top2 is
     Port ( CLOCK_19_2 : in  STD_LOGIC;
@@ -63,6 +74,8 @@ entity top2 is
            BUTTONS: in std_logic_vector(1 downto 0);
            
            RFSW: out std_logic_vector(1 downto 0);
+           
+           LCD_SCL,LCD_SDI,LCD_CS,LCD_DC,LCD_RST: out std_logic;
 			  
            USB_DIR: in std_logic;
 			USB_NXT: in std_logic;
@@ -96,9 +109,8 @@ architecture Behavioral of top2 is
 	signal fifo1empty,fifo1full: std_logic;
 	
 	-- adf4350 config
-	signal config_freq: unsigned(15 downto 0);				-- configured sgen frequency (100kHz increments)
-	signal lo_freq: unsigned(15 downto 0);
-	signal lo_vco_freq, sgen_vco_freq: unsigned(15 downto 0);
+	signal config_freq: unsigned(19 downto 0);				-- configured sgen frequency (10kHz increments)
+	signal lo_freq: unsigned(19 downto 0);
 	signal odiv: unsigned(5 downto 0);						-- rf divide factor
 	
 	signal pll1_R, pll2_R: std_logic_vector(9 downto 0);
@@ -106,6 +118,7 @@ architecture Behavioral of top2 is
 	signal pll1_N, pll2_N: std_logic_vector(15 downto 0);
 	signal pll1_frac, pll2_frac: std_logic_vector(11 downto 0);
 	signal pll1_O, pll2_O: std_logic_vector(2 downto 0);
+	signal pll1_pwr, pll2_pwr: std_logic_vector(1 downto 0);
 	--signal adf4350_clk,adf4350_le,adf4350_data: std_logic;
 	signal pll_update_usbclk, pll_update1, pll_update2, pll_update3, pll_do_update: std_logic;
 	
@@ -128,7 +141,8 @@ architecture Behavioral of top2 is
 	signal vna_txval: std_logic;
 	
 	-- config registers
-	signal cfg: array8(0 to 3);
+	constant cfgCount: integer := 6;
+	signal cfg: array8(0 to cfgCount-1);
 	signal cfg_wrIndicate: std_logic;
 	signal cfg_wrAddr: unsigned(7 downto 0);
 	-- how long to ignore adc overflow for after a pll reconfig; in adcclk cycles
@@ -137,6 +151,21 @@ architecture Behavioral of top2 is
 	-- ui
 	signal use_vna_txdat: std_logic;
 	signal led_adc_overflow: std_logic;
+	
+	
+	-- lcd user side interface signals
+	signal lcdClk: std_logic;
+	signal lcd_scl1,lcd_sdi1,lcd_cs1,lcd_dc1: std_logic;
+	signal curPos: position;
+	signal pixel,pixelOut: color;
+	
+	--sprite position control
+	signal spritePos: position;
+	signal spriteAdvance: std_logic;
+	
+	constant W: integer := 240;
+	constant H: integer := 320;
+	constant spriteW,spriteH: integer := 50;
 	
 begin
 	--############# CLOCKS ##############
@@ -161,8 +190,8 @@ begin
 	adcclk <= CLOCK_19_2_i;
 	-- 250kHz state machine clock => 62.5kHz i2c clock
 	i2cc: entity slow_clock generic map(200,100) port map(internalclk,i2cclk);
-	-- 1MHz spi clock
-	spic: entity slow_clock generic map(50,25) port map(internalclk,spiclk);
+	-- 300kHz spi clock
+	spic: entity slow_clock generic map(150,75) port map(internalclk,spiclk);
 	
 	--############# usb serial port device ##############
 	usbdev: entity ulpi_serial port map(USB_DATA, USB_DIR, USB_NXT,
@@ -179,8 +208,9 @@ begin
 	
 	txval <= vna_txval when use_vna_txdat='1' else '1';
 	txclk <= adcclk;
-	txdat <= std_logic_vector(filtered0(17 downto 10)) when use_vna_txdat='0' and BUTTONS(1)='0'
-			else std_logic_vector(filtered1(17 downto 10)) when use_vna_txdat='0'
+	txdat <= std_logic_vector(filtered0(17 downto 10)) when use_vna_txdat='0' and BUTTONS="00"
+			else std_logic_vector(filtered1(17 downto 10)) when use_vna_txdat='0' and BUTTONS="01"
+			else std_logic_vector(filtered2(17 downto 10)) when use_vna_txdat='0' and BUTTONS="10"
 			else vna_txdat;
 	
 	
@@ -191,14 +221,17 @@ begin
 	
 	
 	-- adf4350 spi
-	lo_freq <= config_freq+7;
+	lo_freq <= config_freq+70;
+	pll1_pwr <= cfg(5)(3 downto 2);
+	pll2_pwr <= cfg(5)(1 downto 0);
 	
-	calc1: entity adf4350_calc generic map(192) port map(usbclk, lo_freq, pll1_N, pll1_frac, pll1_O);
-	calc2: entity adf4350_calc generic map(192) port map(usbclk, config_freq, pll2_N, pll2_frac, pll2_O);
+	
+	calc1: entity adf4350_calc generic map(1920) port map(usbclk, lo_freq, pll1_N, pll1_frac, pll1_O);
+	calc2: entity adf4350_calc generic map(1920) port map(usbclk, config_freq, pll2_N, pll2_frac, pll2_O);
 	
 	--pll2_R <= std_logic_vector(to_unsigned(26,10));
 	pll1_R <= std_logic_vector(to_unsigned(1,10));
-	pll1_mod <= std_logic_vector(to_unsigned(192,12));
+	pll1_mod <= std_logic_vector(to_unsigned(1920,12));
 	--pll2_N <= std_logic_vector(to_unsigned(3026,16));
 	--pll1_N <= std_logic_vector(to_unsigned(190,16));
 	--pll1_N <= cfg(0) & cfg(1);
@@ -211,8 +244,8 @@ begin
 	spi1: entity spiDataTx generic map(words=>6,wordsize=>32) port map(
 	--	 XXXXXXXXLLXXXXXXXXXXXXXXXXXXX101
 		"00000000010000000000000000000101" &
-	--	 XXXXXXXXF    OOO   BBBBBBBBVMAAAAROO100
-		"000000001"&pll1_O&"11111111000111111100" &
+	--	 XXXXXXXXF    OOO   BBBBBBBBVMAA    AA          R    OO          100
+		"000000001"&pll1_O&"111111110001" & pll1_pwr & "1" & pll1_pwr & "100" &
 		"00000000000000000" & std_logic_vector(to_unsigned(80,12)) & "011" &
 		"01100100" & pll1_R & "01111101000010" &
 		"00001000000000001" & pll1_mod & "001" &
@@ -222,8 +255,8 @@ begin
 	spi2: entity spiDataTx generic map(words=>6,wordsize=>32) port map(
 	--	 XXXXXXXXLLXXXXXXXXXXXXXXXXXXX101
 		"00000000010000000000000000000101" &
-	--	 XXXXXXXXF    OOO   BBBBBBBBVMAAAAROO100
-		"000000001"&pll2_O&"11111111000000111100" &
+	--	 XXXXXXXXF    OOO   BBBBBBBBVMAAAAR    OO          100
+		"000000001"&pll2_O&"111111110000001" & pll2_pwr & "100" &
 		"00000000000000000" & std_logic_vector(to_unsigned(80,12)) & "011" &
 		"01100100" & pll2_R & "01111101000010" &
 		"00001000000000001" & pll2_mod & "001" &
@@ -236,13 +269,13 @@ begin
 
 	
 	-- config registers
-	cfgInst: entity serialConfigRegister generic map(bytes=>4, defaultValue =>
-		(X"00", std_logic_vector(to_unsigned(190, 8)), X"00", X"00", others=>X"00"))
+	cfgInst: entity serialConfigRegister generic map(bytes=>cfgCount, defaultValue =>
+		(X"00", X"00", std_logic_vector(to_unsigned(190, 8)), X"00", X"00", "00001100", others=>X"00"))
 		port map(usbclk, usbrxdat, usbrxval, cfg, cfg_wrIndicate, cfg_wrAddr);
 	usbrxrdy <= '1';
-	config_freq <= unsigned(cfg(0)) & unsigned(cfg(1));
-	pll_update_usbclk <= not pll_update_usbclk when cfg_wrIndicate='1' and cfg_wrAddr=X"02" and rising_edge(usbclk);
-	pe4312_attenuation <= unsigned(cfg(3)(5 downto 0));
+	config_freq <= unsigned(cfg(0)(3 downto 0)) & unsigned(cfg(1)) & unsigned(cfg(2));
+	pll_update_usbclk <= not pll_update_usbclk when cfg_wrIndicate='1' and cfg_wrAddr=X"03" and rising_edge(usbclk);
+	pe4312_attenuation <= unsigned(cfg(4)(5 downto 0));
 	
 	
 	-- vna data
@@ -285,10 +318,42 @@ begin
 	
 	
 	-- ui
-	use_vna_txdat <= BUTTONS(0);
+	use_vna_txdat <= BUTTONS(0) and BUTTONS(1);
 	
 	
-	RFSW <= "00";
+	RFSW <= cfg(5)(5 downto 4);
+	
+	
+	
+	
+	-- ############### lcd ###############
+	
+	-- 48MHz
+	sc: entity slow_clock_odd generic map(5,2) port map(CLOCK_240,lcdClk);
+	
+	-- lcd controller
+	lcdOut: entity ili9341Out generic map(2) port map(lcdClk,curPos,
+		pixelOut, lcd_scl1,lcd_sdi1,lcd_cs1,lcd_dc1,open);
+	
+	lcdBuf: ODDR2 generic map(DDR_ALIGNMENT=>"NONE",SRTYPE=>"SYNC")
+		port map(C0=>lcd_scl1, C1=>not lcd_scl1,CE=>'1',D0=>'1',D1=>'0',Q=>LCD_SCL);
+	--LCD_SCL <= lcd_scl1;
+	LCD_SDI <= lcd_sdi1 when falling_edge(lcdclk);
+	LCD_CS <= lcd_cs1 when falling_edge(lcdclk);
+	LCD_DC <= lcd_dc1 when falling_edge(lcdclk);
+	
+	
+	-- draw the rectangle
+	pixel <= (X"ff",X"00",X"00") when curPos(0)>spritePos(0) and curPos(0)<spritePos(0)+spriteW
+			and curPos(1)>spritePos(1) and curPos(1)<spritePos(1)+spriteH
+		else (X"ff",X"ff",X"00") when curPos(0)=0 or curPos(1)=0 or curPos(0)=W-1 or curPos(1)=H-1
+		else (X"00",X"00",X"00");
+	pixelOut <= pixel when rising_edge(lcdClk);
+	
+	--calculate the position of the rectangle
+	spriteAdvance <= '1' when curPos(0)=0 and curPos(1)=0 else '0';
+	bounce: entity bounce_sprite generic map(W,H,spriteW,spriteH)
+		port map(lcdClk, spriteAdvance, spritePos, to_unsigned(6,15), to_unsigned(6,15));
 	
 end Behavioral;
 

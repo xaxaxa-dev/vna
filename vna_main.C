@@ -76,7 +76,7 @@ void resizeVectors2() {
 void updateFreqButton() {
 	Gtk::Button *b_freq;
 	GETWIDGET(b_freq);
-	b_freq->set_label(ssprintf(31, "%.1f MHz -\n%.1f MHz", freqAt(0), freqAt(nPoints-1)));
+	b_freq->set_label(ssprintf(31, "%.2f MHz -\n%.2f MHz", freqAt(0), freqAt(nPoints-1)));
 }
 
 
@@ -158,8 +158,8 @@ void addButtonHandlers() {
 		GETWIDGET(dialog_freq);
 		GETWIDGET(d_t_start); GETWIDGET(d_t_step); GETWIDGET(d_t_span);
 		
-		d_t_start->set_text(ssprintf(20, "%.1f", double(startFreq)*freqMultiplier));
-		d_t_step->set_text(ssprintf(20, "%.1f", double(freqStep)*freqMultiplier));
+		d_t_start->set_text(ssprintf(20, "%.2f", double(startFreq)*freqMultiplier));
+		d_t_step->set_text(ssprintf(20, "%.2f", double(freqStep)*freqMultiplier));
 		d_t_span->set_text(ssprintf(20, "%d", nPoints));
 		
 		dialog_freq->set_transient_for(*window1);
@@ -240,7 +240,7 @@ void updateLabels() {
 	// frequency label
 	int freqIndex=(int)s_freq->get_value();
 	double freq=freqAt(freqIndex);
-	c_freq->set_label(ssprintf(20, "%.1f MHz", freq));
+	c_freq->set_label(ssprintf(20, "%.2f MHz", freq));
 	
 	
 	complex<double> reflCoeff = polarView->points[freqIndex];
@@ -394,7 +394,7 @@ int main(int argc, char** argv) {
 		auto step = d_t_step->get_text();
 		auto span = d_t_span->get_text();
 		double endFreq = atof(start.c_str()) + atof(step.c_str()) * (atoi(span.c_str()) - 1);
-		d_l_end->set_text(ssprintf(20, "%.1f", endFreq));
+		d_l_end->set_text(ssprintf(20, "%.2f", endFreq));
 	};
 	d_t_start->signal_changed().connect(func);
 	d_t_step->signal_changed().connect(func);

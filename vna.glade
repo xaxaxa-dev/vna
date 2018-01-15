@@ -125,6 +125,7 @@
                 <property name="has_focus">True</property>
                 <property name="hexpand">True</property>
                 <property name="activates_default">True</property>
+                <property name="progress_pulse_step">0.01</property>
                 <property name="input_purpose">number</property>
               </object>
               <packing>
@@ -138,6 +139,7 @@
                 <property name="can_focus">True</property>
                 <property name="hexpand">True</property>
                 <property name="activates_default">True</property>
+                <property name="progress_pulse_step">0.01</property>
                 <property name="input_purpose">number</property>
               </object>
               <packing>
@@ -151,6 +153,7 @@
                 <property name="can_focus">True</property>
                 <property name="hexpand">True</property>
                 <property name="activates_default">True</property>
+                <property name="progress_pulse_step">1</property>
                 <property name="input_purpose">digits</property>
               </object>
               <packing>
@@ -564,8 +567,8 @@
             <property name="can_focus">False</property>
             <child>
               <object class="GtkToggleButton" id="c_freq">
-                <property name="label" translatable="yes">1000 MHz</property>
-                <property name="width_request">100</property>
+                <property name="label" translatable="yes">1000.00 MHz</property>
+                <property name="width_request">110</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>

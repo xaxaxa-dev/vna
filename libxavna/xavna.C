@@ -6,6 +6,7 @@
 #include <unistd.h>
 #include <math.h>
 #include <assert.h>
+#include <poll.h>
 
 #include <complex>
 
@@ -14,7 +15,7 @@
 using namespace std;
 
 extern "C" {
-	int nWait=100;		//number of data points to skip after changing frequency
+	int nWait=50;		//number of data points to skip after changing frequency
 	
 	struct complex5 {
 		complex<double> val[5];
@@ -26,6 +27,18 @@ extern "C" {
 	};
 	
 	static complex5 readValue3(int ttyFD, int cnt);
+	
+		
+	static void drainfd(int fd) {
+		pollfd pfd;
+		pfd.fd = fd;
+		pfd.events = POLLIN;
+		while(poll(&pfd,1,0)>0) {
+			if(!(pfd.revents&POLLIN)) continue;
+			char buf[4096];
+			read(fd,buf,sizeof(buf));
+		}
+	}
 	
 
 	// dev: path to the serial device; if NULL, it will be selected automatically
@@ -66,14 +79,20 @@ extern "C" {
 		xavna_device* d = (xavna_device*)dev;
 		int attenuation=0;
 		double freq = double(freq_khz)/1000.;
-		int N = (int)round(freq*10);
+		int N = (int)round(freq*100);
 		
 		//attenuation = 20;
 		
-		if(freq<1000) attenuation=20;
-		else if(freq<1500) attenuation=14;
-		else if(freq<3000) attenuation=10;
-		else attenuation=6;
+		if(freq<1000) attenuation=13;
+		else if(freq<1500) attenuation=10;
+		else if(freq<1730) attenuation=7;
+		else if(freq<2130) attenuation=6;
+		else if(freq<2900) attenuation=2;
+		else attenuation=0;
+		
+		//attenuation += 18;
+		attenuation += 5;
+		//attenuation = 31;
 		
 		/*
 		if(freq<400) attenuation=20;
@@ -82,16 +101,20 @@ extern "C" {
 		else if(freq<3000) attenuation=8;
 		else attenuation=4;*/
 		
-		u8 buf[10] = {
-			1, u8(N>>8),
-			2, u8(N),
-			4, u8(attenuation*2),
+		u8 buf[] = {
+			1, u8(N>>16),
+			2, u8(N>>8),
+			3, u8(N),
+			5, u8(attenuation*2),
+			6, u8(0b00001100),
 			0, 0,
-			3, 1
+			4, 1
 		};
 		assert(write(d->ttyFD,buf,sizeof(buf))==(int)sizeof(buf));
 		
+		drainfd(d->ttyFD);
 		readValue3(d->ttyFD, nWait);
+		return N*10;
 	}
 
 	// Set the signal generator attenuation
@@ -121,6 +144,28 @@ extern "C" {
 		out_values[1] = result.val[3].imag();
 		out_values[2] = result.val[4].real();
 		out_values[3] = result.val[4].imag();
+		return 0;
+	}
+	
+	// out_values: array of size 4 holding the following values:
+	//				reflection real, reflection imag,
+	//				thru real, thru imag
+	// n_samples: number of samples to average over; typical 50
+	// returns: number of samples read, or -1 if failure
+	int xavna_read_values_raw(void* dev, double* out_values, int n_samples) {
+		xavna_device* d = (xavna_device*)dev;
+		double scale = 1.d/double((int64_t(1)<<12) * (int64_t(1)<<19));
+		complex5 result = readValue3(d->ttyFD, n_samples);
+		
+		complex<double> refl = result.val[1], thru = result.val[0];
+		complex<double> reference = polar(1., -arg(result.val[0]));
+		refl *= reference;
+		thru *= reference;
+		
+		out_values[0] = refl.real()*scale;
+		out_values[1] = refl.imag()*scale;
+		out_values[2] = thru.real()*scale;
+		out_values[3] = thru.imag()*scale;
 		return 0;
 	}
 

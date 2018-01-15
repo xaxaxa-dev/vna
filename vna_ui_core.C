@@ -25,15 +25,16 @@ using namespace std;
 
 // settings
 int nPoints=100;
-int startFreq=200000;
-int freqStep=29000;
+int startFreq=137500;
+int freqStep=28000;
 
+// currently loaded calibration references
 array<vector<complex2>, 4> calibrationReferences;
 
 bool newBoard = true;
 
 int nValues=100;	//number of data points to integrate over
-int nValuesExtended=100;
+int nValuesExtended=nValues;
 
 
 
@@ -43,13 +44,15 @@ double Z0=50.;
 bool use_cal=false;
 bool refreshThreadShouldExit=false;
 
+// currently active calibration coefficients, calculated from measured calibration references
 vector<array<complex<double>,3> > cal_coeffs;	// the 3 calibration terms
 vector<complex<double> > cal_thru;				// the raw value for the thru reference
-vector<complex<double> > cal_thru_leak;			// leakage from port 1 to 2
+vector<complex<double> > cal_thru_leak;			// leakage from port 1 forward to 2
+vector<complex<double> > cal_thru_leak_r;		// leakage from port 1 reflected to 2
 
 
 
-
+extern "C" int xavna_read_values_raw(void* dev, double* out_values, int n_samples);
 
 
 
@@ -79,16 +82,15 @@ void* refreshThread(void* v) {
 	//p1 = fftw_plan_dft_c2r_1d(timePoints()*2, (fftw_complex*)reflArray, reflTD, 0);
 	//p2 = fftw_plan_dft_c2r_1d(timePoints()*2, (fftw_complex*)thruArray, thruTD, 0);
 	
+	complex2 values;
 	while(true) {
 		memset(reflArray, 0, timePoints()*sizeof(complex<double>));
 		memset(thruArray, 0, timePoints()*sizeof(complex<double>));
 		
-		int freq_kHz=startFreq;
 		for(int i=0;i<nPoints;i++) {
+			int freq_kHz=startFreq + i*freqStep;
 			printf("%d\n",freq_kHz);
 			xavna_set_frequency(xavna_dev, freq_kHz);
-			
-			complex2 values;
 			xavna_read_values(xavna_dev, (double*)&values, nValues);
 			
 			complex<double> reflValue=values[reflIndex];
@@ -101,7 +103,14 @@ void* refreshThread(void* v) {
 				//auto refl=(cal_X[i]*cal_Y[i]-value*cal_Z[i])/(value-cal_X[i]);
 				//refl=(cal_X[i]*cal_Y[i]-reflValue)/(reflValue*cal_Z[i]-cal_X[i]);
 				refl = SOL_compute_reflection(cal_coeffs[i], reflValue);
-				thru=(thruValue-cal_thru_leak[i])/(cal_thru[i]-cal_thru_leak[i]);
+				
+				thru = thruValue - (cal_thru_leak[i] + reflValue*cal_thru_leak_r[i]);
+				
+				auto refThru = cal_thru[i] - (cal_thru_leak[i] + reflValue*cal_thru_leak_r[i]);
+				
+				thru /= refThru;
+				
+				//thru=(thruValue-cal_thru_leak[i])/(cal_thru[i]-cal_thru_leak[i]);
 			}
 			
 			reflArray[i] = refl * gauss(double(i)/nPoints, 0, 0.7);
@@ -109,10 +118,11 @@ void* refreshThread(void* v) {
 			
 			updateGraph(i, {refl, thru});
 			
-			freq_kHz += freqStep;
-			if(requestedMeasurements>requestedMeasurementsPrev) break;
+			//if(requestedMeasurements>requestedMeasurementsPrev)
+			//	if(i<(nPoints-50)) i = nPoints-50;
 			if(refreshThreadShouldExit) return NULL;
 		}
+
 		// compute time domain values
 		FFTWFUNC(execute)(p1);
 		FFTWFUNC(execute)(p2);
@@ -127,6 +137,7 @@ void* refreshThread(void* v) {
 		
 		sweepCompleted();
 		
+		
 		// take extended measurement
 		if(requestedMeasurements>requestedMeasurementsPrev) {
 			requestedMeasurementsPrev = requestedMeasurements;
@@ -134,10 +145,11 @@ void* refreshThread(void* v) {
 			
 			printf("taking extended measurement...\n");
 			vector<complex2> results;
-			freq_kHz=startFreq;
+			
+			
 			for(int i=0;i<nPoints;i++) {
+				int freq_kHz=startFreq + i*freqStep;
 				xavna_set_frequency(xavna_dev, freq_kHz);
-				complex2 values;
 				xavna_read_values(xavna_dev, (double*)&values, nValuesExtended);
 				
 				results.push_back(values);
@@ -146,8 +158,6 @@ void* refreshThread(void* v) {
 					abs(values[0]),arg(values[0]),abs(values[1]),arg(values[1]));
 				
 				updateGraph(i, values);
-				
-				freq_kHz+=freqStep;
 			}
 			printf("done.\n");
 			(*measurementCallback)(results);
@@ -181,7 +191,14 @@ void applySOLT() {
 		if(calibrationReferences[CAL_THRU].size() != 0)
 			cal_thru[i] = calibrationReferences[CAL_THRU][i][1];
 		else cal_thru[i] = 1.;
-		cal_thru_leak[i] = calibrationReferences[CAL_LOAD][i][1];
+		
+		auto x1 = calibrationReferences[CAL_LOAD][i][0],
+			y1 = calibrationReferences[CAL_LOAD][i][1],
+			x2 = calibrationReferences[CAL_OPEN][i][0],
+			y2 = calibrationReferences[CAL_OPEN][i][1];
+		
+		cal_thru_leak_r[i] = (y1-y2)/(x1-x2);
+		cal_thru_leak[i] = y2-cal_thru_leak_r[i]*x2;
 	}
 	use_cal=true;
 }
@@ -257,6 +274,7 @@ void resizeVectors(int n) {
 		calibrationReferences[i].resize(0);
 	cal_thru = vector<complex<double> >(nPoints, 1);
 	cal_thru_leak = vector<complex<double> >(nPoints, 0);
+	cal_thru_leak_r = vector<complex<double> >(nPoints, 0);
 	cal_coeffs.resize(nPoints);
 }
 
