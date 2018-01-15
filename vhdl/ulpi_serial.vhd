@@ -64,9 +64,11 @@ begin
 	
 	usb_serial_inst : entity usb_serial
 	generic map (
-		VENDORID        => X"fb9a",
-		PRODUCTID       => X"fb9a",
-		VERSIONBCD      => X"0031",
+		VENDORID        => X"beef",
+		PRODUCTID       => X"0001",
+		VERSIONBCD      => X"0001",
+		VENDORSTR		=> "xaxaxa Development Ltd",
+		PRODUCTSTR		=> "VNA0001",
 		HSSUPPORT       => true,
 		SELFPOWERED     => false,
 		RXBUFSIZE_BITS  => RXBUFSIZE_BITS,
