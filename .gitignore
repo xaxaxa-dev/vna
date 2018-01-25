@@ -1,7 +1,7 @@
 vna_main
 *.glade.c
 *~
-Makefile
+/Makefile
 
 pcb/*_out/*
 *.pcb.bak*
