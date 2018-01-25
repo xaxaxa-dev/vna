@@ -9,6 +9,7 @@
 #include <poll.h>
 
 #include <complex>
+#include <tuple>
 
 #include "common_types.h"
 #include "include/xavna.h"
@@ -26,7 +27,7 @@ extern "C" {
 		int ttyFD;
 	};
 	
-	static complex5 readValue3(int ttyFD, int cnt);
+	static tuple<complex5,int> readValue3(int ttyFD, int cnt);
 	
 		
 	static void drainfd(int fd) {
@@ -91,8 +92,8 @@ extern "C" {
 		else attenuation=0;
 		
 		//attenuation += 18;
-		attenuation += 5;
-		//attenuation = 31;
+		//attenuation += 5;
+		attenuation = 20;
 		
 		/*
 		if(freq<400) attenuation=20;
@@ -139,12 +140,14 @@ extern "C" {
 	// returns: number of samples read, or -1 if failure
 	int xavna_read_values(void* dev, double* out_values, int n_samples) {
 		xavna_device* d = (xavna_device*)dev;
-		complex5 result = readValue3(d->ttyFD, n_samples);
+		complex5 result;
+		int n;
+		tie(result, n) = readValue3(d->ttyFD, n_samples);
 		out_values[0] = result.val[3].real();
 		out_values[1] = result.val[3].imag();
 		out_values[2] = result.val[4].real();
 		out_values[3] = result.val[4].imag();
-		return 0;
+		return n;
 	}
 	
 	// out_values: array of size 4 holding the following values:
@@ -155,7 +158,9 @@ extern "C" {
 	int xavna_read_values_raw(void* dev, double* out_values, int n_samples) {
 		xavna_device* d = (xavna_device*)dev;
 		double scale = 1.d/double((int64_t(1)<<12) * (int64_t(1)<<19));
-		complex5 result = readValue3(d->ttyFD, n_samples);
+		complex5 result;
+		int n;
+		tie(result, n) = readValue3(d->ttyFD, n_samples);
 		
 		complex<double> refl = result.val[1], thru = result.val[0];
 		complex<double> reference = polar(1., -arg(result.val[0]));
@@ -166,7 +171,45 @@ extern "C" {
 		out_values[1] = refl.imag()*scale;
 		out_values[2] = thru.real()*scale;
 		out_values[3] = thru.imag()*scale;
-		return 0;
+		return n;
+	}
+	
+	// out_values: array of size 10 holding the following values:
+	//				reference real, reference imag,
+	//				raw reflection real, raw reflection imag,
+	//				raw thru real, raw thru imag
+	//				reflection real, reflection imag,
+	//				thru real, thru imag
+	// n_samples: number of samples to average over; typical 50
+	// returns: number of samples read, or -1 if failure
+	int xavna_read_values_raw2(void* dev, double* out_values, int n_samples) {
+		xavna_device* d = (xavna_device*)dev;
+		complex5 result;
+		int n;
+		tie(result, n) = readValue3(d->ttyFD, n_samples);
+		double scale = 1.d/double((int64_t(1)<<12) * (int64_t(1)<<19));
+		result.val[0] *= scale;
+		result.val[1] *= scale;
+		result.val[2] *= scale;
+		
+		//FIXME: make hardware phase consistent (enable PLL phase resync)
+		// and remove this code
+		complex<double> refPhase = polar(1., -arg(result.val[0]));
+		result.val[0] *= refPhase;
+		result.val[1] *= refPhase;
+		result.val[2] *= refPhase;
+		
+		out_values[0] = result.val[0].real();
+		out_values[1] = result.val[0].imag();
+		out_values[2] = result.val[1].real();
+		out_values[3] = result.val[1].imag();
+		out_values[4] = result.val[2].real();
+		out_values[5] = result.val[2].imag();
+		out_values[6] = result.val[3].real();
+		out_values[7] = result.val[3].imag();
+		out_values[8] = result.val[4].real();
+		out_values[9] = result.val[4].imag();
+		return n;
 	}
 
 	// close device handle
@@ -190,7 +233,7 @@ extern "C" {
 		return {double((ll)data2), double((ll)data1)};
 	}
 	// returns [adc0, adc1, adc2, adc1/adc0, adc2/adc0]
-	static complex5 readValue3(int ttyFD, int cnt) {
+	static tuple<complex5,int> readValue3(int ttyFD, int cnt) {
 		complex5 result=complex5{{0,0,0,0,0}};
 		int bufsize=1024;
 		u8 buf[bufsize];
@@ -218,7 +261,7 @@ extern "C" {
 						if(++n >= cnt) {
 							for(int g=0;g<5;g++)
 								result.val[g] /= cnt;
-							return result;
+							return make_tuple(result, n);
 						}
 					}
 					values[0]=values[1]=values[2]=0;
@@ -238,7 +281,7 @@ extern "C" {
 				}
 			}
 		}
-		return result;
+		return make_tuple(result, n);
 	}
 
 }

@@ -21,3 +21,11 @@ inline complex<double> SOL_compute_reflection(const array<complex<double>, 3>& c
 	return (cal_X*cal_Y-raw)/(raw*cal_Z-cal_X);
 }
 
+// given the cal coefficients and a reflection coefficient, compute d(refl)/d(raw)
+inline complex<double> SOL_compute_sensitivity(const array<complex<double>, 3>& coeffs, complex<double> refl) {
+	auto X = coeffs[0];
+	auto Y = coeffs[1];
+	auto Z = coeffs[2];
+	auto raw = X*(Y+refl)/(refl*Z+1.);
+	return -X*(Y*Z-1.) / ((Z*raw-X)*(Z*raw-X));
+}
