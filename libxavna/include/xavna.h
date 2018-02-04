@@ -6,21 +6,11 @@ extern "C" {
 
 	void* xavna_get_chained_device(void* dev);
 
-	// Set the RF frequency.
+	// Set the RF frequency and attenuation.
 	// freq_khz: frequency in kHz
-	// returns: actual frequency set, in kHz; -1 if failure
-	int xavna_set_frequency(void* dev, int freq_khz);
-
-	// Set the signal generator attenuation
-	// a: attenuation in dB
+	// atten: attenuation in dB (positive integer)
 	// returns: 0 if success; -1 if failure
-	int xavna_set_attenuation(void* dev, int a);
-
-	// Set whether the signal source is enabled.
-	// en: 0 to disable, nonzero to enable
-	// returns: 0 if success, -1 if failure
-	int xavna_set_source_enabled(void* dev, int en);
-
+	int xavna_set_params(void* dev, int freq_khz, int atten);
 
 	// out_values: array of size 4 holding the following values:
 	//				reflection real, reflection imag,

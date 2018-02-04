@@ -26,7 +26,8 @@ using namespace std;
 // settings
 int nPoints=100;
 int startFreq=137500;
-int freqStep=28000;
+int freqStep=25000;
+int attenuation=40;
 
 // currently loaded calibration references
 array<vector<complex2>, 4> calibrationReferences;
@@ -90,7 +91,7 @@ void* refreshThread(void* v) {
 		for(int i=0;i<nPoints;i++) {
 			int freq_kHz=startFreq + i*freqStep;
 			printf("%d\n",freq_kHz);
-			xavna_set_frequency(xavna_dev, freq_kHz);
+			xavna_set_params(xavna_dev, freq_kHz, attenuation);
 			xavna_read_values(xavna_dev, (double*)&values, nValues);
 			
 			complex<double> reflValue=values[reflIndex];
@@ -149,7 +150,7 @@ void* refreshThread(void* v) {
 			
 			for(int i=0;i<nPoints;i++) {
 				int freq_kHz=startFreq + i*freqStep;
-				xavna_set_frequency(xavna_dev, freq_kHz);
+				xavna_set_params(xavna_dev, freq_kHz, attenuation);
 				xavna_read_values(xavna_dev, (double*)&values, nValuesExtended);
 				
 				results.push_back(values);

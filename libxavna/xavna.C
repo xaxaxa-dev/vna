@@ -72,18 +72,29 @@ extern "C" {
 	void* xavna_get_chained_device(void* dev) {
 		return NULL;
 	}
-
-	// Set the RF frequency.
-	// freq_khz: frequency in kHz
-	// returns: actual frequency set, in kHz; -1 if failure
-	int xavna_set_frequency(void* dev, int freq_khz) {
+	
+	int xavna_set_params(void* dev, int freq_khz, int atten) {
 		xavna_device* d = (xavna_device*)dev;
-		int attenuation=0;
+		int attenuation=atten;
 		double freq = double(freq_khz)/1000.;
 		int N = (int)round(freq*100);
 		
-		//attenuation = 20;
+		int txpower = 0b11;
+		int minAtten = 5;
 		
+		if(attenuation >= 9+minAtten) {
+			txpower = 0b00;
+			attenuation -= 9;
+		} else if(attenuation >= 6+minAtten) {
+			txpower = 0b01;
+			attenuation -= 6;
+		} else if(attenuation >= 3+minAtten) {
+			txpower = 0b10;
+			attenuation -= 3;
+		}
+		
+		//attenuation = 20;
+		/*
 		if(freq<1000) attenuation=13;
 		else if(freq<1500) attenuation=10;
 		else if(freq<1730) attenuation=7;
@@ -93,8 +104,7 @@ extern "C" {
 		
 		//attenuation += 18;
 		//attenuation += 5;
-		attenuation = 20;
-		
+		attenuation = 20;*/
 		/*
 		if(freq<400) attenuation=20;
 		else if(freq<1000) attenuation=18;
@@ -111,27 +121,12 @@ extern "C" {
 			0, 0,
 			4, 1
 		};
-		assert(write(d->ttyFD,buf,sizeof(buf))==(int)sizeof(buf));
+		if(write(d->ttyFD,buf,sizeof(buf))!=(int)sizeof(buf)) return -1;
 		
 		drainfd(d->ttyFD);
 		readValue3(d->ttyFD, nWait);
 		return N*10;
 	}
-
-	// Set the signal generator attenuation
-	// a: attenuation in dB
-	// returns: 0 if success; -1 if failure
-	int xavna_set_attenuation(void* dev, int a) {
-		return 0;
-	}
-
-	// Set whether the signal source is enabled.
-	// en: 0 to disable, nonzero to enable
-	// returns: 0 if success, -1 if failure
-	int xavna_set_source_enabled(void* dev, int en) {
-		return 0;
-	}
-
 
 	// out_values: array of size 4 holding the following values:
 	//				reflection real, reflection imag,
