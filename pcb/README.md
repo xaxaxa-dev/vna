@@ -1,11 +1,10 @@
 # PCB design files
 
-##### Iteration 2 design files
+##### Release 2 design files
 * main2_2.sch/main2_2.pcb - VNA board, 2nd revision - switched to AD8342 mixer
 * main2.sch/main2.pcb - VNA board, initial revision
 
-
-##### Iteration 1 design files
+##### Release 1 design files
 * main.sch/main.pcb - main board
 * tx.sch/tx.pcb - signal generator
 * coupler.pcb - directional coupler
