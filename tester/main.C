@@ -17,11 +17,11 @@
 using namespace std;
 
 int rfSwitchPins[3] = {7,8,9};
-constexpr int nPoints=100;		// how many frequency points; do not modify; call resizeVectors()
+constexpr int nPoints=50;		// how many frequency points
 constexpr int startFreq=137500;	// start frequency in kHz
-constexpr int freqStep=25000;		// frequency step in kHz
+constexpr int freqStep=50000;		// frequency step in kHz
 constexpr int nValues=50;
-
+bool detailed = false;
 void* vna_dev=NULL;
 
 
@@ -79,16 +79,24 @@ void fail(errorType code, string msg) {
 	exit((int)code);
 }
 int errorCodes = 0;
-string errorMsgs;
+string errorMsgs,infoMsgs;
 void appendFail(errorType code, string msg) {
 	errorCodes |= (int)code;
 	errorMsgs.append(msg);
 	errorMsgs.append("\n");
 	fprintf(stderr, "FAIL: %s\n", msg.c_str());
 }
+void appendInfo(string msg) {
+	infoMsgs.append(msg);
+	infoMsgs.append("\n");
+	fprintf(stderr, "%s\n", msg.c_str());
+}
 void showResult() {
 	if(errorCodes == 0) {
-		ui_show_banner("PASS", 0x00ff00, 0x0000ff);
+		if(detailed)
+			ui_show_details("PASS", infoMsgs, 0x00ff00, 0x0000ff);
+		else
+			ui_show_banner("PASS", 0x00ff00, 0x0000ff);
 	} else {
 		ui_show_details("FAIL", errorMsgs, 0xff0000);
 	}
@@ -108,9 +116,9 @@ void* refreshThread(void* v) {
 			int freq = startFreq+freqStep*i;
 			int freq2;
 			xavna_raw2_values values;
-			if((freq2=xavna_set_frequency(vna_dev,freq)) != freq) {
-				fail(ERR_CONTROL, "device could not set frequency to " + to_string(freq)
-					+ ", device reported " + to_string(freq2) + "; " + string(strerror(errno)));
+			if(xavna_set_params(vna_dev,freq, 20) < 0) {
+				fail(ERR_CONTROL, "device could not set parameters; frequency = " + to_string(freq)
+					+ "; " + string(strerror(errno)));
 			}
 			if(xavna_read_values_raw2(vna_dev,&values,nValues)<=0) {
 				if(ignoreReadErrors) return NULL;
@@ -224,7 +232,6 @@ int main(int argc, char** argv) {
 	ui_show_banner("WARMUP", 0xbb5500);
 	setSwitchShort();
 	doScan();
-	doScan();
 	ui_show_banner("0%", 0xbb5500);
 	setSwitchShort();
 	values_short = doScan();
@@ -275,22 +282,22 @@ int main(int argc, char** argv) {
 	}
 	sort(worst_s11floors.begin(), worst_s11floors.end(), [&](int a, int b) {return s11floors[a] > s11floors[b];});
 	
-	printf("worst directivity: %.1fdB @ %.2fMHz\n", worst_directivity, freqAt(worst_directivity_freq));
-	printf("worst sensitivity: %.1fdB @ %.2fMHz\n", worst_sensitivity, freqAt(worst_sensitivity_freq));
+	appendInfo(ssprintf(255, "worst directivity: \n    %.1fdB @ %.2fMHz", worst_directivity, freqAt(worst_directivity_freq)));
+	appendInfo(ssprintf(255, "worst sensitivity: \n    %.1fdB @ %.2fMHz", worst_sensitivity, freqAt(worst_sensitivity_freq)));
 	int s11floor0 = worst_s11floors[0];
 	int s11floor2 = worst_s11floors[2];
-	printf("highest S11: %.1fdB @ %.2fMHz\n", s11floors[s11floor0], freqAt(s11floor0));
-	printf("3rd highest S11: %.1fdB @ %.2fMHz\n", s11floors[s11floor2], freqAt(s11floor2));
+	appendInfo(ssprintf(255, "highest S11: \n    %.1fdB @ %.2fMHz", s11floors[s11floor0], freqAt(s11floor0)));
+	appendInfo(ssprintf(255, "3rd highest S11: \n    %.1fdB @ %.2fMHz", s11floors[s11floor2], freqAt(s11floor2)));
 	
-	if(s11floors[s11floor0] > -40) {
+	if(s11floors[s11floor0] > -40 || isnan(s11floors[s11floor0])) {
 		string msg = ssprintf(255, "S11 floor too high: \n    %.1fdB @ %.2fMHz", s11floors[s11floor0], freqAt(s11floor0));
 		appendFail(ERR_SPEC, msg);
 	}
-	if(s11floors[s11floor2] > -50) {
+	if(s11floors[s11floor2] > -50 || isnan(s11floors[s11floor2])) {
 		string msg = ssprintf(255, "3rd highest S11 too high: \n    %.1fdB @ %.2fMHz", s11floors[s11floor2], freqAt(s11floor2));
 		appendFail(ERR_SPEC, msg);
 	}
-	if(worst_sensitivity > 30) {
+	if(worst_sensitivity > 30 || isnan(worst_sensitivity)) {
 		string msg = ssprintf(255, "S11 sensitivity too high: \n    %.1fdB @ %.2fMHz", worst_sensitivity, freqAt(worst_sensitivity_freq));
 		appendFail(ERR_SPEC, msg);
 	}

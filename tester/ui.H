@@ -96,6 +96,8 @@ void ui_show_banner(string text, uint32_t bgcolor=0x000000, uint32_t color=0xfff
 }
 void ui_show_details(string title, string details, uint32_t bgcolor=0x000000, uint32_t color=0xffffff) {
 	pthread_mutex_lock(&ui_mutex);
+	printf("%s\n", title.c_str());
+	
 	set_rgb(context, bgcolor);
 	context->paint();
 	set_rgb(context, color);
