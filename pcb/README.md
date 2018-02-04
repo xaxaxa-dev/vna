@@ -1,7 +1,7 @@
 # PCB design files
 
 ##### Release 2 design files
-* main2_2.sch/main2_2.pcb - VNA board, 2nd revision - switched to AD8342 mixer
+* main2_2.sch/main2_2.pcb - VNA board, 2nd revision - switched to AD8342 mixer __\[current production version\]__
 * main2.sch/main2.pcb - VNA board, initial revision
 
 ##### Release 1 design files
