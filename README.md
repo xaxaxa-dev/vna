@@ -64,10 +64,10 @@ The main board connects to a PC through usb and communicates via a virtual seria
 * rf switches: BGS14GA14
 * programmable attenuator: PE4312
 
-# Pictures (iteration 2)
+# Pictures (~~iteration~~ release 2)
 ![vna board 2](pictures/main2_top.jpg)
 
-# Pictures (iteration 1)
+# Pictures (~~iteration~~ release 1)
 
 ##### Complete assembly
 ![vna assembly](pictures/all.jpg)
