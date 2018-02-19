@@ -10,6 +10,8 @@ lib/*.so
 pcb/*.png
 pcb/*/*.png
 pcb/*.csv
+*.tar.gz
+vhdl/spiflash.*
 /Makefile
 
 pcb/*_out/*
