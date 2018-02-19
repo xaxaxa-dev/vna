@@ -1,7 +1,7 @@
 # libxavna
-C and C++ libraries for accessing the xaVNA hardware.
+C and C++ library for accessing the xaVNA hardware. There is only one library (.so or .dll), but several headers you can include, one for each api.
 
-# C library
+# C api
 The C library allows low level access to the hardware; typical usage is:
 1. Open the device
 2. Set parameters (frequency, signal generator power, etc)
@@ -44,7 +44,7 @@ int xavna_read_values_raw(void* dev, double* out_values, int n_samples);
 void xavna_close(void* dev);
 ```
 
-# C++ library
+# C++ api
 The C++ library provides a more convenient callback based interface, with frequency sweep and background data reading taken care of.
 The typical usage is:
 1. Instantiate VNADevice
