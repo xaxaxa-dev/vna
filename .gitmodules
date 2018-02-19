@@ -1,0 +1,3 @@
+[submodule "tester/svfplayer"]
+	path = tester/svfplayer
+	url = https://github.com/xaxaxa-dev/svfplayer.git
