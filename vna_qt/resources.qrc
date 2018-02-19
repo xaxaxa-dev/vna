@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/aaaaa">
+        <file alias="pending">edit-redo-symbolic.svg</file>
+        <file alias="complete">emblem-ok-symbolic.svg</file>
+    </qresource>
+</RCC>
