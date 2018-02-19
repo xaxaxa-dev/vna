@@ -91,7 +91,7 @@ void* refreshThread(void* v) {
 		for(int i=0;i<nPoints;i++) {
 			int freq_kHz=startFreq + i*freqStep;
 			printf("%d\n",freq_kHz);
-			xavna_set_params(xavna_dev, freq_kHz, attenuation);
+			xavna_set_params(xavna_dev, freq_kHz, attenuation, -1);
 			xavna_read_values(xavna_dev, (double*)&values, nValues);
 			
 			complex<double> reflValue=values[reflIndex];
@@ -150,7 +150,7 @@ void* refreshThread(void* v) {
 			
 			for(int i=0;i<nPoints;i++) {
 				int freq_kHz=startFreq + i*freqStep;
-				xavna_set_params(xavna_dev, freq_kHz, attenuation);
+				xavna_set_params(xavna_dev, freq_kHz, attenuation, -1);
 				xavna_read_values(xavna_dev, (double*)&values, nValuesExtended);
 				
 				results.push_back(values);

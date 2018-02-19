@@ -1,6 +1,15 @@
 vna_main
 *.glade.c
 *~
+build-*/*
+*/build-*/*
+cal/*
+*.pro.user*
+*.a
+lib/*.so
+pcb/*.png
+pcb/*/*.png
+pcb/*.csv
 /Makefile
 
 pcb/*_out/*

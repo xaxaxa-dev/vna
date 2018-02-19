@@ -8,8 +8,11 @@ INSTALL_INCLUDEDIR = @prefix@@includedir@
 
 all: vna_main
 
-vna_main: vna_main.C vna.glade.c libxavna/xavna.C vna_ui_core.C
-	$(CXX) vna_main.C vna.glade.c libxavna/xavna.C vna_ui_core.C -Iinclude -o $@ $(LDFLAGS) @GTK_CFLAGS@ @GTK_LIBS@ @FFTW_CFLAGS@ @FFTW_LIBS@ -lpthread
+lib/libxavna.so: libxavna/xavna.C libxavna/xavna_cpp.C libxavna/platform_abstraction.C libxavna/calibration.C
+	$(CXX) --shared $^ -o $@ $(LDFLAGS) -lpthread
+
+vna_main: vna_main.C vna.glade.c vna_ui_core.C lib/libxavna.so
+	$(CXX) vna_main.C vna.glade.c vna_ui_core.C -Iinclude -Llib -lxavna -o $@ $(LDFLAGS) @GTK_CFLAGS@ @GTK_LIBS@ @FFTW_CFLAGS@ @FFTW_LIBS@ -lpthread
 
 vna.glade.c: vna.glade
 	xxd -i vna.glade > $@

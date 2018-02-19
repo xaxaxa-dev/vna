@@ -40,10 +40,7 @@ extern "C" {
 			read(fd,buf,sizeof(buf));
 		}
 	}
-	
 
-	// dev: path to the serial device; if NULL, it will be selected automatically
-	// returns: handle to the opened device, or NULL if failed; check errno
 	void* xavna_open(const char* dev) {
 		xavna_device* d = new xavna_device();
 		d->ttyFD=open(dev,O_RDWR);
@@ -73,9 +70,9 @@ extern "C" {
 		return NULL;
 	}
 	
-	int xavna_set_params(void* dev, int freq_khz, int atten) {
+	int xavna_set_params(void* dev, int freq_khz, int atten1, int atten2) {
 		xavna_device* d = (xavna_device*)dev;
-		int attenuation=atten;
+		int attenuation=atten1;
 		double freq = double(freq_khz)/1000.;
 		int N = (int)round(freq*100);
 		
@@ -93,25 +90,6 @@ extern "C" {
 			attenuation -= 3;
 		}
 		
-		//attenuation = 20;
-		/*
-		if(freq<1000) attenuation=13;
-		else if(freq<1500) attenuation=10;
-		else if(freq<1730) attenuation=7;
-		else if(freq<2130) attenuation=6;
-		else if(freq<2900) attenuation=2;
-		else attenuation=0;
-		
-		//attenuation += 18;
-		//attenuation += 5;
-		attenuation = 20;*/
-		/*
-		if(freq<400) attenuation=20;
-		else if(freq<1000) attenuation=18;
-		else if(freq<2000) attenuation=14;
-		else if(freq<3000) attenuation=8;
-		else attenuation=4;*/
-		
 		u8 buf[] = {
 			1, u8(N>>16),
 			2, u8(N>>8),
@@ -125,14 +103,9 @@ extern "C" {
 		
 		drainfd(d->ttyFD);
 		readValue3(d->ttyFD, nWait);
-		return N*10;
+		return 0;
 	}
 
-	// out_values: array of size 4 holding the following values:
-	//				reflection real, reflection imag,
-	//				thru real, thru imag
-	// n_samples: number of samples to average over; typical 50
-	// returns: number of samples read, or -1 if failure
 	int xavna_read_values(void* dev, double* out_values, int n_samples) {
 		xavna_device* d = (xavna_device*)dev;
 		complex5 result;
@@ -145,27 +118,19 @@ extern "C" {
 		return n;
 	}
 	
-	// out_values: array of size 4 holding the following values:
-	//				reflection real, reflection imag,
-	//				thru real, thru imag
-	// n_samples: number of samples to average over; typical 50
-	// returns: number of samples read, or -1 if failure
 	int xavna_read_values_raw(void* dev, double* out_values, int n_samples) {
 		xavna_device* d = (xavna_device*)dev;
-		double scale = 1.d/double((int64_t(1)<<12) * (int64_t(1)<<19));
 		complex5 result;
 		int n;
 		tie(result, n) = readValue3(d->ttyFD, n_samples);
-		
-		complex<double> refl = result.val[1], thru = result.val[0];
-		complex<double> reference = polar(1., -arg(result.val[0]));
-		refl *= reference;
-		thru *= reference;
-		
-		out_values[0] = refl.real()*scale;
-		out_values[1] = refl.imag()*scale;
-		out_values[2] = thru.real()*scale;
-		out_values[3] = thru.imag()*scale;
+		out_values[0] = result.val[0].real();
+		out_values[1] = result.val[0].imag();
+		out_values[2] = result.val[1].real();
+		out_values[3] = result.val[1].imag();
+		out_values[4] = 0.;
+		out_values[5] = 0.;
+		out_values[6] = result.val[2].real();
+		out_values[7] = result.val[2].imag();
 		return n;
 	}
 	
