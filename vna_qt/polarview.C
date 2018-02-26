@@ -62,6 +62,8 @@ void PolarView::draw_chart(QPainter &painter) {
 }
 
 void PolarView::draw_full(QPainter &painter) {
+    painter.setRenderHints(QPainter::Antialiasing);
+    painter.fillRect(rect(),Qt::white);
     draw_grid(painter);
     if(persistence) {
         painter.drawImage(0,0,image);
@@ -69,9 +71,11 @@ void PolarView::draw_full(QPainter &painter) {
         painter.setPen(QPen(Qt::blue, 2.0));
         draw_chart(painter);
     }
-    if(selectedPoint<0 || selectedPoint>=(int)points.size()) return;
-    painter.setPen(QPen(QColor(cursorColor), 2.0));
-    draw_point(painter,points[selectedPoint],3);
+    for(Marker marker:markers) {
+        if(marker.index<0) continue;
+        painter.setPen(QPen(QColor(marker.color), 2.0));
+        draw_point(painter,points.at(marker.index),3);
+    }
 }
 
 void PolarView::draw_point(QPainter &painter, complex<double> pt, double size) {

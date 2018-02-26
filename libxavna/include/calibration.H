@@ -54,7 +54,7 @@ public:
 	// return the name of this calibration type
 	virtual string name() const=0;
 	// get a list of calibration standards required
-	virtual vector<string> getRequiredStandards() const=0;
+	virtual vector<array<string, 2> > getRequiredStandards() const=0;
 	// given the measurements for each of the calibration standards, compute the coefficients
 	virtual MatrixXcd computeCoefficients(const vector<VNARawValue>& measurements) const=0;
 	// given cal coefficients and a raw value, compute S parameters

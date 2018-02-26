@@ -7,8 +7,8 @@ public:
 		return "SOL (1 port)";
 	}
 	// get a list of calibration standards required
-    vector<string> getRequiredStandards() const override {
-		return {"short1,Short","open1,Open","load1,Load"};
+    vector<array<string, 2> > getRequiredStandards() const override {
+		return {{"short1","Short"},{"open1","Open"},{"load1","Load"}};
 	}
 	// given the measurements for each of the calibration standards, compute the coefficients
     MatrixXcd computeCoefficients(const vector<VNARawValue>& measurements) const override {
@@ -32,8 +32,8 @@ public:
 		return "SOLT (T/R)";
 	}
 	// get a list of calibration standards required
-    vector<string> getRequiredStandards() const override {
-		return {"short1,Short","open1,Open","load1,Load","thru,Thru"};
+    vector<array<string, 2> > getRequiredStandards() const override {
+		return {{"short1","Short"},{"open1","Open"},{"load1","Load"},{"thru","Thru"}};
 	}
 	// given the measurements for each of the calibration standards, compute the coefficients
     MatrixXcd computeCoefficients(const vector<VNARawValue>& measurements) const override {
@@ -57,11 +57,11 @@ public:
 		return "SOLT (two port)";
 	}
 	// get a list of calibration standards required
-    vector<string> getRequiredStandards() const override {
-		return {"short1,Short (port 1)", "short2,Short (port 2)",
-				"open1,Open (port 1)", "open2,Open (port 2)",
-				"load1,Load (port 1)", "load2,Load (port 2)",
-				"thru,Thru"};
+    vector<array<string, 2> > getRequiredStandards() const override {
+		return {{"short1","Short (port 1)"}, {"short2","Short (port 2)"},
+				{"open1","Open (port 1)"}, {"open2","Open (port 2)"},
+				{"load1","Load (port 1)"}, {"load2","Load (port 2)"},
+				{"thru","Thru"}};
 	}
 	// given the measurements for each of the calibration standards, compute the coefficients
     MatrixXcd computeCoefficients(const vector<VNARawValue>& measurements) const override {

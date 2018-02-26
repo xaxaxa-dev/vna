@@ -6,6 +6,12 @@ namespace xaxaxa {
     static void* _mainThread_(void* param);
 
 
+	VNADevice::VNADevice() {
+        _cb_ = &_cb;
+	}
+	VNADevice::~VNADevice() {
+		
+	}
 	vector<string> VNADevice::findDevices() {
 		return xavna_find_devices();
 	}
@@ -41,8 +47,16 @@ namespace xaxaxa {
 		}
 	}
 	
+	void VNADevice::takeMeasurement(function<void(const vector<VNARawValue>& vals)> cb) {
+		if(!_threadRunning) throw logic_error("takeMeasurement: vna scan thread must be started");
+		_cb = cb;
+		__sync_synchronize();
+		__sync_add_and_fetch(&_measurementCnt, 1);
+	}
+	
 	void* VNADevice::_mainThread() {
-		
+		uint32_t last_measurementCnt = _measurementCnt;
+		int cnt=0;
 		while(!_shouldExit) {
 			vector<VNARawValue> results(nPoints);
 			for(int i=0;i<nPoints;i++) {
@@ -66,10 +80,23 @@ namespace xaxaxa {
 							values[0][3]/values[0][0], 0;
 				else throw logic_error("not yet implemented");
                 frequencyCompletedCallback(i, tmp);
+                
 				results[i]=tmp;
 				if(_shouldExit) return NULL;
 			}
 			sweepCompletedCallback(results);
+			
+			if(_measurementCnt != last_measurementCnt) {
+				__sync_synchronize();
+				if(cnt == 1) {
+					function<void(const vector<VNARawValue>& vals)> func
+						= *(function<void(const vector<VNARawValue>& vals)>*)_cb_;
+					func(results);
+					cnt = 0;
+					last_measurementCnt = _measurementCnt;
+				} else cnt++;
+			}
+			
 		}
 		return NULL;
 	}

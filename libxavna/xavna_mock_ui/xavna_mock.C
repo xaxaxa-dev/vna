@@ -328,7 +328,7 @@ extern "C" {
 		//Vector2cd res1 = d->getMeasuredValues(d->curFreq, {0.01,3.6});
 		
 		auto noise = [](){
-			return (drand48()*2.-1.) * 500e-7;
+			return (drand48()*2.-1.) * 50e-7;
 		};
 		
 		out_values[0] = d->excitations[0].real() + noise();

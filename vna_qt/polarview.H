@@ -14,12 +14,15 @@ class PolarView : public QWidget
 {
     Q_OBJECT
 public:
+    struct Marker {
+        uint32_t color; // rgb
+        int index;
+    };
     vector<complex<double> > points;
+    vector<Marker> markers;
     double scale=1.;
     double margin=10;	// pixels
-    int selectedPoint=0;
     bool persistence = false;
-    uint32_t cursorColor = 0xffffff00; //ARGB
 
     explicit PolarView(QWidget *parent = 0);
 

@@ -15,11 +15,11 @@ namespace xaxaxa {
 		double startFreqHz=200e6;	// start frequency in Hz
 		double stepFreqHz=25e6;		// step frequency in Hz
 		int nPoints=50;				// how many frequency points
-		int nValues=50;				// how many values to average over
+		int nValues=100;	 		// how many values to average over
 		bool tr = true;			// whether to measure with only port 1 signal gen enabled
 		
 		// rf parameters
-		int attenuation1=10, attenuation2=10;
+		int attenuation1=35, attenuation2=35;
 		
 		// called by background thread when a single frequency measurement is done
         function<void(int freqIndex, VNARawValue val)> frequencyCompletedCallback;
@@ -31,8 +31,8 @@ namespace xaxaxa {
 		function<void(const exception& exc)> backgroundErrorCallback;
 		
 		
-		VNADevice() {}
-		~VNADevice() {}
+		VNADevice();
+		~VNADevice();
 		
 		// find all xaVNA devices present
 		static vector<string> findDevices();
@@ -51,9 +51,17 @@ namespace xaxaxa {
 		// close the vna device
 		void close();
 		
+		// wait for one full measurement, and call cb with results
+		void takeMeasurement(function<void(const vector<VNARawValue>& vals)> cb);
+		
 		// return the frequency in Hz at an array index
 		double freqAt(int i) {
 			return startFreqHz+i*stepFreqHz;
+		}
+		
+		// return highest power output in dBm
+		int maxPower() const {
+			return 10;
 		}
 		
 		
@@ -63,6 +71,9 @@ namespace xaxaxa {
 		pthread_t _pth;
 		bool _threadRunning=false;
 		bool _shouldExit=false;
+		volatile uint32_t _measurementCnt=0;
+		function<void(const vector<VNARawValue>& vals)> _cb;
+		volatile function<void(const vector<VNARawValue>& vals)>* _cb_;
 		
 		// internal methods
 		void* _mainThread();

@@ -90,6 +90,8 @@ extern "C" {
 			attenuation -= 3;
 		}
 		
+		if(attenuation > 31) attenuation = 31;
+		
 		u8 buf[] = {
 			1, u8(N>>16),
 			2, u8(N>>8),

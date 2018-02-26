@@ -31,8 +31,8 @@ SOURCES += xavna_mock_ui.C \
     xavna_mock_ui_dialog.C
 
 HEADERS += xavna_mock_ui.H\
-        xavna_mock_ui_global.h \
-    xavna_mock_ui_dialog.H
+    xavna_mock_ui_dialog.H \
+    xavna_mock_ui_global.h
 
 unix {
     target.path = /usr/lib

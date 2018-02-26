@@ -38,18 +38,34 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES +=\
     polarview.C \
     mainwindow.C \
-    main.C
+    main.C \
+    markerslider.C \
+    impedancedisplay.C \
+    frequencydialog.C \
+    graphpanel.C \
+    configureviewdialog.C
 
 HEADERS  += \
     polarview.H \
-    mainwindow.H
+    mainwindow.H \
+    markerslider.H \
+    impedancedisplay.H \
+    utility.H \
+    frequencydialog.H \
+    graphpanel.H \
+    configureviewdialog.H
 
-FORMS    += mainwindow.ui
+FORMS    += mainwindow.ui \
+    markerslider.ui \
+    impedancedisplay.ui \
+    frequencydialog.ui \
+    graphpanel.ui \
+    configureviewdialog.ui
 
 RESOURCES += \
     resources.qrc
 
-unix|win32: LIBS += -L$$PWD/../lib_mock/ -lxavna
+unix|win32: LIBS += -L$$PWD/../lib/ -lxavna
 
 INCLUDEPATH += $$PWD/../include
 DEPENDPATH += $$PWD/../include
