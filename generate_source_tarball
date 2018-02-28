@@ -1,0 +1,5 @@
+#!/bin/bash
+
+rm -rf xavna-src
+rsync -a ./ xavna-src --exclude xavna-src --exclude '*.gz' --exclude 'lib/*' --exclude vhdl --exclude pcb --exclude 'build-*' --exclude pictures --exclude '*.cache' --exclude .git --exclude '*~'
+tar cfz xavna-src.tar.gz xavna-src
