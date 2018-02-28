@@ -2,6 +2,10 @@
 #include "include/xavna.h"
 #include "include/platform_abstraction.H"
 
+#include <array>
+
+using namespace std;
+
 namespace xaxaxa {
     static void* _mainThread_(void* param);
 

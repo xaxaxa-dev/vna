@@ -56,14 +56,20 @@
    </item>
    <item>
     <widget class="QLabel" name="l_id">
+     <property name="minimumSize">
+      <size>
+       <width>32</width>
+       <height>0</height>
+      </size>
+     </property>
      <property name="toolTip">
       <string>Marker id</string>
      </property>
      <property name="text">
       <string>1</string>
      </property>
-     <property name="margin">
-      <number>5</number>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
      </property>
     </widget>
    </item>

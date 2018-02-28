@@ -1,5 +1,6 @@
 #ifndef UTILITY_H
 #define UTILITY_H
+#define _USE_MATH_DEFINES
 #include <stdio.h>
 #include <stdarg.h>
 #include <math.h>

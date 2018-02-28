@@ -18,7 +18,8 @@ CONFIG += static
 
 #QMAKE_LFLAGS += --static -lexpat -lz -lXext -lXau -lbsd -lXdmcp
 #QMAKE_LFLAGS += -L../lib -lxavna
-#QMAKE_CXXFLAGS += --std=c++11
+QMAKE_CFLAGS += --std=c++11 -DEIGEN_DONT_VECTORIZE -DEIGEN_DISABLE_UNALIGNED_ARRAY_ASSERT
+QMAKE_CXXFLAGS += --std=c++11
 
 TARGET = vna_qt
 TEMPLATE = app
@@ -65,7 +66,7 @@ FORMS    += mainwindow.ui \
 RESOURCES += \
     resources.qrc
 
-unix|win32: LIBS += -L$$PWD/../lib/ -lxavna
+unix|win32: LIBS += -L$$PWD/../libxavna/.libs/ -lxavna
 
-INCLUDEPATH += $$PWD/../include
+INCLUDEPATH += $$PWD/../include /usr/local/include
 DEPENDPATH += $$PWD/../include

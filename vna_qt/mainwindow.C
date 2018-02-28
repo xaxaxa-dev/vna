@@ -1,3 +1,4 @@
+#define _USE_MATH_DEFINES
 #include "mainwindow.H"
 #include "ui_mainwindow.h"
 #include "polarview.H"
@@ -91,10 +92,11 @@ void MainWindow::populateCalTypes() {
 }
 
 void MainWindow::setupViews() {
-    views.push_back({
+    views.push_back(SParamView{
                         {0,0,
                         SParamViewSource::TYPE_COMPLEX},
-                        this->polarView
+                        this->polarView,
+                        {}, nullptr
                     });
 
     vector<string> graphTraces;
@@ -160,12 +162,9 @@ void MainWindow::setCallbacks() {
         //printf("frequencyCompletedCallback: %d\n",freqIndex);
         //fflush(stdout);
         this->rawValues[freqIndex] = val;
-        if(curCal)
-            this->values[freqIndex] = curCal->computeValue(curCalCoeffs[freqIndex], val);
-        else this->values[freqIndex] = (VNACalibratedValue) val;
         QMetaObject::invokeMethod(this, "updateViews", Qt::QueuedConnection, Q_ARG(int, freqIndex));
     };
-    vna->sweepCompletedCallback = [this](const vector<VNARawValue>& vals) {
+    vna->sweepCompletedCallback = [this](const vector<VNARawValue>&) {
 
     };
     vna->backgroundErrorCallback = [this](const exception& exc) {
@@ -174,6 +173,9 @@ void MainWindow::setCallbacks() {
 }
 
 void MainWindow::updateViews(int freqIndex) {
+    if(curCal)
+        this->values[freqIndex] = curCal->computeValue(curCalCoeffs[freqIndex], this->rawValues[freqIndex]);
+    else this->values[freqIndex] = (VNACalibratedValue) this->rawValues[freqIndex];
     for(int i=0;i<(int)this->views.size();i++) {
         updateView(i, freqIndex);
     }
@@ -192,6 +194,7 @@ void MainWindow::updateView(int viewIndex, int freqIndex) {
     switch(tmp.src.type) {
     case SParamViewSource::TYPE_MAG:
     case SParamViewSource::TYPE_PHASE:
+    case SParamViewSource::TYPE_GRPDELAY:
     {
         auto* series = dynamic_cast<QLineSeries*>(tmp.view);
         double y = tmp.src.type==SParamViewSource::TYPE_MAG?dB(norm(entry)):arg(entry);
@@ -204,6 +207,7 @@ void MainWindow::updateView(int viewIndex, int freqIndex) {
         view->points.at(freqIndex) = entry;
         break;
     }
+    default: assert(false);
     }
 }
 
@@ -215,6 +219,7 @@ void MainWindow::updateSweepParams() {
         switch(tmp.src.type) {
         case SParamViewSource::TYPE_MAG:
         case SParamViewSource::TYPE_PHASE:
+        case SParamViewSource::TYPE_GRPDELAY:
         {
             auto* series = dynamic_cast<QLineSeries*>(tmp.view);
             series->clear();
@@ -229,6 +234,7 @@ void MainWindow::updateSweepParams() {
             view->points.resize(vna->nPoints);
             break;
         }
+        default: assert(false);
         }
     }
     for(Marker& marker:markers) {
@@ -414,7 +420,7 @@ void MainWindow::on_d_caltype_currentIndexChanged(int index) {
         ui->w_calstandards->layout()->addWidget(btn);
         calButtons[name] = btn;
 
-        connect(btn,&QPushButton::clicked,[btn,this](bool b) {
+        connect(btn,&QPushButton::clicked,[btn,this]() {
             btn_measure_click(btn);
         });
     }
@@ -475,13 +481,13 @@ void MainWindow::on_b_apply_clicked() {
     vector<vector<VNARawValue> > measurements(vna->nPoints);
 
     for(int i=0;i<(int)names.size();i++) {
-        if(calMeasurements[names[i]].size() != vna->nPoints) {
+        if(int(calMeasurements[names[i]].size()) != vna->nPoints) {
             QMessageBox::critical(this,"Error",qs("measurement for \"" + names[i] + "\" does not exist"));
             return;
         }
     }
 
-    for(int j=0;j<measurements.size();j++) {
+    for(int j=0;j<(int)measurements.size();j++) {
         measurements[j].resize(names.size());
         for(int i=0;i<(int)names.size();i++)
             measurements[j][i] = calMeasurements[names[i]].at(j);

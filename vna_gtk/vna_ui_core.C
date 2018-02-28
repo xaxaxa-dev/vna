@@ -27,7 +27,7 @@ using namespace std;
 int nPoints=100;
 int startFreq=137500;
 int freqStep=25000;
-int attenuation=40;
+int attenuation=20;
 
 // currently loaded calibration references
 array<vector<complex2>, 4> calibrationReferences;

@@ -273,13 +273,13 @@ int main() {
 	cout << tmp.getMeasuredValues(200e6, {1.,0.}) << endl;
 }*/
 extern "C" {
-	void* xavna_open(const char* dev) {
+    void* xavna_open(const char*) {
 		xavna_device* d = new xavna_device();
 		d->init();
 		return d;
 	}
 
-	void* xavna_get_chained_device(void* dev) {
+    void* xavna_get_chained_device(void*) {
 		return NULL;
 	}
 	
@@ -293,7 +293,7 @@ extern "C" {
         d->excitations[1] = polar(3.6*pow(10,-atten2/10.), d->phaseOffset + 2.5);
 		
 		// simulate some switch leakage
-        complex<double> tmp = d->excitations[0];
+        //complex<double> tmp = d->excitations[0];
         //d->excitations[0] += d->excitations[1]*polar(0.002,1.2);
         //d->excitations[1] += tmp*polar(0.002,5.3);
 		
@@ -343,7 +343,7 @@ extern "C" {
 		return n_samples;
 	}
 	
-	int xavna_read_values_raw2(void* dev, double* out_values, int n_samples) {
+    int xavna_read_values_raw2(void*, double*, int n_samples) {
 		return n_samples;
 	}
 

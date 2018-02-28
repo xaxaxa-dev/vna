@@ -1,6 +1,6 @@
+#include "utility.H"
 #include "graphpanel.H"
 #include "ui_graphpanel.h"
-#include "utility.H"
 #include <QGraphicsLayout>
 #include <QtCharts/QChart>
 #include <QtCharts/QChartView>

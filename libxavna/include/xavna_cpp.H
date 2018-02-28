@@ -15,7 +15,7 @@ namespace xaxaxa {
 		double startFreqHz=200e6;	// start frequency in Hz
 		double stepFreqHz=25e6;		// step frequency in Hz
 		int nPoints=50;				// how many frequency points
-		int nValues=100;	 		// how many values to average over
+		int nValues=50;	 		// how many values to average over
 		bool tr = true;			// whether to measure with only port 1 signal gen enabled
 		
 		// rf parameters

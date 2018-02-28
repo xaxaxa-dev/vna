@@ -1,6 +1,6 @@
+#include "utility.H"
 #include "frequencydialog.H"
 #include "ui_frequencydialog.h"
-#include "utility.H"
 #include <xavna/xavna_cpp.H>
 
 using namespace xaxaxa;
@@ -49,14 +49,14 @@ void FrequencyDialog::on_slider_power_valueChanged(int value) {
     ui->l_power->setText(qs(ssprintf(32, "%d dBm", value)));
 }
 
-void FrequencyDialog::on_t_start_textChanged(const QString &arg1) {
+void FrequencyDialog::on_t_start_textChanged(const QString &) {
     updateLabels();
 }
 
-void FrequencyDialog::on_t_step_textChanged(const QString &arg1) {
+void FrequencyDialog::on_t_step_textChanged(const QString &) {
     updateLabels();
 }
 
-void FrequencyDialog::on_t_points_textChanged(const QString &arg1) {
+void FrequencyDialog::on_t_points_textChanged(const QString &) {
     updateLabels();
 }

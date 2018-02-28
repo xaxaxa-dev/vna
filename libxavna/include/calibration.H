@@ -12,8 +12,8 @@ using namespace Eigen;
 inline array<complex<double>, 3> SOL_compute_coefficients(complex<double> sc, complex<double> oc, complex<double> load) {
 	complex<double> a=load, b=oc, c=sc;
 	complex<double> cal_X, cal_Y, cal_Z;
-	cal_Z=(2.d*a-b-c)/(b-c);
-	cal_X=a-c*(1.d-cal_Z);
+	cal_Z=(2.*a-b-c)/(b-c);
+	cal_X=a-c*(1.-cal_Z);
 	cal_Y=a/cal_X;
 	
 	return {cal_X, cal_Y, cal_Z};

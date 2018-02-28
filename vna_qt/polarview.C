@@ -92,7 +92,7 @@ void PolarView::commitTrace() {
 
 }
 
-void PolarView::paintEvent(QPaintEvent *event) {
+void PolarView::paintEvent(QPaintEvent *) {
     QPainter painter(this);
     draw_full(painter);
 }

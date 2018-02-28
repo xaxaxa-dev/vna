@@ -1,6 +1,7 @@
+#include "utility.H"
 #include "impedancedisplay.H"
 #include "ui_impedancedisplay.h"
-#include "utility.H"
+
 
 ImpedanceDisplay::ImpedanceDisplay(QWidget *parent) :
     QWidget(parent),

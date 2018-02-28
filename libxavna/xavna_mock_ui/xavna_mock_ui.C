@@ -7,7 +7,7 @@
 QApplication* app;
 pthread_t pth;
 
-void* thread1(void* v) {
+void* thread1(void*) {
     //app->exec();
     while(true) {
         usleep(100000);

@@ -1,16 +1,51 @@
 AC_INIT(vna, version-0.1, private0x01@gmail.com)
-
-if test -z $CXXFLAGS; then
-    CXXFLAGS='-O2 --std=c++0x -fPIC -fwrapv -fno-delete-null-pointer-checks -funsigned-char -fno-strict-aliasing -Wno-pmf-conversions'
-fi
-
+AM_INIT_AUTOMAKE([-Wall -Werror foreign])
+m4_ifdef([AM_PROG_AR], [AM_PROG_AR])
 AC_PROG_CXX
 AC_LANG(C++)
+AC_CONFIG_MACRO_DIR([m4])
+#AC_CONFIG_HEADERS([libxavna/include/xavna.h])
+AC_CONFIG_FILES([
+ Makefile
+ libxavna/Makefile
+])
+LT_INIT([win32-dll])
+AC_CANONICAL_HOST
 
-AC_SUBST(EXTRA_LIBRARIES)
-AC_SUBST(EXTRA_SOURCES)
+is_windows=no
+case "${host_os}" in
+    cygwin*|mingw*)
+        is_windows=yes
+        ;;
+esac
 
-PKG_CHECK_MODULES([GTK], [gtkmm-3.0])
-PKG_CHECK_MODULES([FFTW], [fftw3])
+AM_CONDITIONAL([WINDOWS], [test "$is_windows" = "yes"])
 
-AC_OUTPUT(Makefile)
+#if test -z $CXXFLAGS; then
+#    CXXFLAGS='-O2 --std=c++0x -fPIC -fwrapv -fno-delete-null-pointer-checks -funsigned-char -fno-strict-aliasing -Wno-pmf-conversions'
+#fi
+
+#AC_SUBST(OBJECTS)
+#OBJECTS="lib/libxavna.so"
+
+
+
+#AC_SUBST(EXTRA_LIBRARIES)
+#AC_SUBST(EXTRA_SOURCES)
+
+#AC_ARG_VAR([QMAKE], [Path to qmake])
+
+#AC_ARG_WITH([qt_gui],
+    #[AS_HELP_STRING([--with-qt-gui],
+      #[Build QT GUI @<:@default=yes@:>@])],
+    #[],
+    #[with_qt_gui=yes])
+
+
+#if test "$with_qt_gui" == "yes"
+#then
+    #AC_CHECK_PROG([QMAKE], [qmake], [qmake])
+    #OBJECTS+=" vna_qt/vna_qt"
+#fi
+
+AC_OUTPUT
