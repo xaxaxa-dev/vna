@@ -64,8 +64,8 @@ begin
 	
 	usb_serial_inst : entity usb_serial
 	generic map (
-		VENDORID        => X"beef",
-		PRODUCTID       => X"0001",
+		VENDORID        => X"04b4",
+		PRODUCTID       => X"0008",
 		VERSIONBCD      => X"0001",
 		VENDORSTR		=> "xaxaxa Development Ltd",
 		PRODUCTSTR		=> "VNA0001",
