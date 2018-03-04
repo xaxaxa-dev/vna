@@ -8,6 +8,7 @@
 #include "frequencydialog.H"
 #include "graphpanel.H"
 #include "utility.H"
+#include "touchstone.H"
 #include <xavna/calibration.H>
 #include <xavna/xavna_cpp.H>
 #include <iostream>
@@ -17,6 +18,10 @@
 #include <QMessageBox>
 #include <QTimer>
 #include <QGraphicsLayout>
+#include <QFileDialog>
+#include <QFile>
+#include <QTextStream>
+#include <QSettings>
 
 #include <QtCharts/QChart>
 #include <QtCharts/QChartView>
@@ -40,6 +45,7 @@ MainWindow::MainWindow(QWidget *parent) :
     impdisp = new ImpedanceDisplay();
     timer = new QTimer();
 
+    loadSettings();
     setCallbacks();
     setupViews();
     updateSweepParams();
@@ -84,10 +90,24 @@ MainWindow::~MainWindow()
     fflush(stdout);
 }
 
+void MainWindow::loadSettings() {
+    QSettings settings;
+    recentFiles = settings.value("recentFiles").toStringList();
+    refreshRecentFiles();
+
+    graphLimits = {
+        {-1000,-999},
+        {-80, 30},      //TYPE_MAG=1
+        {-180, 180},    //TYPE_PHASE
+        {0, 50},        //TYPE_GRPDELAY
+        {-1000,-999}    //TYPE_COMPLEX
+    };
+}
+
 void MainWindow::populateCalTypes() {
     ui->d_caltype->clear();
     for(const VNACalibration* cal:calibrationTypes) {
-        ui->d_caltype->addItem(QString::fromStdString(cal->name()));
+        ui->d_caltype->addItem(QString::fromStdString(cal->description()));
     }
 }
 
@@ -95,7 +115,7 @@ void MainWindow::setupViews() {
     views.push_back(SParamView{
                         {0,0,
                         SParamViewSource::TYPE_COMPLEX},
-                        this->polarView,
+                        this->polarView, nullptr,
                         {}, nullptr
                     });
 
@@ -143,14 +163,15 @@ void MainWindow::setupViews() {
         };
         views.push_back({
                             graphSources[0],
-                            gp->series[i], {},
-                            fn
+                            gp->series[i], gp->axisY[i],
+                            {}, fn
                         });
         curViews.push_back(views.size()-1);
     }
     connect(gp,&GraphPanel::comboBoxSelectionChanged, [this, curViews, graphSources](int index, int sel) {
         views.at(curViews.at(index)).src = graphSources.at(sel);
         updateView(curViews.at(index));
+        updateYAxis(curViews.at(index));
         updateMarkerViews();
     });
     gp->comboBox(0)->setCurrentIndex(1);
@@ -169,35 +190,64 @@ void MainWindow::setCallbacks() {
     };
     vna->backgroundErrorCallback = [this](const exception& exc) {
         fprintf(stderr,"background thread error: %s\n",exc.what());
+        QString msg = exc.what();
+        QMetaObject::invokeMethod(this, "handleBackgroundError", Qt::QueuedConnection, Q_ARG(QString, msg));
     };
 }
 
 void MainWindow::updateViews(int freqIndex) {
+    if(freqIndex >= (int)values.size()) return;
     if(curCal)
-        this->values[freqIndex] = curCal->computeValue(curCalCoeffs[freqIndex], this->rawValues[freqIndex]);
-    else this->values[freqIndex] = (VNACalibratedValue) this->rawValues[freqIndex];
+        this->values.at(freqIndex) = curCal->computeValue(curCalCoeffs.at(freqIndex), this->rawValues.at(freqIndex));
+    else this->values.at(freqIndex) = (VNACalibratedValue) this->rawValues.at(freqIndex);
     for(int i=0;i<(int)this->views.size();i++) {
         updateView(i, freqIndex);
     }
 }
 
 void MainWindow::updateView(int viewIndex, int freqIndex) {
+    double period = 1./vna->stepFreqHz;
+    double grpDelayScale = period/(2*M_PI) * 1e9;
+
     if(freqIndex < 0) {
         for(int i=0;i<(int)values.size();i++) {
             updateView(viewIndex,i);
         }
         return;
     }
-    VNACalibratedValue val = this->values.at(freqIndex);
     SParamView tmp = this->views.at(viewIndex);
+
+    VNACalibratedValue val = this->values.at(freqIndex);
     complex<double> entry = val(tmp.src.row,tmp.src.col);
+
     switch(tmp.src.type) {
     case SParamViewSource::TYPE_MAG:
     case SParamViewSource::TYPE_PHASE:
     case SParamViewSource::TYPE_GRPDELAY:
     {
         auto* series = dynamic_cast<QLineSeries*>(tmp.view);
-        double y = tmp.src.type==SParamViewSource::TYPE_MAG?dB(norm(entry)):arg(entry);
+        double y = 0;
+        switch(tmp.src.type) {
+        case SParamViewSource::TYPE_MAG:
+            y = dB(norm(entry));
+            break;
+        case SParamViewSource::TYPE_PHASE:
+            y = arg(entry)*180./M_PI;
+            break;
+        case SParamViewSource::TYPE_GRPDELAY:
+        {
+            if(freqIndex>0) {
+                VNACalibratedValue prevVal = this->values.at(freqIndex-1);
+                complex<double> prevEntry = prevVal(tmp.src.row,tmp.src.col);
+                y = arg(prevEntry) - arg(entry);
+                if(y>=M_PI) y-=2*M_PI;
+                if(y<-M_PI) y+=2*M_PI;
+            } else y=0;
+            y *= grpDelayScale;
+            break;
+        }
+        default: assert(false);
+        }
         series->replace(freqIndex,series->at(freqIndex).x(), y);
         break;
     }
@@ -211,7 +261,25 @@ void MainWindow::updateView(int viewIndex, int freqIndex) {
     }
 }
 
+void MainWindow::handleBackgroundError(QString msg) {
+    QMessageBox::critical(this, "Error", msg);
+    enableUI(false);
+}
+
+void MainWindow::s11MeasurementCompleted(QString fileName) {
+    string data = serializeTouchstone(tmp_s11,vna->startFreqHz,vna->stepFreqHz);
+    saveFile(fileName, data);
+    enableUI(true);
+}
+
+void MainWindow::sMeasurementCompleted() {
+    enableUI(true);
+}
+
 void MainWindow::updateSweepParams() {
+    double maxGrpDelayNs = (1./vna->stepFreqHz)*.5*1e9;
+    graphLimits[SParamViewSource::TYPE_GRPDELAY] = {0., maxGrpDelayNs};
+    updateYAxis();
     rawValues.resize(vna->nPoints);
     values.resize(vna->nPoints);
     for(int i=0;i<(int)this->views.size();i++) {
@@ -265,7 +333,7 @@ void MainWindow::updateMarkerViews(int marker) {
                     continue;
                 }
                 ss->replace(0,series->at(freqIndex));
-                printf("sss %f %f\n",series->at(freqIndex).x(), series->at(freqIndex).y());
+                //printf("sss %f %f\n",series->at(freqIndex).x(), series->at(freqIndex).y());
                 fflush(stdout);
             }
         }
@@ -310,6 +378,17 @@ void MainWindow::updateBottomLabels(int marker) {
             }
         }
     }
+}
+
+void MainWindow::updateYAxis(int viewIndex) {
+    if(viewIndex<0) {
+        for(int i=0;i<(int)views.size();i++) updateYAxis(i);
+        return;
+    }
+    auto& view = views.at(viewIndex);
+    int typeIndex = view.src.type;
+    if(view.yAxis == nullptr) return;
+    view.yAxis->setRange(graphLimits.at(typeIndex)[0], graphLimits.at(typeIndex)[1]);
 }
 
 void MainWindow::addMarker(bool removable) {
@@ -377,7 +456,168 @@ void MainWindow::enableUI(bool enable) {
     ui->dock_impedance->setEnabled(enable);
     ui->centralWidget->setEnabled(enable);
     ui->menuCalibration->setEnabled(enable);
-    ui->menuS_parameters->setEnabled(false);
+    ui->menuS_parameters->setEnabled(enable && curCal!=nullptr);
+}
+
+static string calFileVer = "calFileVersion 1";
+string MainWindow::serializeCalibration(const CalibrationInfo &cal) {
+    string tmp;
+    tmp.append(calFileVer);
+    tmp += '\n';
+    tmp.append(cal.calName + "\n");
+    tmp.append(to_string(cal.nPoints)+" "+to_string(cal.startFreqHz)+" "+to_string(cal.stepFreqHz));
+    tmp.append(" "+to_string(cal.attenuation1)+" "+to_string(cal.attenuation2));
+    tmp += '\n';
+    for(auto& calstd:cal.measurements) {
+        tmp.append(calstd.first);
+        tmp += '\n';
+        for(const VNARawValue& val:calstd.second) {
+            int sz=val.rows()*val.cols();
+            for(int i=0;i<sz;i++) {
+                tmp.append(to_string(val(i).real()) + " ");
+                tmp.append(to_string(val(i).imag()));
+                tmp += ' ';
+            }
+            tmp += '\n';
+        }
+    }
+    return tmp;
+}
+
+CalibrationInfo MainWindow::deserializeCalibration(QTextStream &inp) {
+    CalibrationInfo ret;
+    string versionStr = inp.readLine().toStdString();
+    if(versionStr != calFileVer) {
+        throw runtime_error("Unsupported file version: "+versionStr+". Should be: "+calFileVer);
+    }
+    ret.calName = inp.readLine().toStdString();
+    inp >> ret.nPoints;
+    inp >> ret.startFreqHz;
+    inp >> ret.stepFreqHz;
+    inp >> ret.attenuation1;
+    inp >> ret.attenuation2;
+    inp.readLine();
+
+    QString calstd;
+    while((calstd = inp.readLine())!=nullptr) {
+        vector<VNARawValue> values;
+        for(int i=0;i<ret.nPoints;i++) {
+            VNARawValue value;
+            for(int j=0;j<4;j++) {
+                double re,im;
+                inp >> re;
+                inp >> im;
+                value(j) = complex<double>(re,im);
+            }
+            values.push_back(value);
+        }
+        ret.measurements[calstd.toStdString()] = values;
+        fprintf(stderr, "found cal standard %s\n", calstd.toUtf8().data());
+        fflush(stderr);
+    }
+    return ret;
+}
+
+void MainWindow::saveFile(QString path, const string &data) {
+    QFile file(path);
+    if (!file.open(QIODevice::WriteOnly)) {
+        QMessageBox::information(this, tr("Unable to open file"), file.errorString());
+        return;
+    }
+    file.write(data.data(), data.size());
+}
+
+void MainWindow::saveCalibration(QString path) {
+    CalibrationInfo cal = {vna->nPoints,vna->startFreqHz,vna->stepFreqHz,
+                           vna->attenuation1,vna->attenuation2,
+                           curCal->name(),curCalMeasurements};
+    saveFile(path, serializeCalibration(cal));
+    addRecentFile(path);
+}
+
+void MainWindow::loadCalibration(QString path) {
+    QFile file(path);
+    if (!file.open(QIODevice::ReadOnly)) {
+        QMessageBox::information(this, tr("Unable to open file"), file.errorString());
+        return;
+    }
+    QTextStream stream(&file);
+    CalibrationInfo calInfo = deserializeCalibration(stream);
+
+    const VNACalibration* cal=nullptr;
+    int i=0;
+    for(auto* c:calibrationTypes) {
+        if(c->name() == calInfo.calName) {
+            cal = c;
+            ui->d_caltype->setCurrentIndex(i);
+            break;
+        }
+        i++;
+    }
+    if(!cal) {
+        string errmsg = "The calibration file uses calibration type \""+calInfo.calName+"\" which is not supported";
+        QMessageBox::critical(this,"Error",qs(errmsg));
+        return;
+    }
+    bool scan=vna->_threadRunning;
+    vna->stopScan();
+
+    vna->nPoints = calInfo.nPoints;
+    vna->startFreqHz = calInfo.startFreqHz;
+    vna->stepFreqHz = calInfo.stepFreqHz;
+    vna->attenuation1 = calInfo.attenuation1;
+    vna->attenuation2 = calInfo.attenuation2;
+
+    updateSweepParams();
+    calMeasurements = calInfo.measurements;
+    this->on_d_caltype_currentIndexChanged(ui->d_caltype->currentIndex());
+    this->on_b_apply_clicked();
+
+    if(scan) vna->startScan();
+    addRecentFile(path);
+}
+
+void MainWindow::addRecentFile(QString path) {
+    recentFiles.insert(0,path);
+    recentFiles.removeDuplicates();
+    refreshRecentFiles();
+    QSettings settings;
+    settings.setValue("recentFiles", recentFiles);
+}
+
+void MainWindow::refreshRecentFiles() {
+    for(auto* act:recentFileActions) {
+        ui->menuCalibration->removeAction(act);
+    }
+    recentFileActions.clear();
+    for(QString entry:recentFiles) {
+        auto* act = ui->menuCalibration->addAction(entry, [entry,this](){
+            loadCalibration(entry);
+        });
+        recentFileActions.push_back(act);
+    }
+}
+
+void MainWindow::captureSParam(vector<VNACalibratedValue> *var) {
+    enableUI(false);
+    var->resize(vna->nPoints);
+    vna->takeMeasurement([this,var](const vector<VNARawValue>& vals){
+        assert(curCal != nullptr);
+        for(int i=0;i<vna->nPoints;i++)
+            var->at(i) = curCal->computeValue(curCalCoeffs.at(i),vals.at(i));
+        QMetaObject::invokeMethod(this, "sMeasurementCompleted", Qt::QueuedConnection);
+    });
+}
+
+QString MainWindow::fileDialogSave(QString title, QString filter, QString defaultSuffix) {
+    QFileDialog dialog(this);
+    dialog.setWindowTitle(title);
+    dialog.setAcceptMode(QFileDialog::AcceptSave);
+    dialog.setDefaultSuffix(defaultSuffix);
+    dialog.setNameFilter(filter);
+    if(dialog.exec() == QDialog::Accepted)
+        return dialog.selectedFiles().at(0);
+    return nullptr;
 }
 
 string MainWindow::freqStr(double freqHz) {
@@ -493,17 +733,20 @@ void MainWindow::on_b_apply_clicked() {
             measurements[j][i] = calMeasurements[names[i]].at(j);
     }
     curCal = cal;
+    curCalMeasurements = calMeasurements;
     curCalCoeffs.resize(vna->nPoints);
     for(int i=0;i<(int)measurements.size();i++) {
         curCalCoeffs[i] = curCal->computeCoefficients(measurements[i]);
     }
-    ui->l_cal->setText(qs(curCal->name()));
+    ui->l_cal->setText(qs(curCal->description()));
     ui->menuS_parameters->setEnabled(true);
 }
 
 void MainWindow::on_b_clear_clicked() {
     curCal = NULL;
     curCalCoeffs.clear();
+    tmp_sn1.clear();
+    tmp_sn2.clear();
     ui->l_cal->setText("None");
     ui->menuS_parameters->setEnabled(false);
 }
@@ -521,4 +764,70 @@ void MainWindow::on_actionSweep_params_triggered() {
         updateSweepParams();
         if(running) vna->startScan();
     }
+}
+
+void MainWindow::on_actionLoad_triggered() {
+    QString fileName = QFileDialog::getOpenFileName(this,
+            tr("Open calibration"), "",
+            tr("VNA calibration (*.cal);;All Files (*)"));
+    if (fileName.isEmpty()) return;
+    loadCalibration(fileName);
+}
+
+void MainWindow::on_actionSave_triggered() {
+    if(curCal == NULL) {
+        QMessageBox::critical(this, "Error", "No calibration is currently active");
+        return;
+    }
+    QString fileName = QFileDialog::getSaveFileName(this,
+            tr("Save calibration"), "",
+            tr("VNA calibration (*.cal);;All Files (*)"));
+    if (fileName.isEmpty()) return;
+    saveCalibration(fileName);
+}
+
+void MainWindow::on_actionExport_s1p_triggered() {
+    QString fileName = fileDialogSave(
+            tr("Save S parameters"),
+            tr("Touchstone .s1p (*.s1p);;All Files (*)"), "s1p");
+    if (fileName.isEmpty()) return;
+
+    tmp_s11.resize(vna->nPoints);
+    enableUI(false);
+    vna->takeMeasurement([this,fileName](const vector<VNARawValue>& vals){
+        assert(curCal != nullptr);
+        for(int i=0;i<vna->nPoints;i++)
+            tmp_s11.at(i) = curCal->computeValue(curCalCoeffs.at(i),vals.at(i))(0,0);
+        QMetaObject::invokeMethod(this, "s11MeasurementCompleted", Qt::QueuedConnection, Q_ARG(QString, fileName));
+    });
+}
+
+void MainWindow::on_actionCapture_S_1_triggered() {
+    captureSParam(&tmp_sn1);
+}
+
+void MainWindow::on_actionCapture_S_2_triggered() {
+    captureSParam(&tmp_sn2);
+}
+
+void MainWindow::on_actionExport_s2p_triggered() {
+    if(tmp_sn1.size()!=vna->nPoints) {
+        QMessageBox::critical(this,"Error","S*1 has not been captured");
+        return;
+    }
+    if(tmp_sn2.size()!=vna->nPoints) {
+        QMessageBox::critical(this,"Error","S*2 has not been captured");
+        return;
+    }
+    vector<VNACalibratedValue> res(vna->nPoints);
+    for(int i=0;i<vna->nPoints;i++) {
+        res[i] << tmp_sn1[i](0,0), tmp_sn2[i](1,0),
+                tmp_sn1[i](1,0), tmp_sn2[i](0,0);
+    }
+    string data = serializeTouchstone(res,vna->startFreqHz,vna->stepFreqHz);
+    QString fileName = fileDialogSave(
+            tr("Save S parameters"),
+            tr("Touchstone .s2p (*.s2p);;All Files (*)"), "s2p");
+    if (fileName.isEmpty()) return;
+    saveFile(fileName, data);
 }

@@ -53,10 +53,16 @@ class VNACalibration
 public:
 	// return the name of this calibration type
 	virtual string name() const=0;
+	
+	// return the descriptive name of this calibration type
+	virtual string description() const=0;
+	
 	// get a list of calibration standards required
 	virtual vector<array<string, 2> > getRequiredStandards() const=0;
+	
 	// given the measurements for each of the calibration standards, compute the coefficients
 	virtual MatrixXcd computeCoefficients(const vector<VNARawValue>& measurements) const=0;
+	
 	// given cal coefficients and a raw value, compute S parameters
 	virtual VNACalibratedValue computeValue(MatrixXcd coeffs, VNARawValue val) const=0;
 };

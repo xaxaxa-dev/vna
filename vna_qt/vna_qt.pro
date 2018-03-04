@@ -44,7 +44,8 @@ SOURCES +=\
     impedancedisplay.C \
     frequencydialog.C \
     graphpanel.C \
-    configureviewdialog.C
+    configureviewdialog.C \
+    touchstone.C
 
 HEADERS  += \
     polarview.H \
@@ -54,7 +55,8 @@ HEADERS  += \
     utility.H \
     frequencydialog.H \
     graphpanel.H \
-    configureviewdialog.H
+    configureviewdialog.H \
+    touchstone.H
 
 FORMS    += mainwindow.ui \
     markerslider.ui \
@@ -66,7 +68,10 @@ FORMS    += mainwindow.ui \
 RESOURCES += \
     resources.qrc
 
-unix|win32: LIBS += -L$$PWD/../libxavna/.libs/ -lxavna
+unix|win32: LIBS += -L$$PWD/../libxavna/.libs/ -L$$PWD/../libxavna/xavna_mock_ui -lxavna
 
 INCLUDEPATH += $$PWD/../include /usr/local/include
 DEPENDPATH += $$PWD/../include
+
+#INCLUDEPATH += ../libxavna/xavna_mock_ui
+#PRE_TARGETDEPS += ../libxavna/xavna_mock_ui/libxavna_mock_ui.so
