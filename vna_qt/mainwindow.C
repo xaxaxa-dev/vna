@@ -50,6 +50,7 @@ MainWindow::MainWindow(QWidget *parent) :
     setupViews();
     updateSweepParams();
     populateCalTypes();
+    populateDevicesMenu();
 
 
     ui->w_polar->layout()->addWidget(polarView);
@@ -193,6 +194,33 @@ void MainWindow::setCallbacks() {
         QString msg = exc.what();
         QMetaObject::invokeMethod(this, "handleBackgroundError", Qt::QueuedConnection, Q_ARG(QString, msg));
     };
+}
+
+void MainWindow::populateDevicesMenu() {
+    bool remove = false;
+    for(QAction* act: ui->menuDevice->actions()) {
+        if(act == ui->actionRefresh) break;
+        if(remove) ui->menuDevice->removeAction(act);
+        if(act == ui->actionSelect_device) remove = true;
+    }
+    vector<string> devices = vna->findDevices();
+    for(string dev:devices) {
+        QAction* action = new QAction(qs("   " + dev));
+        connect(action, &QAction::triggered, [this,dev](){
+            this->openDevice(dev);
+        });
+        ui->menuDevice->insertAction(ui->actionRefresh, action);
+    }
+}
+
+void MainWindow::openDevice(string dev) {
+    try {
+        vna->open(dev);
+        vna->startScan();
+        enableUI(true);
+    } catch(exception& ex) {
+        QMessageBox::critical(this,"Exception",ex.what());
+    }
 }
 
 void MainWindow::updateViews(int freqIndex) {
@@ -678,15 +706,7 @@ void MainWindow::btn_measure_click(QPushButton *btn) {
 
 void MainWindow::on_actionOther_triggered() {
    auto tmp = QInputDialog::getText(this,"Specify device path...","Device (/dev/tty... on linux/mac, COM... on windows)").toStdString();
-   if(tmp!="") {
-       try {
-           vna->open(tmp);
-           vna->startScan();
-           enableUI(true);
-       } catch(exception& ex) {
-           QMessageBox::critical(this,"Exception",ex.what());
-       }
-   }
+   if(tmp != "") openDevice(tmp);
 }
 
 
@@ -830,4 +850,23 @@ void MainWindow::on_actionExport_s2p_triggered() {
             tr("Touchstone .s2p (*.s2p);;All Files (*)"), "s2p");
     if (fileName.isEmpty()) return;
     saveFile(fileName, data);
+}
+
+void MainWindow::on_actionImpedance_pane_toggled(bool arg1) {
+    ui->dock_impedance->setVisible(arg1);
+}
+void MainWindow::on_actionCalibration_pane_toggled(bool arg1) {
+    ui->dock_cal->setVisible(arg1);
+}
+void MainWindow::on_dock_cal_visibilityChanged(bool visible) {
+    if(visible != ui->actionCalibration_pane->isChecked())
+        ui->actionCalibration_pane->setChecked(visible);
+}
+void MainWindow::on_dock_impedance_visibilityChanged(bool visible) {
+    if(visible != ui->actionImpedance_pane->isChecked())
+        ui->actionImpedance_pane->setChecked(visible);
+}
+
+void MainWindow::on_action_Refresh_triggered() {
+    populateDevicesMenu();
 }

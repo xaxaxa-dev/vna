@@ -290,6 +290,7 @@ Measurements</string>
     </property>
     <addaction name="actionImpedance_pane"/>
     <addaction name="actionCalibration_pane"/>
+    <addaction name="actionTime_to_fault"/>
    </widget>
    <widget class="QMenu" name="menuS_parameters">
     <property name="title">
@@ -307,6 +308,7 @@ Measurements</string>
     <addaction name="actionSweep_params"/>
     <addaction name="separator"/>
     <addaction name="actionSelect_device"/>
+    <addaction name="actionRefresh"/>
     <addaction name="actionOther"/>
    </widget>
    <addaction name="menuCalibration"/>
@@ -366,11 +368,23 @@ Measurements</string>
    </property>
   </action>
   <action name="actionImpedance_pane">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
    <property name="text">
     <string>Impedance</string>
    </property>
   </action>
   <action name="actionCalibration_pane">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
    <property name="text">
     <string>Calibration</string>
    </property>
@@ -416,6 +430,16 @@ Measurements</string>
    </property>
    <property name="text">
     <string>Select device:</string>
+   </property>
+  </action>
+  <action name="actionTime_to_fault">
+   <property name="text">
+    <string>Time to fault</string>
+   </property>
+  </action>
+  <action name="actionRefresh">
+   <property name="text">
+    <string>   Refresh</string>
    </property>
   </action>
  </widget>

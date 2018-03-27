@@ -85,6 +85,8 @@ public:
     vector<VNARawValue> rawValues;
     // same as rawValues, but with calibration applied (if any)
     vector<VNACalibratedValue> values;
+    // time domain values; usually the fourier transform of this->values
+    vector<VNACalibratedValue> values_td;
     // array of UI views of the data; each view has a source (describing what data to display) and a widget
     // (where to display the data on
     vector<SParamView> views;
@@ -123,6 +125,11 @@ public:
     void setupViews();
     // set the callbacks of this->vna
     void setCallbacks();
+    // find devices and populate the devices menu
+    void populateDevicesMenu();
+
+    // try to use the device dev
+    void openDevice(string dev);
 
     // call after changing frequency sweep parameters of vna
     void updateSweepParams();
@@ -186,6 +193,16 @@ private slots:
     void on_actionCapture_S_2_triggered();
 
     void on_actionExport_s2p_triggered();
+
+    void on_actionImpedance_pane_toggled(bool arg1);
+
+    void on_actionCalibration_pane_toggled(bool arg1);
+
+    void on_dock_cal_visibilityChanged(bool visible);
+
+    void on_dock_impedance_visibilityChanged(bool visible);
+
+    void on_action_Refresh_triggered();
 
 private:
     Ui::MainWindow *ui;
