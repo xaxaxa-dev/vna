@@ -16,6 +16,42 @@ https://www.kickstarter.com/projects/1759352588/xavna-a-full-featured-low-cost-t
 # Interfacing
 The main board connects to a PC through usb and communicates via a virtual serial port device; the PC software sets the frequency and other parameters by sending two-byte register write commands, and the device sends averaged vector values representing magnitude and phase of measured wave.
 
+# Building the software
+
+___Building on linux & mac___
+
+Build & install libxavna (required for QT GUI):
+```sudo apt-get install automake libtool make g++ libeigen3-dev libfftw3-dev
+autoreconf --install
+./configure
+make
+sudo make install```
+
+Build QT GUI:
+```cd vna_qt
+qmake
+make
+./vna_qt```
+
+Cross-compile for windows (from linux)
+```# download and build MXE
+cd ~/
+git clone https://github.com/mxe/mxe.git
+cd mxe
+export QT_MXE_ARCH=386
+make qt5 qtcharts cc eigen fftw
+
+# build
+export PATH="$(pwd)/usr/bin:$PATH"
+cd /PATH/TO/vna
+autoreconf --install
+./configure
+make
+cd vna_qt
+qmake
+make
+```
+
 # Block diagram
 
 ##### Overall architecture

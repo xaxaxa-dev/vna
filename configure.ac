@@ -21,6 +21,21 @@ esac
 
 AM_CONDITIONAL([WINDOWS], [test "$is_windows" = "yes"])
 
+AC_CHECK_HEADER(eigen3/Eigen/Dense)
+if test "$ac_cv_header_eigen3_Eigen_Dense" == no
+then
+    AC_MSG_ERROR([eigen3 not installed (eigen3/Eigen/Dense include not found)])
+fi
+
+
+AC_CHECK_HEADER(fftw3.h)
+if test "$ac_cv_header_fftw3_h" == no
+then
+    AC_MSG_ERROR([fftw3 not installed (fftw3.h include not found)])
+fi
+
+
+
 #if test -z $CXXFLAGS; then
 #    CXXFLAGS='-O2 --std=c++0x -fPIC -fwrapv -fno-delete-null-pointer-checks -funsigned-char -fno-strict-aliasing -Wno-pmf-conversions'
 #fi
