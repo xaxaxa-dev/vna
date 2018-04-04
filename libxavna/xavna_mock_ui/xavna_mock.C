@@ -13,11 +13,13 @@
 #include <vector>
 #include <array>
 #include <iostream>
+#include <map>
 
 #include <eigen3/Eigen/Dense>
 
 #include "../common_types.h"
 #include "../include/xavna.h"
+#include "../include/xavna_generic.H"
 #include "xavna_mock_ui.H"
 
 /*
@@ -93,8 +95,8 @@ struct scopeLock {
 		pthread_mutex_unlock(mut);
 	}
 };
-// the structure pointed to by the device handle
-struct xavna_device {
+
+struct xavna_virtual {
 	double startFreq,freqStep; //Hz
 	vector<Matrix2cd> dut; // S parameters
 	// error adaptor S parameters; ports 0,1 are reflectometer side
@@ -107,13 +109,13 @@ struct xavna_device {
 	Vector2cd excitations;
 	double phaseOffset;
 	
-    xavna_device() {
+    xavna_virtual() {
         ui = new xavna_mock_ui();
         ui->set_cb([this](string dut_name, double cableLen1, double cableLen2) {
             ui_changed_cb(dut_name,cableLen1,cableLen2);
         });
     }
-    ~xavna_device() {
+    ~xavna_virtual() {
 		delete ui;
 	}
 	double freqAt(int i) {
@@ -266,36 +268,27 @@ struct xavna_device {
 		return res.tail(4).head(2);
 	}
 };
-/*
-int main() {
-	xavna_device tmp;
-	tmp.init();
-	cout << tmp.getMeasuredValues(200e6, {1.,0.}) << endl;
-}*/
-extern "C" {
-    void* xavna_open(const char*) {
-		xavna_device* d = new xavna_device();
-		d->init();
-		return d;
-	}
 
-    void* xavna_get_chained_device(void*) {
-		return NULL;
+
+class xavna_mock: public xavna_generic {
+public:
+    xavna_virtual virt;
+    xavna_mock(const char*) {
+        virt.init();
 	}
 	
-    int xavna_set_params(void* dev, int freq_khz, int atten1, int atten2) {
-		xavna_device* d = (xavna_device*)dev;
+    int set_params(int freq_khz, int atten1, int atten2) {
 		if(atten1 == -1) atten1=100;
 		if(atten2 == -1) atten2=100;
 		
-		d->curFreq = double(freq_khz)*1000;
-        d->excitations[0] = polar(2.5*pow(10,-atten1/10.), d->phaseOffset + 1.23);
-        d->excitations[1] = polar(3.6*pow(10,-atten2/10.), d->phaseOffset + 2.5);
+        virt.curFreq = double(freq_khz)*1000;
+        virt.excitations[0] = polar(2.5*pow(10,-atten1/10.), virt.phaseOffset + 1.23);
+        virt.excitations[1] = polar(3.6*pow(10,-atten2/10.), virt.phaseOffset + 2.5);
 		
 		// simulate some switch leakage
-        //complex<double> tmp = d->excitations[0];
-        //d->excitations[0] += d->excitations[1]*polar(0.002,1.2);
-        //d->excitations[1] += tmp*polar(0.002,5.3);
+        //complex<double> tmp = virt.excitations[0];
+        //virt.excitations[0] += virt.excitations[1]*polar(0.002,1.2);
+        //virt.excitations[1] += tmp*polar(0.002,5.3);
 		
 		return 0;
 	}
@@ -305,10 +298,9 @@ extern "C" {
 	//				thru real, thru imag
 	// n_samples: number of samples to average over; typical 50
 	// returns: number of samples read, or -1 if failure
-	int xavna_read_values(void* dev, double* out_values, int n_samples) {
-		xavna_device* d = (xavna_device*)dev;
-		Vector2cd res0 = d->getMeasuredValues(d->curFreq, {1.,0.});
-		//Vector8cd res1 = d->getMeasuredValues(d->curFreq, {0.,1.});
+    int read_values(double* out_values, int n_samples) {
+        Vector2cd res0 = virt.getMeasuredValues(virt.curFreq, {1.,0.});
+        //Vector8cd res1 = virt.getMeasuredValues(virt.curFreq, {0.,1.});
 		
 		auto noise = [](){
 			return (drand48()*2-1) * 500e-6;
@@ -322,35 +314,35 @@ extern "C" {
 		return n_samples;
 	}
 	
-	int xavna_read_values_raw(void* dev, double* out_values, int n_samples) {
-		xavna_device* d = (xavna_device*)dev;
-		Vector2cd res0 = d->getMeasuredValues(d->curFreq, d->excitations);
-		//Vector2cd res1 = d->getMeasuredValues(d->curFreq, {0.01,3.6});
+    int read_values_raw(double* out_values, int n_samples) {
+        Vector2cd res0 = virt.getMeasuredValues(virt.curFreq, virt.excitations);
+        //Vector2cd res1 = virt.getMeasuredValues(virt.curFreq, {0.01,3.6});
 		
 		auto noise = [](){
 			return (drand48()*2.-1.) * 50e-7;
 		};
 		
-		out_values[0] = d->excitations[0].real() + noise();
-		out_values[1] = d->excitations[0].imag() + noise();
+        out_values[0] = virt.excitations[0].real() + noise();
+        out_values[1] = virt.excitations[0].imag() + noise();
 		out_values[2] = res0[0].real() + noise();
 		out_values[3] = res0[0].imag() + noise();
-		out_values[4] = d->excitations[1].real() + noise();
-		out_values[5] = d->excitations[1].imag() + noise();
+        out_values[4] = virt.excitations[1].real() + noise();
+        out_values[5] = virt.excitations[1].imag() + noise();
 		out_values[6] = res0[1].real() + noise();
 		out_values[7] = res0[1].imag() + noise();
         usleep(5000);
 		return n_samples;
-	}
-	
-    int xavna_read_values_raw2(void*, double*, int n_samples) {
-		return n_samples;
-	}
+    }
+};
 
-	// close device handle
-	void xavna_close(void* dev) {
-		xavna_device* d = (xavna_device*)dev;
-		delete d;
-	}
+extern map<string, xavna_constructor> xavna_virtual_devices;
 
+static int __init_xavna_mock() {
+    xavna_virtual_devices["mock"] = [](const char* dev){ return new xavna_mock(dev); };
+    return 0;
 }
+
+static int ghsfkghfjkgfs = __init_xavna_mock();
+
+
+

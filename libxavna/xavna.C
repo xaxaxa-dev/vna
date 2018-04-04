@@ -4,45 +4,129 @@
 #include <math.h>
 #include <assert.h>
 #include <unistd.h>
+#include <string.h>
 #include <complex>
 #include <tuple>
+#include <map>
+#include <functional>
 
+#include "include/xavna_generic.H"
 #include "common_types.h"
 #include "include/xavna.h"
 #include "include/platform_abstraction.H"
 using namespace std;
 
+
+// named virtual devices
+map<string, xavna_constructor> xavna_virtual_devices;
+xavna_constructor xavna_default_constructor;
+
 extern "C" {
 	int nWait=50;		//number of data points to skip after changing frequency
 	
-	struct complex5 {
-		complex<double> val[5];
-	};
-
-	// the structure pointed to by the device handle
-	struct xavna_device {
-		int ttyFD;
-	};
-	
-	static tuple<complex5,int> readValue3(int ttyFD, int cnt);
-
-
 	void* xavna_open(const char* dev) {
-		xavna_device* d = new xavna_device();
-		d->ttyFD=xavna_open_serial(dev);
-		if(d->ttyFD < 0) {
-			delete d;
-			return NULL;
-		}
-		return d;
+		auto it = xavna_virtual_devices.find(dev);
+		if(it != xavna_virtual_devices.end()) return (*it).second(dev);
+		return xavna_default_constructor(dev);
 	}
 
-	void* xavna_get_chained_device(void* dev) {
-		return NULL;
+	int xavna_set_params(void* dev, int freq_khz, int atten1, int atten2) {
+		return ((xavna_generic*)dev)->set_params(freq_khz, atten1, atten2);
+	}
+
+	int xavna_read_values(void* dev, double* out_values, int n_samples) {
+		return ((xavna_generic*)dev)->read_values(out_values, n_samples);
 	}
 	
-	int xavna_set_params(void* dev, int freq_khz, int atten1, int atten2) {
-		xavna_device* d = (xavna_device*)dev;
+	int xavna_read_values_raw(void* dev, double* out_values, int n_samples) {
+		return ((xavna_generic*)dev)->read_values_raw(out_values, n_samples);
+	}
+
+	void xavna_close(void* dev) {
+		delete ((xavna_generic*)dev);
+	}
+}
+
+
+struct complex5 {
+	complex<double> val[5];
+};
+
+static u64 sx(u64 data, int bits) {
+	u64 mask=~u64(u64(1LL<<bits) - 1);
+	return data|((data>>(bits-1))?mask:0);
+}
+static complex<double> processValue(u64 data1,u64 data2) {
+	data1=sx(data1,35);
+	data2=sx(data2,35);
+	
+	return {double((ll)data2), double((ll)data1)};
+}
+// returns [adc0, adc1, adc2, adc1/adc0, adc2/adc0]
+static tuple<complex5,int> readValue3(int ttyFD, int cnt) {
+	complex5 result=complex5{{0.,0.,0.,0.,0.}};
+	int bufsize=1024;
+	u8 buf[bufsize];
+	int br;
+	u64 values[7];
+	int n=0;	// how many sample groups we've read so far
+	int j=0;	// bit offset into current value
+	int k=0;	// which value in the sample group we are currently expecting
+	
+	u8 msb=1<<7;
+	u8 mask=msb-1;
+	u8 checksum = 0;
+	while((br=read(ttyFD,buf,sizeof(buf)))>0) {
+		for(int i=0;i<br;i++) {
+			if((buf[i]&msb)==0) {
+				if(k == 6 && j == 7) {
+					checksum &= 0b1111111;
+					if(checksum != u8(values[6])) {
+						printf("ERROR: checksum should be %d, is %d\n", (int)checksum, (int)(u8)values[6]);
+					}
+					for(int g=0;g<3;g++)
+						result.val[g] += processValue(values[g*2],values[g*2+1]);
+					//result.val[3] += result.val[1]/result.val[0];
+					//result.val[4] += result.val[2]/result.val[0];
+					if(++n >= cnt) {
+						for(int g=0;g<5;g++)
+							result.val[g] /= cnt;
+						result.val[3] = result.val[1]/result.val[0];
+						result.val[4] = result.val[2]/result.val[0];
+						return make_tuple(result, n);
+					}
+				}
+				values[0]=values[1]=values[2]=0;
+				values[3]=values[4]=values[5]=0;
+				values[6]=0;
+				j=0;
+				k=0;
+				checksum=0b01000110;
+			}
+			if(k<6) checksum = (checksum xor ((checksum<<1) | 1)) xor buf[i];
+			if(k < 7)
+				values[k] |= u64(buf[i]&mask) << j;
+			j+=7;
+			if(j>=35) {
+				j=0;
+				k++;
+			}
+		}
+	}
+	return make_tuple(result, n);
+}
+
+
+class xavna_default: public xavna_generic {
+public:
+	int ttyFD;
+	xavna_default(const char* dev) {
+		ttyFD=xavna_open_serial(dev);
+		if(ttyFD < 0) {
+			throw runtime_error(strerror(errno));
+		}
+	}
+	virtual int set_params(int freq_khz, int atten1, int atten2) {
 		int attenuation=atten1;
 		double freq = double(freq_khz)/1000.;
 		int N = (int)round(freq*100);
@@ -72,18 +156,17 @@ extern "C" {
 			0, 0,
 			4, 1
 		};
-		if(write(d->ttyFD,buf,sizeof(buf))!=(int)sizeof(buf)) return -1;
+		if(write(ttyFD,buf,sizeof(buf))!=(int)sizeof(buf)) return -1;
 		
-		xavna_drainfd(d->ttyFD);
-		readValue3(d->ttyFD, nWait);
+		xavna_drainfd(ttyFD);
+		readValue3(ttyFD, nWait);
 		return 0;
 	}
 
-	int xavna_read_values(void* dev, double* out_values, int n_samples) {
-		xavna_device* d = (xavna_device*)dev;
+	virtual int read_values(double* out_values, int n_samples) {
 		complex5 result;
 		int n;
-		tie(result, n) = readValue3(d->ttyFD, n_samples);
+		tie(result, n) = readValue3(ttyFD, n_samples);
 		out_values[0] = result.val[3].real();
 		out_values[1] = result.val[3].imag();
 		out_values[2] = result.val[4].real();
@@ -91,11 +174,10 @@ extern "C" {
 		return n;
 	}
 	
-	int xavna_read_values_raw(void* dev, double* out_values, int n_samples) {
-		xavna_device* d = (xavna_device*)dev;
+	virtual int read_values_raw(double* out_values, int n_samples) {
 		complex5 result;
 		int n;
-		tie(result, n) = readValue3(d->ttyFD, n_samples);
+		tie(result, n) = readValue3(ttyFD, n_samples);
 		out_values[0] = result.val[0].real();
 		out_values[1] = result.val[0].imag();
 		out_values[2] = result.val[1].real();
@@ -107,19 +189,10 @@ extern "C" {
 		return n;
 	}
 	
-	// out_values: array of size 10 holding the following values:
-	//				reference real, reference imag,
-	//				raw reflection real, raw reflection imag,
-	//				raw thru real, raw thru imag
-	//				reflection real, reflection imag,
-	//				thru real, thru imag
-	// n_samples: number of samples to average over; typical 50
-	// returns: number of samples read, or -1 if failure
-	int xavna_read_values_raw2(void* dev, double* out_values, int n_samples) {
-		xavna_device* d = (xavna_device*)dev;
+	virtual int read_values_raw2(double* out_values, int n_samples) {
 		complex5 result;
 		int n;
-		tie(result, n) = readValue3(d->ttyFD, n_samples);
+		tie(result, n) = readValue3(ttyFD, n_samples);
 		double scale = 1./double((int64_t(1)<<12) * (int64_t(1)<<19));
 		result.val[0] *= scale;
 		result.val[1] *= scale;
@@ -145,74 +218,16 @@ extern "C" {
 		return n;
 	}
 
-	// close device handle
-	void xavna_close(void* dev) {
-		xavna_device* d = (xavna_device*)dev;
-		close(d->ttyFD);
-		delete d;
+	virtual ~xavna_default() {
+		close(ttyFD);
 	}
+};
+
+static int __init_xavna_default() {
+	xavna_default_constructor = [](const char* dev){ return new xavna_default(dev); };
+	return 0;
 }
 
-static u64 sx(u64 data, int bits) {
-	u64 mask=~u64(u64(1LL<<bits) - 1);
-	return data|((data>>(bits-1))?mask:0);
-}
-static complex<double> processValue(u64 data1,u64 data2) {
-	data1=sx(data1,35);
-	data2=sx(data2,35);
-	
-	return {double((ll)data2), double((ll)data1)};
-}
-// returns [adc0, adc1, adc2, adc1/adc0, adc2/adc0]
-static tuple<complex5,int> readValue3(int ttyFD, int cnt) {
-	complex5 result=complex5{{0,0,0,0,0}};
-	int bufsize=1024;
-	u8 buf[bufsize];
-	int br;
-	u64 values[7];
-	int n=0;	// how many sample groups we've read so far
-	int j=0;	// bit offset into current value
-	int k=0;	// which value in the sample group we are currently expecting
-	
-	u8 msb=1<<7;
-	u8 mask=msb-1;
-	u8 checksum = 0;
-	while((br=read(ttyFD,buf,sizeof(buf)))>0) {
-		for(int i=0;i<br;i++) {
-			if((buf[i]&msb)==0) {
-				if(k == 6 && j == 7) {
-					checksum &= 0b1111111;
-					if(checksum != u8(values[6])) {
-						printf("ERROR: checksum should be %d, is %d\n", (int)checksum, (int)(u8)values[6]);
-					}
-					for(int g=0;g<3;g++)
-						result.val[g] += processValue(values[g*2],values[g*2+1]);
-					result.val[3] += result.val[1]/result.val[0];
-					result.val[4] += result.val[2]/result.val[0];
-					if(++n >= cnt) {
-						for(int g=0;g<5;g++)
-							result.val[g] /= cnt;
-						return make_tuple(result, n);
-					}
-				}
-				values[0]=values[1]=values[2]=0;
-				values[3]=values[4]=values[5]=0;
-				values[6]=0;
-				j=0;
-				k=0;
-				checksum=0b01000110;
-			}
-			if(k<6) checksum = (checksum xor ((checksum<<1) | 1)) xor buf[i];
-			if(k < 7)
-				values[k] |= u64(buf[i]&mask) << j;
-			j+=7;
-			if(j>=35) {
-				j=0;
-				k++;
-			}
-		}
-	}
-	return make_tuple(result, n);
-}
+static int ghsfkghfjkgfs = __init_xavna_default();
 
 

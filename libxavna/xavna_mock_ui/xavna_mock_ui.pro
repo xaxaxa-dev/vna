@@ -25,14 +25,12 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += xavna_mock_ui.C \
     xavna_mock.C \
-    ../calibration.C \
-    ../xavna_cpp.C \
-    ../platform_abstraction.C \
     xavna_mock_ui_dialog.C
 
 HEADERS += xavna_mock_ui.H\
     xavna_mock_ui_dialog.H \
-    xavna_mock_ui_global.h
+    xavna_mock_ui_global.h \
+    ../include/calibration.H
 
 unix {
     target.path = /usr/lib
@@ -41,3 +39,6 @@ unix {
 
 FORMS += \
     xavna_mock_ui_dialog.ui
+
+LIBS += -L$$PWD/../.libs/ -lxavna
+
