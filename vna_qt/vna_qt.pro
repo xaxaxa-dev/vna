@@ -18,8 +18,8 @@ CONFIG += static
 
 #QMAKE_LFLAGS += --static -lexpat -lz -lXext -lXau -lbsd -lXdmcp
 #QMAKE_LFLAGS += -L../lib -lxavna
-QMAKE_CFLAGS += --std=c++11 -DEIGEN_DONT_VECTORIZE -DEIGEN_DISABLE_UNALIGNED_ARRAY_ASSERT
-QMAKE_CXXFLAGS += --std=c++11
+QMAKE_CFLAGS += -Wextra --std=c++11 -DEIGEN_DONT_VECTORIZE -DEIGEN_DISABLE_UNALIGNED_ARRAY_ASSERT
+QMAKE_CXXFLAGS += -Wextra --std=c++11
 
 TARGET = vna_qt
 TEMPLATE = app
@@ -45,7 +45,8 @@ SOURCES +=\
     frequencydialog.C \
     graphpanel.C \
     configureviewdialog.C \
-    touchstone.C
+    touchstone.C \
+    calkitsettingsdialog.C
 
 HEADERS  += \
     polarview.H \
@@ -56,19 +57,23 @@ HEADERS  += \
     frequencydialog.H \
     graphpanel.H \
     configureviewdialog.H \
-    touchstone.H
+    touchstone.H \
+    calkitsettingsdialog.H \
+    calkitsettings.H
 
 FORMS    += mainwindow.ui \
     markerslider.ui \
     impedancedisplay.ui \
     frequencydialog.ui \
     graphpanel.ui \
-    configureviewdialog.ui
+    configureviewdialog.ui \
+    calkitsettingsdialog.ui \
+    calkitsettingswidget.ui
 
 RESOURCES += \
     resources.qrc
 
-unix|win32: LIBS += -L$$PWD/../libxavna/.libs/ -L$$PWD/../libxavna/xavna_mock_ui -lxavna
+unix|win32: LIBS += -L$$PWD/../libxavna/.libs/ -L$$PWD/../libxavna/xavna_mock_ui -lxavna -lxavna_mock_ui
 
 INCLUDEPATH += $$PWD/../include /usr/local/include
 DEPENDPATH += $$PWD/../include

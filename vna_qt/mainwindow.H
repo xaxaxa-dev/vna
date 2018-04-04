@@ -8,6 +8,7 @@
 #include <map>
 #include <string>
 #include <xavna/common.H>
+#include "calkitsettings.H"
 namespace Ui {
 class MainWindow;
 }
@@ -104,6 +105,8 @@ public:
     vector<MatrixXcd> curCalCoeffs;
     // a copy of calMeasurements from when curCal was updated
     map<string, vector<VNARawValue> > curCalMeasurements;
+    // the current global cal kit settings
+    CalKitSettings cks;
 
     vector<complex<double> > tmp_s11;
     vector<VNACalibratedValue> tmp_sn1,tmp_sn2;
@@ -112,6 +115,11 @@ public:
     QStringList recentFiles;
     int maxRecentFiles=10;
     vector<QAction*> recentFileActions;
+
+    struct {
+        bool enabled;
+        bool calEnabled;
+    } uiState {true, false};
 
     double freqScale = 1e-6;
 
@@ -139,6 +147,7 @@ public:
     void updateBottomLabels(int marker=-1);
     void updateYAxis(int viewIndex=-1);
     void addMarker(bool removable);
+    void updateUIState();
     void enableUI(bool enable);
 
     string serializeCalibration(const CalibrationInfo& cal);
@@ -182,27 +191,22 @@ private slots:
 
     // called after measurement complete when the user clicks "export s1p"
     void s11MeasurementCompleted(QString fileName);
-
     void sMeasurementCompleted();
 
     void on_actionLoad_triggered();
     void on_actionSave_triggered();
     void on_actionExport_s1p_triggered();
     void on_actionCapture_S_1_triggered();
-
     void on_actionCapture_S_2_triggered();
-
     void on_actionExport_s2p_triggered();
-
     void on_actionImpedance_pane_toggled(bool arg1);
-
     void on_actionCalibration_pane_toggled(bool arg1);
-
     void on_dock_cal_visibilityChanged(bool visible);
-
     void on_dock_impedance_visibilityChanged(bool visible);
+    void on_actionRefresh_triggered();
+    void on_actionKit_settings_triggered();
 
-    void on_action_Refresh_triggered();
+    void on_actionMock_device_triggered();
 
 private:
     Ui::MainWindow *ui;

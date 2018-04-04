@@ -31,6 +31,7 @@ public:
     QValueAxis* axisX;
     vector<QValueAxis*> axisY;
 
+    // combo box 0 is the leftmost one; 1 is the rightmost one
     void populateComboBox(int index, const vector<string>& items);
     QComboBox *comboBox(int index);
 

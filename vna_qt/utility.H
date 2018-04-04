@@ -5,6 +5,8 @@
 #include <stdarg.h>
 #include <math.h>
 #include <string>
+#include <vector>
+#include <sstream>
 #include <QString>
 using namespace std;
 
@@ -60,5 +62,45 @@ inline string ssprintf(int maxLen, const char* fmt, ...) {
     return tmp;
 }
 
+
+// trim from start (in place)
+static inline void ltrim(std::string &s) {
+    s.erase(s.begin(), std::find_if(s.begin(), s.end(), [](int ch) {
+        return !isspace(ch);
+    }));
+}
+
+// trim from end (in place)
+static inline void rtrim(std::string &s) {
+    s.erase(std::find_if(s.rbegin(), s.rend(), [](int ch) {
+        return !isspace(ch);
+    }).base(), s.end());
+}
+
+// trim from both ends (in place)
+static inline void trim(std::string &s) {
+    ltrim(s);
+    rtrim(s);
+}
+
+static inline bool startsWith(string s, string sub) {
+    if(sub.length() > s.length()) return false;
+    return s.substr(0, sub.length()) == sub;
+}
+
+template<typename Out>
+inline void split(const std::string &s, char delim, Out result) {
+    std::stringstream ss(s);
+    std::string item;
+    while (std::getline(ss, item, delim)) {
+        *(result++) = item;
+    }
+}
+
+inline std::vector<std::string> split(const std::string &s, char delim) {
+    std::vector<std::string> elems;
+    split(s, delim, std::back_inserter(elems));
+    return elems;
+}
 
 #endif // UTILITY_H

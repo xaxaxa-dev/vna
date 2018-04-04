@@ -9,6 +9,7 @@
 #include "graphpanel.H"
 #include "utility.H"
 #include "touchstone.H"
+#include "calkitsettingsdialog.H"
 #include <xavna/calibration.H>
 #include <xavna/xavna_cpp.H>
 #include <iostream>
@@ -211,6 +212,11 @@ void MainWindow::populateDevicesMenu() {
         });
         ui->menuDevice->insertAction(ui->actionRefresh, action);
     }
+    if(devices.empty()) {
+        QAction* action = new QAction("   No devices found; check dmesg or device manager");
+        action->setEnabled(false);
+        ui->menuDevice->insertAction(ui->actionRefresh, action);
+    }
 }
 
 void MainWindow::openDevice(string dev) {
@@ -290,6 +296,7 @@ void MainWindow::updateView(int viewIndex, int freqIndex) {
 }
 
 void MainWindow::handleBackgroundError(QString msg) {
+    vna->close();
     QMessageBox::critical(this, "Error", msg);
     enableUI(false);
 }
@@ -478,13 +485,20 @@ void MainWindow::addMarker(bool removable) {
     layout->insertWidget(0, ms);
 }
 
-void MainWindow::enableUI(bool enable) {
+void MainWindow::updateUIState() {
+    bool enable = uiState.enabled;
     ui->dock_bottom->setEnabled(enable);
     ui->dock_cal->setEnabled(enable);
     ui->dock_impedance->setEnabled(enable);
     ui->centralWidget->setEnabled(enable);
-    ui->menuCalibration->setEnabled(enable);
-    ui->menuS_parameters->setEnabled(enable && curCal!=nullptr);
+    //ui->menuCalibration->setEnabled(enable);
+    ui->menuS_parameters->setEnabled(enable && uiState.calEnabled);
+}
+
+void MainWindow::enableUI(bool enable) {
+    uiState.enabled = enable;
+    uiState.calEnabled = (curCal != nullptr);
+    updateUIState();
 }
 
 static string calFileVer = "calFileVersion 1";
@@ -652,20 +666,7 @@ string MainWindow::freqStr(double freqHz) {
     return ssprintf(32, "%.2f", freqHz*freqScale);
 }
 
-template<typename Out>
-void split(const std::string &s, char delim, Out result) {
-    std::stringstream ss(s);
-    std::string item;
-    while (std::getline(ss, item, delim)) {
-        *(result++) = item;
-    }
-}
 
-std::vector<std::string> split(const std::string &s, char delim) {
-    std::vector<std::string> elems;
-    split(s, delim, std::back_inserter(elems));
-    return elems;
-}
 
 void MainWindow::on_d_caltype_currentIndexChanged(int index) {
     QLayoutItem *child;
@@ -739,6 +740,7 @@ void MainWindow::on_b_apply_clicked() {
     }
     // indexed by frequency, calStdType
     vector<vector<VNARawValue> > measurements(vna->nPoints);
+    vector<vector<VNACalibratedValue> > calStdModels(vna->nPoints);
 
     for(int i=0;i<(int)names.size();i++) {
         if(int(calMeasurements[names[i]].size()) != vna->nPoints) {
@@ -747,19 +749,38 @@ void MainWindow::on_b_apply_clicked() {
         }
     }
 
+    // populate measurements and calStdModels
     for(int j=0;j<(int)measurements.size();j++) {
         measurements[j].resize(names.size());
-        for(int i=0;i<(int)names.size();i++)
+        calStdModels[j].resize(names.size());
+        for(int i=0;i<(int)names.size();i++) {
             measurements[j][i] = calMeasurements[names[i]].at(j);
+        }
+    }
+    // populate calStdModels
+    for(int i=0;i<(int)names.size();i++) {
+        string name = names[i];
+        // if the cal standard not set in settings, use ideal parameters
+        if(cks.calKitModels.find(name) == cks.calKitModels.end()) {
+            assert(idealCalStds.find(name) != idealCalStds.end());
+            auto tmp = idealCalStds[name];
+            for(int j=0;j<(int)measurements.size();j++)
+                calStdModels[j][i] = tmp;
+        } else {
+            auto tmp = cks.calKitModels[name];
+            for(int j=0;j<(int)measurements.size();j++)
+                calStdModels[j][i] = tmp.interpolate(vna->freqAt(j));
+        }
     }
     curCal = cal;
     curCalMeasurements = calMeasurements;
     curCalCoeffs.resize(vna->nPoints);
     for(int i=0;i<(int)measurements.size();i++) {
-        curCalCoeffs[i] = curCal->computeCoefficients(measurements[i]);
+        curCalCoeffs[i] = curCal->computeCoefficients(measurements[i], calStdModels[i]);
     }
     ui->l_cal->setText(qs(curCal->description()));
-    ui->menuS_parameters->setEnabled(true);
+    uiState.calEnabled = true;
+    updateUIState();
 }
 
 void MainWindow::on_b_clear_clicked() {
@@ -768,7 +789,8 @@ void MainWindow::on_b_clear_clicked() {
     tmp_sn1.clear();
     tmp_sn2.clear();
     ui->l_cal->setText("None");
-    ui->menuS_parameters->setEnabled(false);
+    uiState.calEnabled = false;
+    updateUIState();
 }
 
 void MainWindow::on_actionSweep_params_triggered() {
@@ -867,6 +889,16 @@ void MainWindow::on_dock_impedance_visibilityChanged(bool visible) {
         ui->actionImpedance_pane->setChecked(visible);
 }
 
-void MainWindow::on_action_Refresh_triggered() {
+void MainWindow::on_actionRefresh_triggered() {
     populateDevicesMenu();
+}
+
+void MainWindow::on_actionKit_settings_triggered() {
+    CalKitSettingsDialog dialog;
+    dialog.fromSettings(cks);
+    if(dialog.exec() == QDialog::Accepted) dialog.toSettings(cks);
+}
+
+void MainWindow::on_actionMock_device_triggered() {
+    openDevice("mock");
 }

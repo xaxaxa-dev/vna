@@ -282,6 +282,7 @@ Measurements</string>
     </property>
     <addaction name="actionLoad"/>
     <addaction name="actionSave"/>
+    <addaction name="actionKit_settings"/>
     <addaction name="separator"/>
    </widget>
    <widget class="QMenu" name="menuView">
@@ -309,6 +310,7 @@ Measurements</string>
     <addaction name="separator"/>
     <addaction name="actionSelect_device"/>
     <addaction name="actionRefresh"/>
+    <addaction name="actionMock_device"/>
     <addaction name="actionOther"/>
    </widget>
    <addaction name="menuCalibration"/>
@@ -440,6 +442,16 @@ Measurements</string>
   <action name="actionRefresh">
    <property name="text">
     <string>   Refresh</string>
+   </property>
+  </action>
+  <action name="actionKit_settings">
+   <property name="text">
+    <string>Kit settings...</string>
+   </property>
+  </action>
+  <action name="actionMock_device">
+   <property name="text">
+    <string>   Mock device</string>
    </property>
   </action>
  </widget>

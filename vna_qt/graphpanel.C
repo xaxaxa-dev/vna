@@ -62,7 +62,7 @@ GraphPanel::~GraphPanel()
 }
 
 void GraphPanel::populateComboBox(int index, const vector<string> &items) {
-    QComboBox* combo = index==0?ui->d1:ui->d2;
+    QComboBox* combo = comboBox(index);
     combo->clear();
     for(string item:items) {
         combo->addItem(qs(item));

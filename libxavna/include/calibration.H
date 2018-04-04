@@ -4,6 +4,8 @@
 #include <complex>
 #include <eigen3/Eigen/Dense>
 #include <vector>
+#include <functional>
+#include <map>
 #include "common.H"
 using namespace std;
 using namespace Eigen;
@@ -57,11 +59,14 @@ public:
 	// return the descriptive name of this calibration type
 	virtual string description() const=0;
 	
-	// get a list of calibration standards required
+	// get a list of calibration standards required (name/desc pair)
 	virtual vector<array<string, 2> > getRequiredStandards() const=0;
 	
-	// given the measurements for each of the calibration standards, compute the coefficients
-	virtual MatrixXcd computeCoefficients(const vector<VNARawValue>& measurements) const=0;
+	// given the measurements for each of the calibration standards, compute the coefficients.
+	// for one port calibration standards (open, short, etc) the calStdModels entry should have
+	// the value at 0,0 (S11)
+	virtual MatrixXcd computeCoefficients(const vector<VNARawValue>& measurements,
+										  const vector<VNACalibratedValue>& calStdModels) const=0;
 	
 	// given cal coefficients and a raw value, compute S parameters
 	virtual VNACalibratedValue computeValue(MatrixXcd coeffs, VNARawValue val) const=0;
@@ -70,5 +75,8 @@ public:
 // system global list of calibration types (auto-populated on library init)
 extern vector<const VNACalibration*> calibrationTypes;
 
+// system global map from calibration standard names to ideal S parameters 
+// (auto-populated on library init)
+extern map<string, VNACalibratedValue> idealCalStds;
 }
 #endif
