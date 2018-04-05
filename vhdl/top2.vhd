@@ -105,6 +105,7 @@ architecture Behavioral of top2 is
 	signal txroom: unsigned(13 downto 0);
 	signal tmp: unsigned(7 downto 0);
 	signal led_usbserial: std_logic;
+	signal usb_txcork: std_logic;
 	
 	signal fifo1empty,fifo1full: std_logic;
 	
@@ -196,7 +197,7 @@ begin
 	--############# usb serial port device ##############
 	usbdev: entity ulpi_serial port map(USB_DATA, USB_DIR, USB_NXT,
 		USB_STP, open, usbclk, usbrxval,usbrxrdy,usbtxval,usbtxrdy, usbrxdat,usbtxdat,
-		LED=>led_usbserial, txroom=>txroom);
+		LED=>led_usbserial, txroom=>txroom, txcork=>usb_txcork);
 	USB_RESET_B <= '1';
 	outbuf: ODDR2 generic map(DDR_ALIGNMENT=>"NONE",SRTYPE=>"SYNC")
 		port map(C0=>usbclk, C1=>not usbclk,CE=>'1',D0=>'1',D1=>'0',Q=>USB_REFCLK);
@@ -212,6 +213,9 @@ begin
 			else std_logic_vector(filtered1(17 downto 10)) when use_vna_txdat='0' and BUTTONS="01"
 			else std_logic_vector(filtered2(17 downto 10)) when use_vna_txdat='0' and BUTTONS="10"
 			else vna_txdat;
+	--corkcounter: entity slow_clock generic map(600000, 300000) port map(usbclk, usb_txcork);
+	-- only send when the buffer is half full
+	usb_txcork <= '0' when txroom<4096 else '1';
 	
 	
 	pll_update1 <= pll_update_usbclk when rising_edge(spiclk);
