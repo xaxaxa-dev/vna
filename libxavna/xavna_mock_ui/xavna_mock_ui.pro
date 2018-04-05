@@ -7,7 +7,7 @@
 QT       += widgets
 CONFIG += shared
 
-QMAKE_CXXFLAGS += -Wextra --std=c++11
+QMAKE_CXXFLAGS += -Wextra --std=c++11 -I/usr/local/include
 win32: QMAKE_CXXFLAGS += -DEIGEN_DONT_VECTORIZE -DEIGEN_DISABLE_UNALIGNED_ARRAY_ASSERT
 
 
