@@ -5,7 +5,11 @@
 #-------------------------------------------------
 
 QT       += widgets
-CONFIG += shared
+CONFIG += shared static
+
+QMAKE_CXXFLAGS += -Wextra --std=c++11
+win32: QMAKE_CXXFLAGS += -DEIGEN_DONT_VECTORIZE -DEIGEN_DISABLE_UNALIGNED_ARRAY_ASSERT
+
 
 TARGET = xavna_mock_ui
 TEMPLATE = lib

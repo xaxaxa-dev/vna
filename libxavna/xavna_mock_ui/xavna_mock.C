@@ -2,11 +2,11 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
-#include <termios.h>
 #include <unistd.h>
 #include <math.h>
 #include <assert.h>
-#include <poll.h>
+#include <pthread.h>
+#include <stdlib.h>
 
 #include <complex>
 #include <tuple>
@@ -123,9 +123,8 @@ struct xavna_virtual {
 	}
 	
 	void init() {
-
 		excitations << 1.,0.;
-		phaseOffset = drand48()*2*M_PI;
+		phaseOffset = (rand() / (RAND_MAX + 1.0))*2*M_PI;
 		pthread_mutex_init(&mutex, NULL);
 		startFreq = 1e6;
 		freqStep = 1e6;
@@ -134,8 +133,8 @@ struct xavna_virtual {
 		errorParams.resize(3000);
 
 		for(int i=0;i<3000;i++) {
-			dut[i] << 1., 0.,
-					  0., 1.;
+            dut[i] << -1., 0.,
+                      0., -1.;
 					 
 			errorParams[i] <<
 			//   0    1    2    3
@@ -292,6 +291,10 @@ public:
 		
 		return 0;
 	}
+	
+	double noise(double amplitude) {
+		return ((rand() / (RAND_MAX + 1.0))*2-1) * amplitude;
+	}
 
 	// out_values: array of size 4 holding the following values:
 	//				reflection real, reflection imag,
@@ -302,14 +305,12 @@ public:
         Vector2cd res0 = virt.getMeasuredValues(virt.curFreq, {1.,0.});
         //Vector8cd res1 = virt.getMeasuredValues(virt.curFreq, {0.,1.});
 		
-		auto noise = [](){
-			return (drand48()*2-1) * 500e-6;
-		};
+		double a = 500e-6;
 		
-		out_values[0] = res0[0].real() + noise();
-		out_values[1] = res0[0].imag() + noise();
-		out_values[2] = res0[1].real() + noise();
-		out_values[3] = res0[1].imag() + noise();
+		out_values[0] = res0[0].real() + noise(a);
+		out_values[1] = res0[0].imag() + noise(a);
+		out_values[2] = res0[1].real() + noise(a);
+		out_values[3] = res0[1].imag() + noise(a);
         usleep(5000);
 		return n_samples;
 	}
@@ -318,18 +319,16 @@ public:
         Vector2cd res0 = virt.getMeasuredValues(virt.curFreq, virt.excitations);
         //Vector2cd res1 = virt.getMeasuredValues(virt.curFreq, {0.01,3.6});
 		
-		auto noise = [](){
-			return (drand48()*2.-1.) * 50e-7;
-		};
+		double a = 5e-7;
 		
-        out_values[0] = virt.excitations[0].real() + noise();
-        out_values[1] = virt.excitations[0].imag() + noise();
-		out_values[2] = res0[0].real() + noise();
-		out_values[3] = res0[0].imag() + noise();
-        out_values[4] = virt.excitations[1].real() + noise();
-        out_values[5] = virt.excitations[1].imag() + noise();
-		out_values[6] = res0[1].real() + noise();
-		out_values[7] = res0[1].imag() + noise();
+        out_values[0] = virt.excitations[0].real() + noise(a);
+        out_values[1] = virt.excitations[0].imag() + noise(a);
+		out_values[2] = res0[0].real() + noise(a);
+		out_values[3] = res0[0].imag() + noise(a);
+        out_values[4] = virt.excitations[1].real() + noise(a);
+        out_values[5] = virt.excitations[1].imag() + noise(a);
+		out_values[6] = res0[1].real() + noise(a);
+		out_values[7] = res0[1].imag() + noise(a);
         usleep(5000);
 		return n_samples;
     }

@@ -29,7 +29,7 @@ sudo make install```
 
 Build QT GUI:
 ```cd vna_qt
-qmake
+/PATH/TO/qmake
 make
 ./vna_qt```
 
@@ -39,16 +39,19 @@ cd ~/
 git clone https://github.com/mxe/mxe.git
 cd mxe
 export QT_MXE_ARCH=386
-make qt5 qtcharts cc eigen fftw
+make qt5 qtcharts cc eigen fftw pthreads
 
 # build
 export PATH="$(pwd)/usr/bin:$PATH"
 cd /PATH/TO/vna
 autoreconf --install
-./configure
+./configure --host i686-w64-mingw32.static
 make
-cd vna_qt
-qmake
+cd libxavna/xavna_mock_ui
+i686-w64-mingw32.static-qmake-qt5
+make
+cd ../../vna_qt
+i686-w64-mingw32.static-qmake-qt5
 make
 ```
 
