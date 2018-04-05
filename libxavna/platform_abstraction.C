@@ -23,6 +23,8 @@ vector<string> xavna_find_devices() {
 		string name = ent->d_name;
 		if(name.find("ttyACM")==0)
 			ret.push_back("/dev/"+name);
+		if(name.find("cu.usbmodem")==0)
+			ret.push_back("/dev/"+name);
 	}
 	closedir (dir);
 	return ret;
