@@ -18,8 +18,8 @@ CONFIG += static
 
 #QMAKE_LFLAGS += --static -lexpat -lz -lXext -lXau -lbsd -lXdmcp
 #QMAKE_LFLAGS += -L../lib -lxavna
-QMAKE_CFLAGS += -Wextra --std=c++11 -DEIGEN_DONT_VECTORIZE -DEIGEN_DISABLE_UNALIGNED_ARRAY_ASSERT
 QMAKE_CXXFLAGS += -Wextra --std=c++11
+win32: QMAKE_CXXFLAGS += -DEIGEN_DONT_VECTORIZE -DEIGEN_DISABLE_UNALIGNED_ARRAY_ASSERT
 
 TARGET = vna_qt
 TEMPLATE = app
@@ -73,7 +73,12 @@ FORMS    += mainwindow.ui \
 RESOURCES += \
     resources.qrc
 
-unix|win32: LIBS += -L$$PWD/../libxavna/.libs/ -L$$PWD/../libxavna/xavna_mock_ui -lxavna -lxavna_mock_ui
+unix|win32: LIBS += -L$$PWD/../libxavna/.libs/ -lxavna
+
+
+win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../libxavna/xavna_mock_ui/release/ -lxavna_mock_ui
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../libxavna/xavna_mock_ui/debug/ -lxavna_mock_ui
+else:unix: LIBS += -L$$PWD/../libxavna/xavna_mock_ui/ -lxavna_mock_ui
 
 INCLUDEPATH += $$PWD/../include /usr/local/include
 DEPENDPATH += $$PWD/../include

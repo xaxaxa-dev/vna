@@ -5,7 +5,7 @@
 #-------------------------------------------------
 
 QT       += widgets
-CONFIG += shared static
+CONFIG += shared
 
 QMAKE_CXXFLAGS += -Wextra --std=c++11
 win32: QMAKE_CXXFLAGS += -DEIGEN_DONT_VECTORIZE -DEIGEN_DISABLE_UNALIGNED_ARRAY_ASSERT
@@ -44,5 +44,5 @@ unix {
 FORMS += \
     xavna_mock_ui_dialog.ui
 
-LIBS += -L$$PWD/../.libs/ -lxavna
+LIBS += -L$$PWD/../.libs/ -lxavna -lpthread
 

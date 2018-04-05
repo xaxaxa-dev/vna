@@ -336,8 +336,10 @@ public:
 
 extern map<string, xavna_constructor> xavna_virtual_devices;
 
-static int __init_xavna_mock() {
+extern "C" int __init_xavna_mock() {
     xavna_virtual_devices["mock"] = [](const char* dev){ return new xavna_mock(dev); };
+    fprintf(stderr, "loaded xavna mock library\n");
+    fflush(stderr);
     return 0;
 }
 

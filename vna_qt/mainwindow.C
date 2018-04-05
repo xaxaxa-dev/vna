@@ -12,6 +12,7 @@
 #include "calkitsettingsdialog.H"
 #include <xavna/calibration.H>
 #include <xavna/xavna_cpp.H>
+#include <xavna/xavna_generic.H>
 #include <iostream>
 
 #include <QString>
@@ -899,6 +900,10 @@ void MainWindow::on_actionKit_settings_triggered() {
     if(dialog.exec() == QDialog::Accepted) dialog.toSettings(cks);
 }
 
+extern "C" int __init_xavna_mock();
+extern map<string, xavna_constructor> xavna_virtual_devices;
 void MainWindow::on_actionMock_device_triggered() {
+    if(xavna_virtual_devices.find("mock") == xavna_virtual_devices.end())
+        __init_xavna_mock();
     openDevice("mock");
 }
