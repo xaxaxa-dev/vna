@@ -18,7 +18,10 @@ rm -rf *.app
 $QMAKE
 make -j8
 "$QT"/macdeployqt vna_qt.app -libpath=../libxavna/xavna_mock_ui
+cp -a ../libxavna/.libs/libxavna.0.dylib vna_qt.app/Contents/Frameworks
 
 cd vna_qt.app/Contents
 install_name_tool -add_rpath "@executable_path/../Frameworks" MacOS/vna_qt
 install_name_tool -change libxavna_mock_ui.1.dylib @executable_path/../Frameworks/libxavna_mock_ui.1.dylib MacOS/vna_qt
+install_name_tool -change /usr/local/lib/libxavna.0.dylib @executable_path/../Frameworks/libxavna.0.dylib MacOS/vna_qt
+install_name_tool -change /usr/local/lib/libxavna.0.dylib @executable_path/../Frameworks/libxavna.0.dylib Frameworks/libxavna_mock_ui.1.dylib
