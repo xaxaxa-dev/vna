@@ -3,6 +3,7 @@
 #include <string>
 #include <vector>
 #include <eigen3/Eigen/Core>
+#include <xavna/common.H>
 using namespace std;
 using namespace Eigen;
 
