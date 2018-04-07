@@ -18,20 +18,33 @@ The main board connects to a PC through usb and communicates via a virtual seria
 
 # Building the software
 
-___Building on linux & mac___
+___Building on linux___
 
 Build & install libxavna (required for QT GUI):
 ```sudo apt-get install automake libtool make g++ libeigen3-dev libfftw3-dev
 autoreconf --install
 ./configure
 make
-sudo make install```
+sudo make install
+pushd libxavna/xavna_mock_ui/
+/PATH/TO/qmake
+make
+popd
+```
 
 Build QT GUI:
 ```cd vna_qt
 /PATH/TO/qmake
 make
 ./vna_qt```
+
+___Building on mac os___
+```brew install automake libtool make eigen fftw
+autoreconf --install
+./configure
+./deploy_macos
+# result is in ./vna_qt/vna_qt.app
+```
 
 Cross-compile for windows (from linux)
 ```# download and build MXE
