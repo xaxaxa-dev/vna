@@ -44,11 +44,13 @@ namespace xaxaxa {
 		_threadRunning = false;
 	}
 	void VNADevice::close() {
-		if(_threadRunning) stopScan();
+		_ignoreError = true;
 		if(_dev != NULL) {
 			xavna_close(_dev);
 			_dev = NULL;
 		}
+		if(_threadRunning) stopScan();
+		_ignoreError = false;
 	}
 	
 	void VNADevice::takeMeasurement(function<void(const vector<VNARawValue>& vals)> cb) {
@@ -70,10 +72,12 @@ namespace xaxaxa {
 				for(int port=0; port<ports; port++) {
                     if(xavna_set_params(_dev, (int)round(freqAt(i)/1000.),
                                         (port==0?attenuation1:-1), (port==1?attenuation2:-1)) < 0) {
+						if(_ignoreError) return NULL;
 						backgroundErrorCallback(runtime_error("xavna_set_params failed: " + string(strerror(errno))));
 						return NULL;
 					}
                     if(xavna_read_values_raw(_dev, (double*)&values[port], nValues)<0) {
+						if(_ignoreError) return NULL;
 						backgroundErrorCallback(runtime_error("xavna_read_values_raw failed: " + string(strerror(errno))));
 						return NULL;
 					}
