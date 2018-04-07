@@ -127,7 +127,7 @@ void* refreshThread(void* v) {
 			int freq = startFreq+freqStep*i;
 			int freq2;
 			xavna_raw2_values values;
-			if(xavna_set_params(vna_dev,freq, 20) < 0) {
+			if(xavna_set_params(vna_dev,freq, 20, -1) < 0) {
 				fail(ERR_CONTROL, "device could not set parameters; frequency = " + to_string(freq)
 					+ "; " + string(strerror(errno)));
 			}
@@ -343,7 +343,7 @@ int main(int argc, char** argv) {
 		s21dr[i] = dB(norm(values_thru[i].thru)) - dB(norm(values_load[i].thru));
 		worst_s21dr[i] = i;
 		
-		if(dir < worst_directivity) {
+		if(dir < worst_directivity && freq<1000000) {
 			worst_directivity = dir;
 			worst_directivity_freq = i;
 		}
@@ -366,7 +366,7 @@ int main(int argc, char** argv) {
 	int s21dr2 = worst_s21dr[2];
 	
 	appendInfo(ssprintf(255, "worst directivity: \n    %.1fdB @ %.2fMHz", worst_directivity, freqAt(worst_directivity_freq)));
-	appendInfo(ssprintf(255, "worst sensitivity: \n    %.1fdB @ %.2fMHz", worst_sensitivity, freqAt(worst_sensitivity_freq)));
+	appendInfo(ssprintf(255, "worst error sensitivity: \n    %.1fdB @ %.2fMHz", worst_sensitivity, freqAt(worst_sensitivity_freq)));
 	appendInfo(ssprintf(255, "3rd worst dynamic range: \n    %.1fdB @ %.2fMHz", s21dr[s21dr2], freqAt(s21dr2)));
 	appendInfo(ssprintf(255, "highest S11: \n    %.1fdB @ %.2fMHz", s11floors[s11floor0], freqAt(s11floor0)));
 	appendInfo(ssprintf(255, "3rd highest S11: \n    %.1fdB @ %.2fMHz", s11floors[s11floor2], freqAt(s11floor2)));
@@ -380,7 +380,7 @@ int main(int argc, char** argv) {
 		appendFail(ERR_SPEC, msg);
 	}
 	if(worst_sensitivity > 30 || isnan(worst_sensitivity)) {
-		string msg = ssprintf(255, "S11 sensitivity too high: \n    %.1fdB @ %.2fMHz", worst_sensitivity, freqAt(worst_sensitivity_freq));
+		string msg = ssprintf(255, "S11 errorsens too high: \n    %.1fdB @ %.2fMHz", worst_sensitivity, freqAt(worst_sensitivity_freq));
 		appendFail(ERR_SPEC, msg);
 	}
 	if(s21dr[s21dr2] < 30 || isnan(s21dr[s21dr2])) {
