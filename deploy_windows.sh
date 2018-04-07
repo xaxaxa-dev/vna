@@ -3,7 +3,8 @@ export PATH="$MXE/usr/bin:$PATH"
 HOST="i686-w64-mingw32.shared"
 QMAKE="$HOST-qmake-qt5"
 
-./configure --host "$HOST"
+autoreconf --install
+./configure --host "$HOST" CXXFLAGS=-O2
 make -j8
 
 pushd libxavna/xavna_mock_ui
