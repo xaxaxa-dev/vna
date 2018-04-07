@@ -119,4 +119,138 @@ int initCalStds() {
 int tmp = initCalStds();
 
 
+// CalibrationEngine
+
+
+CalibrationEngine::CalibrationEngine(int nPorts) {
+    _nPorts = nPorts;
+    _nEquations = 0;
+    _equations = MatrixXcd::Zero(nCoeffs(), nCoeffs());
+    _rhs = VectorXcd::Zero(nCoeffs());
+}
+
+int CalibrationEngine::nEquations() {
+    return _nEquations;
+}
+
+int CalibrationEngine::nCoeffs() {
+    return _nPorts*_nPorts*4;
+}
+
+int CalibrationEngine::nEquationsRequired() {
+    return nCoeffs();
+}
+
+void CalibrationEngine::clearEquations() {
+    _nEquations = 0;
+}
+
+#define T1(ROW, COL) equation(ROW*_nPorts + COL)
+#define T2(ROW, COL) equation(TSize + ROW*_nPorts + COL)
+#define T3(ROW, COL) equation(TSize*2 + ROW*_nPorts + COL)
+#define T4(ROW, COL) equation(TSize*3 + ROW*_nPorts + COL)
+
+void CalibrationEngine::addFullEquation(const MatrixXcd &actualSParams, const MatrixXcd &measuredSParams) {
+    int TSize = _nPorts*_nPorts;
+    const MatrixXcd& S = actualSParams;
+    const MatrixXcd& M = measuredSParams;
+    
+
+    // T1*S + T2 - M*T3*S - M*T4 = 0
+    // T1, T2, T3, T4 are unknowns
+    // the rhs is a size nPort*nPort zero matrix
+
+    // iterate through the entries of the rhs,
+    // and add one equation for each entry
+    for(int row=0;row<_nPorts;row++)
+        for(int col=0;col<_nPorts;col++) {
+            if(_nEquations >= nCoeffs()) throw logic_error("calibration engine: too many equations; required: " + to_string(nCoeffs()));
+            VectorXcd equation = VectorXcd::Zero(nCoeffs());
+
+            // + T1*S
+            for(int i=0;i<_nPorts;i++) {
+                T1(row, i) = S(i, col);
+            }
+
+            // + T2
+            T2(row, col) = 1.;
+
+            // - M*T3*S
+            for(int i=0;i<_nPorts;i++)
+                for(int j=0;j<_nPorts;j++) {
+                    /* to derive these coefficients, play around in sympy:
+                    from sympy import *
+                    M = MatrixSymbol('M', 2, 2)
+                    T = MatrixSymbol('T', 2, 2)
+                    S = MatrixSymbol('S', 2, 2)
+                    rhs = Matrix(M)*Matrix(T)*Matrix(S)
+
+                    print expand(rhs[0,0])
+                    print expand(rhs[0,1])
+                    print expand(rhs[1,1])
+                    */
+                    T3(i, j) = -M(row,i)*S(j,col);
+                }
+
+            // - M*T4
+            for(int i=0;i<_nPorts;i++) {
+                T4(i,col) = -M(row,i);
+            }
+
+            _equations.row(_nEquations) = equation;
+            _rhs(_nEquations) = 0.;
+            _nEquations++;
+        }
+}
+
+void CalibrationEngine::addEquation(const MatrixXcd &actualSParams, const MatrixXcd &measuredSParams, const MatrixXi &map) {
+
+}
+
+void CalibrationEngine::addNormalizingEquation() {
+    int TSize = _nPorts*_nPorts;
+    if(_nEquations >= nCoeffs()) throw logic_error("calibration engine: too many equations; required: " + to_string(nCoeffs()));
+    VectorXcd equation = VectorXcd::Zero(nCoeffs());
+    T3(0,0) = 1.;
+    _equations.row(_nEquations) = equation;
+    _rhs(_nEquations) = 1.;
+    _nEquations++;
+}
+
+#undef T1
+#undef T2
+#undef T3
+#undef T4
+
+MatrixXcd CalibrationEngine::computeCoefficients() {
+    auto tmp = _equations.colPivHouseholderQr();
+    if(tmp.rank() != nCoeffs()) throw runtime_error("matrix rank is not full!");
+
+    int TSize = _nPorts*_nPorts;
+
+    VectorXcd res = tmp.solve(_rhs);
+    MatrixXcd T = MatrixXcd::Zero(_nPorts*2, _nPorts*2);
+    for(int i=0;i<4;i++)
+        for(int row=0;row<_nPorts;row++)
+            for(int col=0;col<_nPorts;col++) {
+                int colOffset = int(i%2) * _nPorts;
+                int rowOffset = int(i/2) * _nPorts;
+                T(row+rowOffset, col+colOffset) = res(TSize*i + row*_nPorts + col);
+            }
+    return T;
+}
+
+MatrixXcd CalibrationEngine::computeSParams(const MatrixXcd &coeffs, const MatrixXcd &measuredSParams) {
+    int _nPorts = measuredSParams.rows();
+    MatrixXcd T1 = coeffs.topLeftCorner(_nPorts, _nPorts);
+    MatrixXcd T2 = coeffs.topRightCorner(_nPorts, _nPorts);
+    MatrixXcd T3 = coeffs.bottomLeftCorner(_nPorts, _nPorts);
+    MatrixXcd T4 = coeffs.bottomRightCorner(_nPorts, _nPorts);
+    MatrixXcd A = T1 - measuredSParams*T3;
+    MatrixXcd rhs = measuredSParams*T4 - T2;
+    return A.colPivHouseholderQr().solve(rhs);
+}
+
+
+
 }

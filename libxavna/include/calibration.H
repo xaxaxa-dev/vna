@@ -78,5 +78,48 @@ extern vector<const VNACalibration*> calibrationTypes;
 // system global map from calibration standard names to ideal S parameters 
 // (auto-populated on library init)
 extern map<string, VNACalibratedValue> idealCalStds;
+
+class CalibrationEngine {
+public:
+	CalibrationEngine(int nPorts);
+	
+	// returns how many equations have been added so far
+	int nEquations();
+
+    // returns how many error coefficients there are
+    int nCoeffs();
+
+	// returns how many equations are required for calibration
+	int nEquationsRequired();
+	
+	
+	// clear all added equations
+	void clearEquations();
+	
+	// add equations for when a fully known cal standard has been measured
+	void addFullEquation(const MatrixXcd& actualSParams, const MatrixXcd& measuredSParams);
+	
+	// similar to addFullEquation, but individual values in actualSParams can be unknown;
+	// the map is a matrix with same size as actualSParams, each entry is a 1 if the corresponding
+	// entry in actualSParams is known, 0 otherwise.
+	void addEquation(const MatrixXcd& actualSParams, const MatrixXcd& measuredSParams, const MatrixXi& map);
+
+    // adds one equation that fixes a error term to 1; this is currently the vna to dut port 1 transmission factor
+    void addNormalizingEquation();
+	
+	
+	// compute calibration coefficients given equations added
+	MatrixXcd computeCoefficients();
+	
+	// given coefficients and measured S parameters, compute actual S parameters
+	static MatrixXcd computeSParams(const MatrixXcd& coeffs, const MatrixXcd& measuredSParams);
+
+
+    // private:
+	int _nPorts, _nEquations;
+	MatrixXcd _equations;
+    VectorXcd _rhs;
+};
+
 }
 #endif
