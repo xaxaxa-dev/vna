@@ -39,6 +39,7 @@ namespace xaxaxa {
 	void VNADevice::stopScan() {
 		if(!_threadRunning) return;
 		_shouldExit = true;
+		pthread_cancel(_pth);
 		pthread_join(_pth, NULL);
 		_shouldExit = false;
 		_threadRunning = false;
