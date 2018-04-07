@@ -71,7 +71,6 @@ namespace xaxaxa {
 		pthread_t _pth;
 		bool _threadRunning=false;
 		bool _shouldExit=false;
-		bool _ignoreError=false;
 		volatile uint32_t _measurementCnt=0;
 		function<void(const vector<VNARawValue>& vals)> _cb;
 		volatile function<void(const vector<VNARawValue>& vals)>* _cb_;
