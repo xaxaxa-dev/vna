@@ -435,6 +435,9 @@ Measurements</string>
    </property>
   </action>
   <action name="actionTime_to_fault">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
    <property name="text">
     <string>Time to fault</string>
    </property>

@@ -474,14 +474,14 @@ void MainWindow::addMarker(bool removable) {
     });
     ms->ui->slider->valueChanged(0);
     if(removable) {
-        ms->ui->b_add_del->setText("⨯");
+        ms->ui->b_add_del->setIcon(QIcon(":/icons/close"));
         connect(ms->ui->b_add_del, &QPushButton::clicked, [this,ms,newId](){
             this->markers[newId].ms = NULL;
             updateMarkerViews(newId);
             ms->deleteLater();
         });
     } else {
-        ms->ui->b_add_del->setText("+");
+        ms->ui->b_add_del->setIcon(QIcon(":/icons/add"));
         connect(ms->ui->b_add_del, &QPushButton::clicked, [this](){
             addMarker(true);
         });
@@ -671,6 +671,17 @@ string MainWindow::freqStr(double freqHz) {
     return ssprintf(32, "%.2f", freqHz*freqScale);
 }
 
+void MainWindow::hideEvent(QHideEvent *) {
+    // hack required because qt seems to close all dock widgets when
+    // the main window is minimized
+    // TODO(xaxaxa): remove this when qt bug is fixed
+    layoutState = this->saveState();
+}
+
+void MainWindow::showEvent(QShowEvent *) {
+    this->restoreState(layoutState);
+}
+
 
 
 void MainWindow::on_d_caltype_currentIndexChanged(int index) {
@@ -713,13 +724,6 @@ void MainWindow::btn_measure_click(QPushButton *btn) {
 void MainWindow::on_actionOther_triggered() {
    auto tmp = QInputDialog::getText(this,"Specify device path...","Device (/dev/tty... on linux/mac, COM... on windows)").toStdString();
    if(tmp != "") openDevice(tmp);
-}
-
-
-void MainWindow::on_slider_valueChanged(int value) {
-    markers[0].freqIndex = value;
-    //ui->b_freq->setText(qs(ssprintf(32,"%.2f", vna->freqAt(value)/1e6)));
-    updateMarkerViews();
 }
 
 void MainWindow::calMeasurementCompleted(string calName) {
@@ -858,11 +862,11 @@ void MainWindow::on_actionCapture_S_2_triggered() {
 }
 
 void MainWindow::on_actionExport_s2p_triggered() {
-    if(tmp_sn1.size()!=vna->nPoints) {
+    if(int(tmp_sn1.size())!=vna->nPoints) {
         QMessageBox::critical(this,"Error","S*1 has not been captured");
         return;
     }
-    if(tmp_sn2.size()!=vna->nPoints) {
+    if(int(tmp_sn2.size())!=vna->nPoints) {
         QMessageBox::critical(this,"Error","S*2 has not been captured");
         return;
     }
@@ -916,4 +920,8 @@ void MainWindow::on_actionMock_device_triggered() {
     if(xavna_virtual_devices.find("mock") == xavna_virtual_devices.end())
         __init_xavna_mock();
     openDevice("mock");
+}
+
+void MainWindow::on_menuDevice_aboutToShow() {
+    populateDevicesMenu();
 }

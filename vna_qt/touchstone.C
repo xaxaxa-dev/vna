@@ -96,7 +96,7 @@ void parseTouchstone(string data, double &startFreqHz, double &stepFreqHz, int& 
             std::transform(tmp.begin(), tmp.end(), tmp.begin(), ::tolower);
 
             vector<string> args = split(tmp, ' ');
-            int n=0, state=0;
+            int state=0;
             for(int i=0; i<(int)args.size(); i++) {
                 if(args[i].size() == 0) continue;
 

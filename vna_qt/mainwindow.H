@@ -116,6 +116,8 @@ public:
     int maxRecentFiles=10;
     vector<QAction*> recentFileActions;
 
+    QByteArray layoutState;
+
     struct {
         bool enabled;
         bool calEnabled;
@@ -168,12 +170,13 @@ public:
     string freqStr(double freqHz);
 
 protected:
+    void hideEvent(QHideEvent* event);
+    void showEvent(QShowEvent* event);
 
 private slots:
     void on_d_caltype_currentIndexChanged(int index);
     void btn_measure_click(QPushButton* btn);
     void on_actionOther_triggered();
-    void on_slider_valueChanged(int value);
     void calMeasurementCompleted(string calName);
     void on_b_clear_m_clicked();
     void on_b_apply_clicked();
@@ -205,8 +208,8 @@ private slots:
     void on_dock_impedance_visibilityChanged(bool visible);
     void on_actionRefresh_triggered();
     void on_actionKit_settings_triggered();
-
     void on_actionMock_device_triggered();
+    void on_menuDevice_aboutToShow();
 
 private:
     Ui::MainWindow *ui;
