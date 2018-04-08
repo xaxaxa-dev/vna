@@ -27,5 +27,27 @@ struct CalKitSettings {
     // if any given cal kit type is not present here, it should be assumed
     // to use ideal parameters
     map<string, SParamSeries> calKitModels;
+    map<string, string> calKitNames;
 };
+#ifdef Q_DECLARE_METATYPE
+Q_DECLARE_METATYPE(CalKitSettings);
+#endif
+
+class QDataStream;
+
+QDataStream &operator<<(QDataStream &out, const complex<double> &myObj);
+QDataStream &operator>>(QDataStream &in, complex<double> &myObj);
+
+QDataStream &operator<<(QDataStream &out, const string &myObj);
+QDataStream &operator>>(QDataStream &in, string &myObj);
+
+QDataStream &operator<<(QDataStream &out, const Matrix2cd &myObj);
+QDataStream &operator>>(QDataStream &in, Matrix2cd &myObj);
+
+QDataStream &operator<<(QDataStream &out, const SParamSeries &myObj);
+QDataStream &operator>>(QDataStream &in, SParamSeries &myObj);
+
+QDataStream &operator<<(QDataStream &out, const CalKitSettings &myObj);
+QDataStream &operator>>(QDataStream &in, CalKitSettings &myObj);
+
 #endif // CALKITSETTINGS_H
