@@ -74,6 +74,10 @@ QComboBox *GraphPanel::comboBox(int index) {
     return ui->d2;
 }
 
+QPushButton *GraphPanel::maximizeButton() {
+    return ui->b_maximize;
+}
+
 void GraphPanel::on_d1_currentIndexChanged(int index) {
     emit comboBoxSelectionChanged(0,index);
 }

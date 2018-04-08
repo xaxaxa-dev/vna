@@ -144,6 +144,18 @@ void MainWindow::setupViews() {
                 graphSources.push_back({row, col, SParamViewSource::Types(i)});
             }
     }
+    QPushButton* polarView_maximize = new QPushButton();
+    polarView_maximize->setIcon(QIcon(":/icons/maximize"));
+    polarView_maximize->setFlat(true);
+    createTopRightFloat(polarView)->layout()->addWidget(polarView_maximize);
+    connect(polarView_maximize, &QPushButton::clicked, [this, polarView_maximize](){
+        if(maximizePane(polarView))
+            polarView_maximize->setIcon(QIcon(":/icons/unmaximize"));
+        else polarView_maximize->setIcon(QIcon(":/icons/maximize"));
+    });
+    polarView->setSizePolicy(QSizePolicy::Ignored, QSizePolicy::Preferred);
+
+
 
 
     GraphPanel* gp = new GraphPanel();
@@ -183,6 +195,12 @@ void MainWindow::setupViews() {
     });
     gp->comboBox(0)->setCurrentIndex(1);
     gp->comboBox(1)->setCurrentIndex(0);
+
+    connect(gp->maximizeButton(), &QPushButton::clicked, [this, gp](){
+        if(maximizePane(gp))
+            gp->maximizeButton()->setIcon(QIcon(":/icons/unmaximize"));
+        else gp->maximizeButton()->setIcon(QIcon(":/icons/maximize"));
+    });
 }
 
 void MainWindow::setCallbacks() {
@@ -506,6 +524,55 @@ void MainWindow::enableUI(bool enable) {
     updateUIState();
 }
 
+bool MainWindow::maximizePane(QWidget *w) {
+    QWidget* initialMaximizedPane = maximizedPane;
+    if(maximizedPane == nullptr) {
+        // we are going from normal view to maximized view
+        unmaximizedLayoutState = this->saveState();
+        for(QDockWidget* dock:findChildren<QDockWidget*>()) {
+            if(dock != ui->dock_bottom)
+                dock->hide();
+        }
+    } else {
+        this->centralWidget()->layout()->removeWidget(maximizedPane);
+        auto* layout = dynamic_cast<QBoxLayout*>(maximizedPaneParent->layout());
+        layout->insertWidget(maximizedPaneIndex, maximizedPane);
+        maximizedPane = nullptr;
+        maximizedPaneParent = nullptr;
+    }
+    if(initialMaximizedPane == w) {
+        // we are going from maximized view to normal view
+        ui->w_content->show();
+        this->restoreState(unmaximizedLayoutState);
+        return false;
+    }
+    auto* layout = dynamic_cast<QBoxLayout*>(w->parentWidget()->layout());
+    maximizedPaneIndex = layout->indexOf(w);
+    maximizedPane = w;
+    maximizedPaneParent = w->parentWidget();
+    w->parentWidget()->layout()->removeWidget(w);
+    this->centralWidget()->layout()->addWidget(w);
+    ui->w_content->hide();
+    return true;
+}
+
+QWidget *MainWindow::createTopRightFloat(QWidget *w) {
+    QBoxLayout* layout = new QBoxLayout(QBoxLayout::TopToBottom);
+    QBoxLayout* layout2 = new QBoxLayout(QBoxLayout::LeftToRight);
+
+    QWidget* widget2 = new QWidget();
+    layout2->addItem(new QSpacerItem(0, 0, QSizePolicy::Expanding, QSizePolicy::Expanding));
+    layout2->setMargin(0);
+    widget2->setLayout(layout2);
+    widget2->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
+
+    layout->addWidget(widget2);
+    layout->addItem(new QSpacerItem(0, 0, QSizePolicy::Expanding, QSizePolicy::Expanding));
+    w->setLayout(layout);
+    layout->setMargin(4);
+    return widget2;
+}
+
 static string calFileVer = "calFileVersion 1";
 string MainWindow::serializeCalibration(const CalibrationInfo &cal) {
     string tmp;
@@ -681,7 +748,6 @@ void MainWindow::hideEvent(QHideEvent *) {
 void MainWindow::showEvent(QShowEvent *) {
     this->restoreState(layoutState);
 }
-
 
 
 void MainWindow::on_d_caltype_currentIndexChanged(int index) {

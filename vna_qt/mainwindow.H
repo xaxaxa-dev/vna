@@ -12,6 +12,7 @@
 namespace Ui {
 class MainWindow;
 }
+class QWidget;
 class QPushButton;
 class PolarView;
 class ImpedanceDisplay;
@@ -117,6 +118,10 @@ public:
     vector<QAction*> recentFileActions;
 
     QByteArray layoutState;
+    QByteArray unmaximizedLayoutState;
+    QWidget* maximizedPane = nullptr;
+    QWidget* maximizedPaneParent = nullptr;
+    int maximizedPaneIndex = -1;
 
     struct {
         bool enabled;
@@ -151,6 +156,8 @@ public:
     void addMarker(bool removable);
     void updateUIState();
     void enableUI(bool enable);
+    bool maximizePane(QWidget* w);
+    QWidget* createTopRightFloat(QWidget* w);
 
     string serializeCalibration(const CalibrationInfo& cal);
     CalibrationInfo deserializeCalibration(QTextStream &inp);

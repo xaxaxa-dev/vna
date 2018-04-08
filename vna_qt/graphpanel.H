@@ -14,6 +14,7 @@ class QValueAxis;
 class QLineSeries;
 }
 class QComboBox;
+class QPushButton;
 
 using namespace QtCharts;
 using namespace std;
@@ -33,7 +34,8 @@ public:
 
     // combo box 0 is the leftmost one; 1 is the rightmost one
     void populateComboBox(int index, const vector<string>& items);
-    QComboBox *comboBox(int index);
+    QComboBox* comboBox(int index);
+    QPushButton* maximizeButton();
 
 signals:
     void comboBoxSelectionChanged(int index, int selection);
