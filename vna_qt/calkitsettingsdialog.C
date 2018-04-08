@@ -70,7 +70,7 @@ void CalKitSettingsDialog::fromSettings(const CalKitSettings &settings) {
         connect(ui1.r_s_param, &QRadioButton::clicked, [this, name](){
             QString fileName = QFileDialog::getOpenFileName(this,
                     tr("Open S parameters file"), "",
-                    tr("S parameters (*.s1p, *.s2p);;All Files (*)"));
+                    tr("S parameters (*.s1p *.s2p);;All Files (*)"));
             if (fileName.isEmpty()) goto fail;
             {
                 QFile file(fileName);
