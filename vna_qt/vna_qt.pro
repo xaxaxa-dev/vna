@@ -46,7 +46,8 @@ SOURCES +=\
     graphpanel.C \
     configureviewdialog.C \
     touchstone.C \
-    calkitsettingsdialog.C
+    calkitsettingsdialog.C \
+    calkitsettings.C
 
 HEADERS  += \
     polarview.H \

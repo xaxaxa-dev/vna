@@ -3,6 +3,7 @@
 
 #include <QDialog>
 #include "calkitsettings.H"
+#include "ui_calkitsettingswidget.h"
 namespace Ui {
 class CalKitSettingsDialog;
 }
@@ -12,6 +13,7 @@ class CalKitSettingsDialog : public QDialog
     Q_OBJECT
 
     struct calKitInfo {
+        Ui::CalKitSettingsWidget ui;
         SParamSeries data;
         bool useIdeal;
     };

@@ -1,4 +1,7 @@
 #define _USE_MATH_DEFINES
+
+#include <QMetaType>
+
 #include "mainwindow.H"
 #include "ui_mainwindow.h"
 #include "polarview.H"
@@ -97,6 +100,7 @@ void MainWindow::loadSettings() {
     QSettings settings;
     recentFiles = settings.value("recentFiles").toStringList();
     refreshRecentFiles();
+    cks = settings.value("calkits").value<CalKitSettings>();
 
     graphLimits = {
         {-1000,-999},
@@ -897,7 +901,13 @@ void MainWindow::on_actionRefresh_triggered() {
 void MainWindow::on_actionKit_settings_triggered() {
     CalKitSettingsDialog dialog;
     dialog.fromSettings(cks);
-    if(dialog.exec() == QDialog::Accepted) dialog.toSettings(cks);
+    if(dialog.exec() == QDialog::Accepted) {
+        dialog.toSettings(cks);
+        QSettings settings;
+        QVariant var;
+        var.setValue(cks);
+        settings.setValue("calkits", var);
+    }
 }
 
 extern "C" int __init_xavna_mock();

@@ -45,7 +45,7 @@ void CalKitSettingsDialog::fromSettings(const CalKitSettings &settings) {
         if(calStdDesc.find(name) != calStdDesc.end())
             desc = calStdDesc[name];
 
-        Ui::CalKitSettingsWidget ui1;
+        Ui::CalKitSettingsWidget& ui1 = info[name].ui;
         QWidget* w = new QWidget();
         ui1.setupUi(w);
         layout->addWidget(w);
@@ -57,14 +57,17 @@ void CalKitSettingsDialog::fromSettings(const CalKitSettings &settings) {
             ui1.r_s_param->setChecked(true);
             info[name].data = (*it).second;
             info[name].useIdeal = false;
+            auto it2 = settings.calKitNames.find(name);
+            if(it2 != settings.calKitNames.end())
+                ui1.l_status->setText(qs((*it2).second));
         } else info[name].useIdeal = true;
 
-        connect(ui1.r_ideal, &QRadioButton::clicked, [this, ui1, name](){
+        connect(ui1.r_ideal, &QRadioButton::clicked, [this, name](){
             info[name].useIdeal = true;
-            ui1.l_status->setText("");
+            info[name].ui.l_status->setText("");
         });
 
-        connect(ui1.r_s_param, &QRadioButton::clicked, [this, ui1, name](){
+        connect(ui1.r_s_param, &QRadioButton::clicked, [this, name](){
             QString fileName = QFileDialog::getOpenFileName(this,
                     tr("Open S parameters file"), "",
                     tr("S parameters (*.s1p, *.s2p);;All Files (*)"));
@@ -86,7 +89,7 @@ void CalKitSettingsDialog::fromSettings(const CalKitSettings &settings) {
                         parseTouchstone(data,series.startFreqHz, series.stepFreqHz,nPorts,series.values);
                         info[name].useIdeal = false;
                         info[name].data = series;
-                        ui1.l_status->setText(fileInfo.fileName());
+                        info[name].ui.l_status->setText(fileInfo.fileName());
                     } catch(exception& ex) {
                         QMessageBox::warning(this, tr("Error parsing S parameter file"), ex.what());
                         goto fail;
@@ -96,19 +99,21 @@ void CalKitSettingsDialog::fromSettings(const CalKitSettings &settings) {
             return;
         fail:
             // revert radiobutton state
-            ui1.r_ideal->setChecked(info[name].useIdeal);
+            info[name].ui.r_ideal->setChecked(info[name].useIdeal);
         });
     }
 }
 
 void CalKitSettingsDialog::toSettings(CalKitSettings &settings) {
     settings.calKitModels.clear();
+    settings.calKitNames.clear();
     for(auto& item:idealCalStds) {
         string name = item.first;
         auto it = info.find(name);
         if(it == info.end()) continue;
         if(!(*it).second.useIdeal) {
             settings.calKitModels[name] = (*it).second.data;
+            settings.calKitNames[name] = (*it).second.ui.l_status->text().toStdString();
         }
     }
 }
