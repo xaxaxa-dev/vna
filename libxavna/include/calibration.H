@@ -12,40 +12,40 @@ using namespace Eigen;
 
 // given the measured raw values for short, open, and load, compute the 3 calibration coefficients
 inline array<complex<double>, 3> SOL_compute_coefficients(complex<double> sc, complex<double> oc, complex<double> load) {
-	complex<double> a=load, b=oc, c=sc;
-	complex<double> cal_X, cal_Y, cal_Z;
-	cal_Z=(2.*a-b-c)/(b-c);
-	cal_X=a-c*(1.-cal_Z);
-	cal_Y=a/cal_X;
-	
-	return {cal_X, cal_Y, cal_Z};
+    complex<double> a=load, b=oc, c=sc;
+    complex<double> cal_X, cal_Y, cal_Z;
+    cal_Z=(2.*a-b-c)/(b-c);
+    cal_X=a-c*(1.-cal_Z);
+    cal_Y=a/cal_X;
+    
+    return {cal_X, cal_Y, cal_Z};
 }
 // given the calibration coefficients and a raw value, compute the reflection coefficient
 inline complex<double> SOL_compute_reflection(const array<complex<double>, 3>& coeffs, complex<double> raw) {
-	auto cal_X = coeffs[0];
-	auto cal_Y = coeffs[1];
-	auto cal_Z = coeffs[2];
-	
-	return (cal_X*cal_Y-raw)/(raw*cal_Z-cal_X);
+    auto cal_X = coeffs[0];
+    auto cal_Y = coeffs[1];
+    auto cal_Z = coeffs[2];
+    
+    return (cal_X*cal_Y-raw)/(raw*cal_Z-cal_X);
 }
 
 // given the cal coefficients and a reflection coefficient, compute d(refl)/d(raw)
 inline complex<double> SOL_compute_sensitivity(const array<complex<double>, 3>& coeffs, complex<double> refl) {
-	auto X = coeffs[0];
-	auto Y = coeffs[1];
-	auto Z = coeffs[2];
-	auto raw = X*(Y+refl)/(refl*Z+1.);
-	return -X*(Y*Z-1.) / ((Z*raw-X)*(Z*raw-X));
+    auto X = coeffs[0];
+    auto Y = coeffs[1];
+    auto Z = coeffs[2];
+    auto raw = X*(Y+refl)/(refl*Z+1.);
+    return -X*(Y*Z-1.) / ((Z*raw-X)*(Z*raw-X));
 }
 
 // S: s11, s12, s21, s22; refl: reflection coefficient
 // computes reflection coefficient looking into port 1 of S, with port 2 of S connected to a load refl
 inline complex<double> cascade_reflection(const array<complex<double>, 4>& S, complex<double> refl) {
-	complex<double> s11=S[0];
-	complex<double> s12=S[1];
-	complex<double> s21=S[2];
-	complex<double> s22=S[3];
-	return s11 + s12*s21*refl/(1.-s22*refl);
+    complex<double> s11=S[0];
+    complex<double> s12=S[1];
+    complex<double> s21=S[2];
+    complex<double> s22=S[3];
+    return s11 + s12*s21*refl/(1.-s22*refl);
 }
 
 namespace xaxaxa {
@@ -53,23 +53,23 @@ namespace xaxaxa {
 class VNACalibration
 {
 public:
-	// return the name of this calibration type
-	virtual string name() const=0;
-	
-	// return the descriptive name of this calibration type
-	virtual string description() const=0;
-	
-	// get a list of calibration standards required (name/desc pair)
-	virtual vector<array<string, 2> > getRequiredStandards() const=0;
-	
-	// given the measurements for each of the calibration standards, compute the coefficients.
-	// for one port calibration standards (open, short, etc) the calStdModels entry should have
-	// the value at 0,0 (S11)
-	virtual MatrixXcd computeCoefficients(const vector<VNARawValue>& measurements,
-										  const vector<VNACalibratedValue>& calStdModels) const=0;
-	
-	// given cal coefficients and a raw value, compute S parameters
-	virtual VNACalibratedValue computeValue(MatrixXcd coeffs, VNARawValue val) const=0;
+    // return the name of this calibration type
+    virtual string name() const=0;
+    
+    // return the descriptive name of this calibration type
+    virtual string description() const=0;
+    
+    // get a list of calibration standards required (name/desc pair)
+    virtual vector<array<string, 2> > getRequiredStandards() const=0;
+    
+    // given the measurements for each of the calibration standards, compute the coefficients.
+    // for one port calibration standards (open, short, etc) the calStdModels entry should have
+    // the value at 0,0 (S11)
+    virtual MatrixXcd computeCoefficients(const vector<VNARawValue>& measurements,
+                                          const vector<VNACalibratedValue>& calStdModels) const=0;
+    
+    // given cal coefficients and a raw value, compute S parameters
+    virtual VNACalibratedValue computeValue(MatrixXcd coeffs, VNARawValue val) const=0;
 };
 
 // system global list of calibration types (auto-populated on library init)
@@ -81,43 +81,43 @@ extern map<string, VNACalibratedValue> idealCalStds;
 
 class CalibrationEngine {
 public:
-	CalibrationEngine(int nPorts);
-	
-	// returns how many equations have been added so far
-	int nEquations();
+    CalibrationEngine(int nPorts);
+    
+    // returns how many equations have been added so far
+    int nEquations();
 
     // returns how many error coefficients there are
     int nCoeffs();
 
-	// returns how many equations are required for calibration
-	int nEquationsRequired();
-	
-	
-	// clear all added equations
-	void clearEquations();
-	
-	// add equations for when a fully known cal standard has been measured
-	void addFullEquation(const MatrixXcd& actualSParams, const MatrixXcd& measuredSParams);
-	
-	// similar to addFullEquation, but individual values in actualSParams can be unknown;
-	// the map is a matrix with same size as actualSParams, each entry is a 1 if the corresponding
-	// entry in actualSParams is known, 0 otherwise.
-	void addEquation(const MatrixXcd& actualSParams, const MatrixXcd& measuredSParams, const MatrixXi& map);
+    // returns how many equations are required for calibration
+    int nEquationsRequired();
+    
+    
+    // clear all added equations
+    void clearEquations();
+    
+    // add equations for when a fully known cal standard has been measured
+    void addFullEquation(const MatrixXcd& actualSParams, const MatrixXcd& measuredSParams);
+    
+    // similar to addFullEquation, but individual values in actualSParams can be unknown;
+    // the map is a matrix with same size as actualSParams, each entry is a 1 if the corresponding
+    // entry in actualSParams is known, 0 otherwise.
+    void addEquation(const MatrixXcd& actualSParams, const MatrixXcd& measuredSParams, const MatrixXi& map);
 
     // adds one equation that fixes a error term to 1; this is currently the vna to dut port 1 transmission factor
     void addNormalizingEquation();
-	
-	
-	// compute calibration coefficients given equations added
-	MatrixXcd computeCoefficients();
-	
-	// given coefficients and measured S parameters, compute actual S parameters
-	static MatrixXcd computeSParams(const MatrixXcd& coeffs, const MatrixXcd& measuredSParams);
+    
+    
+    // compute calibration coefficients given equations added
+    MatrixXcd computeCoefficients();
+    
+    // given coefficients and measured S parameters, compute actual S parameters
+    static MatrixXcd computeSParams(const MatrixXcd& coeffs, const MatrixXcd& measuredSParams);
 
 
     // private:
-	int _nPorts, _nEquations;
-	MatrixXcd _equations;
+    int _nPorts, _nEquations;
+    MatrixXcd _equations;
     VectorXcd _rhs;
 };
 
