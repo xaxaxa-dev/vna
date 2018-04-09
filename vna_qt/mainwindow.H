@@ -9,6 +9,7 @@
 #include <string>
 #include <xavna/common.H>
 #include "calkitsettings.H"
+#include "networkview.H"
 namespace Ui {
 class MainWindow;
 }
@@ -34,33 +35,6 @@ using namespace QtCharts;
 using namespace xaxaxa;
 using namespace std;
 
-struct SParamViewSource {
-    int row,col;    // which S parameter are we viewing
-    enum Types {
-        UNDEFINED=0,
-        TYPE_MAG=1,     // view must be QLineSeries
-        TYPE_PHASE,     // view must be QLineSeries
-        TYPE_GRPDELAY,  // view must be QLineSeries
-        TYPE_COMPLEX,    // view must be PolarView
-        _LAST
-    } type;
-};
-
-// a UI view of one S parameter vs frequency
-struct SParamView {
-    SParamViewSource src;
-    QObject* view;      // either PolarView or QLineSeries depending on src.type
-    QValueAxis* yAxis;  // NULL if view is not QLineSeries
-
-    // these are not applicable for PolarView
-    vector<QObject*> markerViews; // a QScatterSeries for each marker if view is a QLineSeries
-    function<void(SParamView&)> addMarker;   // this function must add a new object to markerViews
-};
-struct Marker {
-    int freqIndex;
-    MarkerSlider* ms;
-    bool enabled;
-};
 
 struct CalibrationInfo {
     int nPoints;
@@ -73,6 +47,9 @@ class MainWindow : public QMainWindow
 {
     Q_OBJECT
 
+private:
+    Ui::MainWindow *ui;
+
 public:
     const char* calButtonDoneStyle = "background-color: #9999ff";
 
@@ -80,22 +57,13 @@ public:
     ImpedanceDisplay* impdisp=NULL;
     QTimer* timer=NULL;
     PolarView* polarView=NULL;
+    NetworkView nv;
 
-    // min and max of the y axis of the graph, indexed by SParamViewSource::Types
-    vector<array<double,2> > graphLimits;
     // array of values directly from the vna, updated every time a frequency point arrives
     vector<VNARawValue> rawValues;
-    // same as rawValues, but with calibration applied (if any)
-    vector<VNACalibratedValue> values;
     // time domain values; usually the fourier transform of this->values
     vector<VNACalibratedValue> values_td;
-    // array of UI views of the data; each view has a source (describing what data to display) and a widget
-    // (where to display the data on
-    vector<SParamView> views;
-    // array of axis to update when frequency sweep params are changed
-    vector<QValueAxis*> xAxis;
-    // user-added markers
-    vector<Marker> markers;
+
     // for each reference standard, map from name to the measure button
     map<string, QWidget*> calButtons;
     // for each reference standard, map from name to measured values
@@ -150,10 +118,7 @@ public:
     void updateSweepParams();
     // update the impedance displays
     void updateValueDisplays();
-    void updateMarkerViews(int marker=-1);
-    void updateBottomLabels(int marker=-1);
-    void updateYAxis(int viewIndex=-1);
-    void addMarker(bool removable);
+
     void updateUIState();
     void enableUI(bool enable);
     bool maximizePane(QWidget* w);
@@ -193,9 +158,6 @@ private slots:
     // update a single point on all views in this->views
     void updateViews(int freqIndex);
 
-    // update a single point on a view, or all points on a view (if freqIndex is -1)
-    void updateView(int viewIndex, int freqIndex=-1);
-
     // called when the vna background thread encounters an error
     void handleBackgroundError(QString msg);
 
@@ -218,8 +180,7 @@ private slots:
     void on_actionMock_device_triggered();
     void on_menuDevice_aboutToShow();
 
-private:
-    Ui::MainWindow *ui;
+
 };
 
 #endif // MAINWINDOW_H

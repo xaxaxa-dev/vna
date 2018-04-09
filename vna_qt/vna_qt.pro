@@ -47,7 +47,8 @@ SOURCES +=\
     configureviewdialog.C \
     touchstone.C \
     calkitsettingsdialog.C \
-    calkitsettings.C
+    calkitsettings.C \
+    networkview.C
 
 HEADERS  += \
     polarview.H \
@@ -60,7 +61,8 @@ HEADERS  += \
     configureviewdialog.H \
     touchstone.H \
     calkitsettingsdialog.H \
-    calkitsettings.H
+    calkitsettings.H \
+    networkview.H
 
 FORMS    += mainwindow.ui \
     markerslider.ui \
