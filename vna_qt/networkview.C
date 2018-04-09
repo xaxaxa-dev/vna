@@ -20,13 +20,20 @@ NetworkView::NetworkView() {
     xAxisValueStr = [](double val) {
         return to_string(val);
     };
+    graphLimits = {
+        {-1000,-999},
+        {-80, 30},      //TYPE_MAG=1
+        {-180, 180},    //TYPE_PHASE
+        {0, 50},        //TYPE_GRPDELAY
+        {-1000,-999}    //TYPE_COMPLEX
+    };
 }
 
 void NetworkView::init(QLayout *sliderContainer) {
     this->sliderContainer = sliderContainer;
 }
 
-GraphPanel* NetworkView::createGraphView() {
+GraphPanel* NetworkView::createGraphView(bool freqDomain) {
     vector<string> graphTraces;
     vector<SParamViewSource> graphSources;
     for(int i=SParamViewSource::UNDEFINED+1;i<SParamViewSource::_LAST;i++) {
@@ -40,6 +47,8 @@ GraphPanel* NetworkView::createGraphView() {
         for(int row=0;row<2;row++)
             for(int col=0;col<2;col++) {
                 if(col==1) continue;
+                // group delay only makes sense in frequency domain view
+                if(!freqDomain && i==SParamViewSource::TYPE_GRPDELAY) continue;
                 string desc = name + "(S" + to_string(row+1) + to_string(col+1) + ")";
                 graphTraces.push_back(desc);
                 graphSources.push_back({row, col, SParamViewSource::Types(i)});

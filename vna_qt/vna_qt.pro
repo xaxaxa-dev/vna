@@ -48,7 +48,8 @@ SOURCES +=\
     touchstone.C \
     calkitsettingsdialog.C \
     calkitsettings.C \
-    networkview.C
+    networkview.C \
+    dtfwindow.C
 
 HEADERS  += \
     polarview.H \
@@ -62,7 +63,8 @@ HEADERS  += \
     touchstone.H \
     calkitsettingsdialog.H \
     calkitsettings.H \
-    networkview.H
+    networkview.H \
+    dtfwindow.H
 
 FORMS    += mainwindow.ui \
     markerslider.ui \
@@ -71,12 +73,13 @@ FORMS    += mainwindow.ui \
     graphpanel.ui \
     configureviewdialog.ui \
     calkitsettingsdialog.ui \
-    calkitsettingswidget.ui
+    calkitsettingswidget.ui \
+    dtfwindow.ui
 
 RESOURCES += \
     resources.qrc
 
-unix|win32: LIBS += -L$$PWD/../libxavna/.libs/ -lxavna
+LIBS += -L$$PWD/../libxavna/.libs/ -lxavna -lfftw3
 
 
 win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../libxavna/xavna_mock_ui/release/ -lxavna_mock_ui

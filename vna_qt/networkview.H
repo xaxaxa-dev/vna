@@ -60,7 +60,7 @@ usage:
     2. call init()
     3. (optional) set graphLimits, xAxisValueStr, etc
     4. add views (graphs, polar views, etc)
-    5. call addMarker(false)
+    5. call addMarker(false); note: no new views may be added after a marker is added.
     6. call update*() as needed
 */
 class NetworkView: public QObject
@@ -91,10 +91,10 @@ public:
     double xAxisAt(int i) {
         return i*xAxisStep + xAxisStart;
     }
-    GraphPanel* createGraphView();
+    GraphPanel* createGraphView(bool freqDomain=true);
     void updateXAxis(double start, double step, int cnt);
     // update a single point on all views in this->views
-    void updateViews(int freqIndex);
+    void updateViews(int freqIndex=-1);
     // update a single point on a view, or all points on a view (if freqIndex is -1)
     void updateView(int viewIndex, int freqIndex=-1);
     void updateMarkerViews(int marker=-1);

@@ -54,8 +54,12 @@ MainWindow::MainWindow(QWidget *parent) :
     nv.xAxisValueStr = [](double val) {
         return ssprintf(32, "%.2f MHz", val);
     };
-    connect(&nv, &NetworkView::markerChanged, [this](int marker, int index) {
+    connect(&nv, &NetworkView::markerChanged, [this](int marker, int /*index*/) {
         if(marker == 0) updateValueDisplays();
+    });
+
+    connect(&dtf,&DTFWindow::hidden, [this]() {
+        ui->actionTime_to_fault->setChecked(false);
     });
 
     loadSettings();
@@ -227,6 +231,7 @@ void MainWindow::updateSweepParams() {
     nv.updateYAxis();
     rawValues.resize(vna->nPoints);
     nv.updateXAxis(vna->startFreqHz*freqScale, vna->stepFreqHz*freqScale, vna->nPoints);
+    dtf.updateSweepParams(vna->stepFreqHz, vna->nPoints);
 }
 
 void MainWindow::updateValueDisplays() {
@@ -617,6 +622,11 @@ void MainWindow::updateViews(int freqIndex) {
         nv.values.at(freqIndex) = curCal->computeValue(curCalCoeffs.at(freqIndex), this->rawValues.at(freqIndex));
     else nv.values.at(freqIndex) = (VNACalibratedValue) this->rawValues.at(freqIndex);
     nv.updateViews(freqIndex);
+
+    time_t t = time(nullptr);
+    if(abs(int64_t(t) - int64_t(lastDTFUpdate)) >= 1)
+        dtf.updateValues(nv.values);
+    lastDTFUpdate = t;
 }
 
 void MainWindow::on_actionLoad_triggered() {
@@ -726,4 +736,9 @@ void MainWindow::on_actionMock_device_triggered() {
 
 void MainWindow::on_menuDevice_aboutToShow() {
     populateDevicesMenu();
+}
+
+void MainWindow::on_actionTime_to_fault_toggled(bool arg1) {
+    if(arg1) dtf.show();
+    else dtf.hide();
 }

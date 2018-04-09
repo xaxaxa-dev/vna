@@ -10,6 +10,7 @@
 #include <xavna/common.H>
 #include "calkitsettings.H"
 #include "networkview.H"
+#include "dtfwindow.H"
 namespace Ui {
 class MainWindow;
 }
@@ -58,6 +59,7 @@ public:
     QTimer* timer=NULL;
     PolarView* polarView=NULL;
     NetworkView nv;
+    DTFWindow dtf;
 
     // array of values directly from the vna, updated every time a frequency point arrives
     vector<VNARawValue> rawValues;
@@ -90,6 +92,8 @@ public:
     QWidget* maximizedPane = nullptr;
     QWidget* maximizedPaneParent = nullptr;
     int maximizedPaneIndex = -1;
+
+    time_t lastDTFUpdate=0;
 
     struct {
         bool enabled;
@@ -181,6 +185,7 @@ private slots:
     void on_menuDevice_aboutToShow();
 
 
+    void on_actionTime_to_fault_toggled(bool arg1);
 };
 
 #endif // MAINWINDOW_H
