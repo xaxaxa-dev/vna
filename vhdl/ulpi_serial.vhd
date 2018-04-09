@@ -6,6 +6,7 @@ use work.usb_serial;
 
 -- simple usb-serial device
 entity ulpi_serial is
+	generic(minTxSize: integer := 1);
 	Port (
 		ulpi_data  : inout  std_logic_vector(7 downto 0);
 		ulpi_dir      : in  std_logic;
@@ -52,6 +53,8 @@ architecture a of ulpi_serial is
 	signal usb_suspend,usb_online,usb_highspeed: std_logic;
 	signal clkcnt : unsigned(24 downto 0);
 	signal usb_txroom: std_logic_vector(TXBUFSIZE_BITS-1 downto 0);
+	
+	signal txcork2: std_logic;
 begin
 	adaptor: entity ulpi_port port map(ulpi_data_in,ulpi_data_out,ulpi_dir,
 		ulpi_nxt,ulpi_stp,ulpi_reset,ulpi_clk60,
@@ -88,7 +91,7 @@ begin
 		TXDAT           => txdat,
 		TXRDY           => txrdy,
 		TXROOM          => usb_txroom,
-		TXCORK          => txcork,
+		TXCORK          => (txcork or txcork2),
 		PHY_DATAIN      => PHY_DATAIN,
 		PHY_DATAOUT     => PHY_DATAOUT,
 		PHY_TXVALID     => PHY_TXVALID,
@@ -106,6 +109,15 @@ begin
 	suspend <= usb_suspend;
 	online <= usb_online;
 	txroom <= "0"&unsigned(usb_txroom);
+
+g:
+	if minTxSize < 2 generate
+		txcork2 <= '0';
+	end generate;
+g2:
+	if minTxSize >= 2 generate
+		txcork2 <= '0' when unsigned(usb_txroom)<((2**TXBUFSIZE_BITS)-minTxSize) else '1';
+	end generate;
 	
 	clkcnt <= clkcnt + 1 when rising_edge(ulpi_clk60);
 	-- Show USB status on LED
