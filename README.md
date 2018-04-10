@@ -1,15 +1,13 @@
 
 Table of Contents
 =================
-   * [Directory layout](#directory-layout)
-   * [Specifications](#specifications)
-   * [Interfacing](#interfacing)
+   * [vna](#vna)
    * [Building the software](#building-the-software)
    * [Block diagram](#block-diagram)
    * [Screenshots](#screenshots)
    * [Parts selection](#parts-selection)
-   * [Pictures (<del>iteration</del> release 2)](#pictures-iteration-release-2)
-   * [Pictures (<del>iteration</del> release 1)](#pictures-iteration-release-1)
+   * [Pictures](#pictures)
+
 
 # vna
 A simple and cheap vector network analyzer, including support software.
@@ -18,20 +16,23 @@ As seen on kickstarter:
 https://www.kickstarter.com/projects/1759352588/xavna-a-full-featured-low-cost-two-port-vna
 
 __Directory layout__
+
 * Root directory: software; compile and run on any Linux based system
 * pcb: schematics, pcb layouts, and simulation files
 * vhdl: circuitry implemented on the fpga
 
 __Specifications__
+
 * Frequency range: guaranteed **137MHz - 2500MHz**, typical **135MHz - 3500MHz**
 * Measurement signal level (controlled using spi interface): **-20dBm to 10dBm, with 1dB increments**
 
 __Interfacing__
+
 The main board connects to a PC through usb and communicates via a virtual serial port device; the PC software sets the frequency and other parameters by sending two-byte register write commands, and the device sends averaged vector values representing magnitude and phase of measured wave.
 
 # Building the software
 
-___Building on linux___
+__Building on linux__
 
 Build libxavna (required for QT GUI):
 ```
@@ -54,7 +55,7 @@ make
 ../run
 ```
 
-___Building on mac os___
+__Building on mac os__
 ```
 brew install automake libtool make eigen fftw
 cd /PATH/TO/vna
@@ -62,7 +63,7 @@ cd /PATH/TO/vna
 # result is in ./vna_qt/vna_qt.app
 ```
 
-___Cross-compile for windows (from linux)___
+__Cross-compile for windows (from linux)__
 
 Download and build MXE:
 ```
@@ -130,14 +131,3 @@ export PATH="/PATH/TO/MXE/usr/bin:$PATH"
 ![calibration standards](pictures/calibration_standards.jpg)
 
 
-##### Complete assembly
-![vna assembly](pictures/all.jpg)
-
-##### Main board
-![main board](pictures/main_top.png)
-
-##### Signal generator
-![signal generator board](pictures/tx_top.png)
-
-##### Directional coupler
-![directional coupler board](pictures/coupler_top.png)
