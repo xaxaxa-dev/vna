@@ -1,12 +1,5 @@
 
-Table of Contents
-=================
-   * [vna](#vna)
-   * [Building the software](#building-the-software)
-   * [Block diagram](#block-diagram)
-   * [Screenshots](#screenshots)
-   * [Parts selection](#parts-selection)
-   * [Pictures](#pictures)
+
 
 
 # vna
@@ -29,6 +22,14 @@ __Specifications__
 __Interfacing__
 
 The main board connects to a PC through usb and communicates via a virtual serial port device; the PC software sets the frequency and other parameters by sending two-byte register write commands, and the device sends averaged vector values representing magnitude and phase of measured wave.
+
+Table of Contents
+=================
+   * [Building the software](#building-the-software)
+   * [Block diagram](#block-diagram)
+   * [Screenshots](#screenshots)
+   * [Parts selection](#parts-selection)
+   * [Pictures](#pictures)
 
 # Building the software
 
