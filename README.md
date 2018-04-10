@@ -1,8 +1,3 @@
-# vna
-A simple and cheap vector network analyzer, including support software.
-
-As seen on kickstarter:
-https://www.kickstarter.com/projects/1759352588/xavna-a-full-featured-low-cost-two-port-vna
 
 Table of Contents
 =================
@@ -16,16 +11,22 @@ Table of Contents
    * [Pictures (<del>iteration</del> release 2)](#pictures-iteration-release-2)
    * [Pictures (<del>iteration</del> release 1)](#pictures-iteration-release-1)
 
-# Directory layout
+# vna
+A simple and cheap vector network analyzer, including support software.
+
+As seen on kickstarter:
+https://www.kickstarter.com/projects/1759352588/xavna-a-full-featured-low-cost-two-port-vna
+
+__Directory layout__
 * Root directory: software; compile and run on any Linux based system
 * pcb: schematics, pcb layouts, and simulation files
 * vhdl: circuitry implemented on the fpga
 
-# Specifications
+__Specifications__
 * Frequency range: guaranteed **137MHz - 2500MHz**, typical **135MHz - 3500MHz**
 * Measurement signal level (controlled using spi interface): **-20dBm to 10dBm, with 1dB increments**
 
-# Interfacing
+__Interfacing__
 The main board connects to a PC through usb and communicates via a virtual serial port device; the PC software sets the frequency and other parameters by sending two-byte register write commands, and the device sends averaged vector values representing magnitude and phase of measured wave.
 
 # Building the software
@@ -96,11 +97,6 @@ export PATH="/PATH/TO/MXE/usr/bin:$PATH"
 
 
 
-##### Calibration standards
-(Short, Open, Load)
-
-![calibration standards](pictures/calibration_standards.jpg)
-
 
 
 # Screenshots
@@ -126,10 +122,13 @@ export PATH="/PATH/TO/MXE/usr/bin:$PATH"
 * rf switches: BGS14GA14
 * programmable attenuator: PE4312
 
-# Pictures (~~iteration~~ release 2)
+# Pictures
+##### Main board (release 2)
 ![vna board 2](pictures/main2_top.jpg)
 
-# Pictures (~~iteration~~ release 1)
+##### Calibration standards (Short, Open, Load)
+![calibration standards](pictures/calibration_standards.jpg)
+
 
 ##### Complete assembly
 ![vna assembly](pictures/all.jpg)
