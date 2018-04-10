@@ -79,8 +79,7 @@ FORMS    += mainwindow.ui \
 RESOURCES += \
     resources.qrc
 
-LIBS += -L$$PWD/../libxavna/.libs/ -lxavna -lfftw3
-
+LIBS += -L$$PWD/../libxavna/.libs/ -L/usr/local/lib/ -lxavna -lfftw3
 
 win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../libxavna/xavna_mock_ui/release/ -lxavna_mock_ui
 else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../libxavna/xavna_mock_ui/debug/ -lxavna_mock_ui

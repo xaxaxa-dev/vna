@@ -2,6 +2,7 @@
 #define NETWORKVIEW_H
 #include <QLayout>
 #include <functional>
+#include <array>
 #include <xavna/common.H>
 
 namespace QtCharts {

@@ -5,6 +5,7 @@
 #include <assert.h>
 #include <unistd.h>
 #include <string.h>
+#include <errno.h>
 #include <complex>
 #include <tuple>
 #include <map>
