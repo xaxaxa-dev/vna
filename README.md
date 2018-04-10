@@ -20,8 +20,9 @@ The main board connects to a PC through usb and communicates via a virtual seria
 
 ___Building on linux___
 
-Build & install libxavna (required for QT GUI):
-```sudo apt-get install automake libtool make g++ libeigen3-dev libfftw3-dev
+Build libxavna (required for QT GUI):
+```
+sudo apt-get install automake libtool make g++ libeigen3-dev libfftw3-dev
 autoreconf --install
 ./configure
 make
@@ -32,40 +33,39 @@ make
 popd
 ```
 
-Build QT GUI:
-```cd vna_qt
+Build & run QT GUI:
+```
+cd vna_qt
 /PATH/TO/qmake
 make
-./vna_qt```
+../run
+```
 
 ___Building on mac os___
-```brew install automake libtool make eigen fftw
-autoreconf --install
-./configure
-./deploy_macos
+```
+brew install automake libtool make eigen fftw
+cd /PATH/TO/vna
+./deploy_macos.sh
 # result is in ./vna_qt/vna_qt.app
 ```
 
-Cross-compile for windows (from linux)
-```# download and build MXE
+___Cross-compile for windows (from linux)___
+
+Download and build MXE:
+```
 cd ~/
 git clone https://github.com/mxe/mxe.git
 cd mxe
 export QT_MXE_ARCH=386
 make qt5 qtcharts cc eigen fftw pthreads
+```
+Edit mxe/settings.mk and add i686-w64-mingw32.shared to MXE_TARGETS.
 
-# build
-export PATH="$(pwd)/usr/bin:$PATH"
+Build
+```
 cd /PATH/TO/vna
-autoreconf --install
-./configure --host i686-w64-mingw32.static
-make
-cd libxavna/xavna_mock_ui
-i686-w64-mingw32.static-qmake-qt5
-make
-cd ../../vna_qt
-i686-w64-mingw32.static-qmake-qt5
-make
+export PATH="/PATH/TO/MXE/usr/bin:$PATH"
+./deploy_windows.sh
 ```
 
 # Block diagram
