@@ -11,22 +11,10 @@ Table of Contents
    * [Interfacing](#interfacing)
    * [Building the software](#building-the-software)
    * [Block diagram](#block-diagram)
-       * [Overall architecture](#overall-architecture)
-       * [Receivers &amp; interfacing](#receivers--interfacing)
-       * [Signal generator](#signal-generator)
-       * [FPGA logic](#fpga-logic)
-       * [Calibration standards](#calibration-standards)
    * [Screenshots](#screenshots)
-       * [Open circuited coax stub](#open-circuited-coax-stub)
-       * [Antenna](#antenna)
-       * [Time to fault (measuring coax cable)](#time-to-fault-measuring-coax-cable)
    * [Parts selection](#parts-selection)
    * [Pictures (<del>iteration</del> release 2)](#pictures-iteration-release-2)
    * [Pictures (<del>iteration</del> release 1)](#pictures-iteration-release-1)
-       * [Complete assembly](#complete-assembly)
-       * [Main board](#main-board)
-       * [Signal generator](#signal-generator-1)
-       * [Directional coupler](#directional-coupler)
 
 # Directory layout
 * Root directory: software; compile and run on any Linux based system
