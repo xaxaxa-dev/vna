@@ -34,7 +34,7 @@ Table of Contents
 __Building on linux__
 
 Build libxavna (required for QT GUI):
-```
+```bash
 sudo apt-get install automake libtool make g++ libeigen3-dev libfftw3-dev
 cd /PATH/TO/vna
 autoreconf --install
@@ -46,16 +46,17 @@ make
 ```
 
 Build & run QT GUI:
-```
+```bash
 cd /PATH/TO/vna
 cd vna_qt
 /PATH/TO/qmake
 make
+export QT=/PATH/TO/QT # e.g. ~/qt/5.10.1/gcc_64
 ../run
 ```
 
 __Building on mac os__
-```
+```bash
 brew install automake libtool make eigen fftw
 cd /PATH/TO/vna
 ./deploy_macos.sh
@@ -65,7 +66,7 @@ cd /PATH/TO/vna
 __Cross-compile for windows (from linux)__
 
 Download and build MXE:
-```
+```bash
 cd ~/
 git clone https://github.com/mxe/mxe.git
 cd mxe
@@ -75,7 +76,7 @@ make qt5 qtcharts cc eigen fftw pthreads
 Edit mxe/settings.mk and add i686-w64-mingw32.shared to MXE_TARGETS.
 
 Build
-```
+```bash
 cd /PATH/TO/vna
 export PATH="/PATH/TO/MXE/usr/bin:$PATH"
 ./deploy_windows.sh
