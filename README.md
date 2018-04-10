@@ -1,7 +1,3 @@
-
-
-
-
 # vna
 A simple and cheap vector network analyzer, including support software.
 
@@ -10,7 +6,7 @@ https://www.kickstarter.com/projects/1759352588/xavna-a-full-featured-low-cost-t
 
 __Directory layout__
 
-* libxavna: C & C++ library for accessing the hardware
+* libxavna: C & C++ library for accessing the hardware, see README.md in subdirectory for more info
 * vna_qt: QT GUI
 * pcb: schematics, pcb layouts, and simulation files
 * vhdl: circuitry implemented on the fpga
@@ -18,7 +14,7 @@ __Directory layout__
 __Specifications__
 
 * Frequency range: guaranteed **137MHz - 2500MHz**, typical **135MHz - 3500MHz**
-* Measurement signal level (controlled using spi interface): **-20dBm to 10dBm, with 1dB increments**
+* Output signal level (configurable in software): **-20dBm to 10dBm, with 1dB increments**
 
 __Interfacing__
 
@@ -28,9 +24,10 @@ Table of Contents
 =================
    * [Building the software](#building-the-software)
    * [Pictures](#pictures)
-   * [Block diagram](#block-diagram)
    * [Screenshots](#screenshots)
+   * [Block diagram](#block-diagram)
    * [Parts selection](#parts-selection)
+
 
 # Building the software
 
@@ -92,34 +89,36 @@ export PATH="/PATH/TO/MXE/usr/bin:$PATH"
 ##### Calibration standards (Short, Open, Load)
 <img src="pictures/calibration_standards.jpg" width="500">
 
-# Block diagram
-
-##### Overall architecture
-![block diagram](pictures/overall_diagram.png)
-
-##### Receivers & interfacing
-![block diagram](pictures/vna_main.png)
-
-##### Signal generator
-![block diagram](pictures/vna_tx.png)
-
-##### FPGA logic
-![block diagram](pictures/fpga_logic.png)
-
 
 # Screenshots
 
 ##### Open circuited coax stub
 
-![screenshot](pictures/screenshot_new_coax.png)
+<img src="pictures/screenshot_new_coax.png" width="500">
 
 ##### Antenna
 
-![screenshot](pictures/screenshot_new_antenna.png)
+<img src="pictures/screenshot_new_antenna.png" width="500">
 
 ##### Time to fault (measuring coax cable)
 
-![screenshot](pictures/screenshot_new_ttf.png)
+<img src="pictures/screenshot_new_ttf.png" width="500">
+
+# Block diagram
+
+##### Overall architecture
+<img src="pictures/overall_diagram.png" width="600">
+
+##### Receivers & interfacing
+<img src="pictures/vna_main.png" width="600">
+
+##### Signal generator
+<img src="pictures/vna_tx.png" width="600">
+
+##### FPGA logic
+<img src="pictures/fpga_logic.png" width="600">
+
+
 
 
 # Parts selection
