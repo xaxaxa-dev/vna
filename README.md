@@ -23,18 +23,18 @@ ___Building on linux___
 Build libxavna (required for QT GUI):
 ```
 sudo apt-get install automake libtool make g++ libeigen3-dev libfftw3-dev
+cd /PATH/TO/vna
 autoreconf --install
 ./configure
 make
-sudo make install
-pushd libxavna/xavna_mock_ui/
+cd libxavna/xavna_mock_ui/
 /PATH/TO/qmake
 make
-popd
 ```
 
 Build & run QT GUI:
 ```
+cd /PATH/TO/vna
 cd vna_qt
 /PATH/TO/qmake
 make
