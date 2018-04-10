@@ -93,19 +93,17 @@ export PATH="/PATH/TO/MXE/usr/bin:$PATH"
 
 # Screenshots
 
-##### Open circuited stub
+##### Open circuited coax stub
 
-![screenshot](pictures/screenshot_open_stub.png)
-
-
-##### Short circuited stub
-
-![screenshot](pictures/screenshot_shorted_stub.png)
-
+![screenshot](pictures/screenshot_new_coax.png)
 
 ##### Antenna
 
-![screenshot](pictures/screenshot_antenna.png)
+![screenshot](pictures/screenshot_new_antenna.png)
+
+##### Time to fault (measuring coax cable)
+
+![screenshot](pictures/screenshot_new_ttf.png)
 
 
 # Parts selection
