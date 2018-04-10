@@ -5,6 +5,7 @@
 #include "ui_markerslider.h"
 #include "graphpanel.H"
 #include <xavna/common.H>
+#include <xavna/workarounds.H>
 #include <QLineSeries>
 #include <QScatterSeries>
 #include <QValueAxis>

@@ -2,6 +2,7 @@
 #include "frequencydialog.H"
 #include "ui_frequencydialog.h"
 #include <xavna/xavna_cpp.H>
+#include <xavna/workarounds.H>
 
 using namespace xaxaxa;
 FrequencyDialog::FrequencyDialog(QWidget *parent) :
@@ -41,7 +42,7 @@ void FrequencyDialog::updateLabels() {
     double endFreq = atof(ui->t_start->text().toUtf8().data())
             + (atoi(ui->t_points->text().toUtf8().data())
                * atof(ui->t_step->text().toUtf8().data()));
-    if(!isnan(endFreq))
+    if(!::isnan(endFreq))
         ui->l_end->setText(qs(ssprintf(32, "%.2f", endFreq)));
 }
 

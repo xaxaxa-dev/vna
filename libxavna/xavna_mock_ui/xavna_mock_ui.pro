@@ -7,9 +7,9 @@
 QT       += widgets
 CONFIG += shared
 
-QMAKE_CXXFLAGS += -Wextra --std=c++11 -I/usr/local/include
+QMAKE_CXXFLAGS += -Wextra --std=c++11 -I/usr/local/include -I../../include
 win32: QMAKE_CXXFLAGS += -DEIGEN_DONT_VECTORIZE -DEIGEN_DISABLE_UNALIGNED_ARRAY_ASSERT
-
+android: QMAKE_CXXFLAGS += -DANDROID_WORKAROUNDS
 
 TARGET = xavna_mock_ui
 TEMPLATE = lib
@@ -44,5 +44,5 @@ unix {
 FORMS += \
     xavna_mock_ui_dialog.ui
 
-LIBS += -L$$PWD/../.libs/ -lxavna -lpthread
-
+LIBS += -L$$PWD/../.libs/ -lxavna
+!android: LIBS += -lpthread

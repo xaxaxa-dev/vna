@@ -1,7 +1,8 @@
 #include "include/xavna_cpp.H"
 #include "include/xavna.h"
 #include "include/platform_abstraction.H"
-
+#include "include/workarounds.H"
+#include <pthread.h>
 #include <array>
 
 using namespace std;

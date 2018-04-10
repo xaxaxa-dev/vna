@@ -20,6 +20,7 @@ CONFIG += static
 #QMAKE_LFLAGS += -L../lib -lxavna
 QMAKE_CXXFLAGS += -Wextra --std=c++11
 win32: QMAKE_CXXFLAGS += -DEIGEN_DONT_VECTORIZE -DEIGEN_DISABLE_UNALIGNED_ARRAY_ASSERT
+android: QMAKE_CXXFLAGS += -I../android_include -DANDROID_WORKAROUNDS
 
 TARGET = vna_qt
 TEMPLATE = app
@@ -80,6 +81,7 @@ RESOURCES += \
     resources.qrc
 
 LIBS += -L$$PWD/../libxavna/.libs/ -L/usr/local/lib/ -lxavna -lfftw3
+android: LIBS += -L$$PWD/../lib
 
 win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../libxavna/xavna_mock_ui/release/ -lxavna_mock_ui
 else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../libxavna/xavna_mock_ui/debug/ -lxavna_mock_ui
@@ -90,3 +92,9 @@ DEPENDPATH += $$PWD/../include
 
 #INCLUDEPATH += ../libxavna/xavna_mock_ui
 #PRE_TARGETDEPS += ../libxavna/xavna_mock_ui/libxavna_mock_ui.so
+
+contains(ANDROID_TARGET_ARCH,armeabi-v7a) {
+    ANDROID_EXTRA_LIBS = \
+        /persist/vna/vna_qt/../libxavna/.libs/libxavna.so \
+        $$PWD/../libxavna/xavna_mock_ui/libxavna_mock_ui.so
+}

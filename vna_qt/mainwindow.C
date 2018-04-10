@@ -16,7 +16,9 @@
 #include <xavna/calibration.H>
 #include <xavna/xavna_cpp.H>
 #include <xavna/xavna_generic.H>
+#include <xavna/workarounds.H>
 #include <iostream>
+#include <stdexcept>
 
 #include <QString>
 #include <QInputDialog>
@@ -183,13 +185,19 @@ void MainWindow::populateDevicesMenu() {
         if(remove) ui->menuDevice->removeAction(act);
         if(act == ui->actionSelect_device) remove = true;
     }
-    vector<string> devices = vna->findDevices();
-    for(string dev:devices) {
-        QAction* action = new QAction(qs("   " + dev));
-        connect(action, &QAction::triggered, [this,dev](){
-            this->openDevice(dev);
-        });
-        ui->menuDevice->insertAction(ui->actionRefresh, action);
+
+    vector<string> devices;
+    try {
+        devices = vna->findDevices();
+        for(string dev:devices) {
+            QAction* action = new QAction(qs("   " + dev));
+            connect(action, &QAction::triggered, [this,dev](){
+                this->openDevice(dev);
+            });
+            ui->menuDevice->insertAction(ui->actionRefresh, action);
+        }
+    } catch(exception& ex) {
+        cerr << ex.what() << endl;
     }
     if(devices.empty()) {
         QAction* action = new QAction("   No devices found; check dmesg or device manager");

@@ -17,9 +17,13 @@ case "${host_os}" in
     cygwin*|mingw*)
         is_windows=yes
         ;;
+    linux-androideabi)
+        is_android=yes
+        ;;
 esac
 
 AM_CONDITIONAL([WINDOWS], [test "$is_windows" = "yes"])
+AM_CONDITIONAL([ANDROID], [test "$is_android" = "yes"])
 
 AC_CHECK_HEADER(eigen3/Eigen/Dense)
 if test "$ac_cv_header_eigen3_Eigen_Dense" == no

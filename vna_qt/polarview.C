@@ -55,7 +55,7 @@ void PolarView::draw_chart(QPainter &painter) {
     QPointF center(this->width()/2,this->height()/2);
     double r=radius();
     for(int i=1;i<(int)points.size();i++) {
-        if(isnan(points[i-1].real()) || isnan(points[i].real())) continue;
+        if(::isnan(points[i-1].real()) || ::isnan(points[i].real())) continue;
         painter.drawLine(val_to_point(center,r,points[i-1]),
                          val_to_point(center,r,points[i]));
     }

@@ -1,4 +1,5 @@
 #include "include/calibration.H"
+#include "include/workarounds.H"
 
 typedef Matrix<complex<double>,5,1> Vector5cd;
 typedef Matrix<complex<double>,6,1> Vector6cd;
