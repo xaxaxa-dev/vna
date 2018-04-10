@@ -10,7 +10,8 @@ https://www.kickstarter.com/projects/1759352588/xavna-a-full-featured-low-cost-t
 
 __Directory layout__
 
-* Root directory: software; compile and run on any Linux based system
+* libxavna: C & C++ library for accessing the hardware
+* vna_qt: QT GUI
 * pcb: schematics, pcb layouts, and simulation files
 * vhdl: circuitry implemented on the fpga
 
@@ -21,15 +22,15 @@ __Specifications__
 
 __Interfacing__
 
-The main board connects to a PC through usb and communicates via a virtual serial port device; the PC software sets the frequency and other parameters by sending two-byte register write commands, and the device sends averaged vector values representing magnitude and phase of measured wave.
+* The main board connects to a PC through usb and communicates via a virtual serial port device; the PC software sets the frequency and other parameters by sending two-byte register write commands, and the device sends averaged vector values representing magnitude and phase of measured waves.
 
 Table of Contents
 =================
    * [Building the software](#building-the-software)
+   * [Pictures](#pictures)
    * [Block diagram](#block-diagram)
    * [Screenshots](#screenshots)
    * [Parts selection](#parts-selection)
-   * [Pictures](#pictures)
 
 # Building the software
 
@@ -83,6 +84,14 @@ export PATH="/PATH/TO/MXE/usr/bin:$PATH"
 ./deploy_windows.sh
 ```
 
+
+# Pictures
+##### Main board (release 2)
+<img src="pictures/main2_top.jpg" width="500">
+
+##### Calibration standards (Short, Open, Load)
+<img src="pictures/calibration_standards.jpg" width="500">
+
 # Block diagram
 
 ##### Overall architecture
@@ -96,9 +105,6 @@ export PATH="/PATH/TO/MXE/usr/bin:$PATH"
 
 ##### FPGA logic
 ![block diagram](pictures/fpga_logic.png)
-
-
-
 
 
 # Screenshots
@@ -124,11 +130,5 @@ export PATH="/PATH/TO/MXE/usr/bin:$PATH"
 * rf switches: BGS14GA14
 * programmable attenuator: PE4312
 
-# Pictures
-##### Main board (release 2)
-![vna board 2](pictures/main2_top.jpg)
-
-##### Calibration standards (Short, Open, Load)
-![calibration standards](pictures/calibration_standards.jpg)
 
 
