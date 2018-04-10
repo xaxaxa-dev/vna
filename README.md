@@ -4,6 +4,30 @@ A simple and cheap vector network analyzer, including support software.
 As seen on kickstarter:
 https://www.kickstarter.com/projects/1759352588/xavna-a-full-featured-low-cost-two-port-vna
 
+Table of Contents
+=================
+   * [Directory layout](#directory-layout)
+   * [Specifications](#specifications)
+   * [Interfacing](#interfacing)
+   * [Building the software](#building-the-software)
+   * [Block diagram](#block-diagram)
+               * [Overall architecture](#overall-architecture)
+               * [Receivers &amp; interfacing](#receivers--interfacing)
+               * [Signal generator](#signal-generator)
+               * [FPGA logic](#fpga-logic)
+               * [Calibration standards](#calibration-standards)
+   * [Screenshots](#screenshots)
+               * [Open circuited coax stub](#open-circuited-coax-stub)
+               * [Antenna](#antenna)
+               * [Time to fault (measuring coax cable)](#time-to-fault-measuring-coax-cable)
+   * [Parts selection](#parts-selection)
+   * [Pictures (<del>iteration</del> release 2)](#pictures-iteration-release-2)
+   * [Pictures (<del>iteration</del> release 1)](#pictures-iteration-release-1)
+               * [Complete assembly](#complete-assembly)
+               * [Main board](#main-board)
+               * [Signal generator](#signal-generator-1)
+               * [Directional coupler](#directional-coupler)
+
 # Directory layout
 * Root directory: software; compile and run on any Linux based system
 * pcb: schematics, pcb layouts, and simulation files
