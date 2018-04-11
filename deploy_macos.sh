@@ -1,8 +1,12 @@
 #!/bin/bash
-if [ "$QT" == "" ]; then
-    QT=~/Qt/5.10.1/clang_64/bin
+
+cd "$(dirname $0)"
+. env.cfg
+if [ ! -e "$QT" ]; then
+    echo "please edit env.cfg and set \$QT"
+    exit 1
 fi
-QMAKE="$QT/qmake"
+QMAKE="$QT/bin/qmake"
 
 autoreconf --install
 ./configure

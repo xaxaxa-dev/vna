@@ -1,6 +1,16 @@
 #!/bin/bash
-if [ "$QT" == "" ]; then
-    QT=/persist/qt/5.10.1/gcc_64
+
+# please edit env.cfg and set the correct paths before running
+
+cd "$(dirname $0)"
+. env.cfg
+if [ ! -e "$QT" ]; then
+    echo "please edit env.cfg and set \$QT"
+    exit 1
+fi
+if [ ! -e "$LINUXDEPLOYQT" ]; then
+    echo "please edit env.cfg and set \$LINUXDEPLOYQT"
+    exit 1
 fi
 QMAKE="$QT/bin/qmake"
 
@@ -19,5 +29,7 @@ make -j8
 popd
 
 export LD_LIBRARY_PATH="$(pwd)/libxavna/.libs:$(pwd)/libxavna/xavna_mock_ui:$QT/lib"
-/persist/linuxdeployqt-continuous-x86_64.AppImage vna_qt/vna_qt -qmake="$QMAKE" -appimage
+mkdir -p scratch
+cp -a vna_qt/vna_qt scratch/
+"$LINUXDEPLOYQT" scratch/vna_qt -qmake="$QMAKE" -appimage
 
