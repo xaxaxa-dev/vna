@@ -241,14 +241,14 @@ void NetworkView::updateBottomLabels(int marker) {
             if(j>=lineViewCount) marker.ms->setLabelText(j, "");
             else {
                 auto* series = dynamic_cast<QLineSeries*>(lineViews[j]->view);
-                const char* unit = "";
+                const char* fmt = "";
                 switch(lineViews[j]->src.type) {
-                case SParamViewSource::TYPE_MAG: unit = "dB"; break;
-                case SParamViewSource::TYPE_PHASE: unit = "°"; break;
-                case SParamViewSource::TYPE_GRPDELAY: unit = "ns"; break;
-                default: unit = "";
+                case SParamViewSource::TYPE_MAG: fmt = "%.1lf dB"; break;
+                case SParamViewSource::TYPE_PHASE: fmt = "%.1lf °"; break;
+                case SParamViewSource::TYPE_GRPDELAY: fmt = "%.2lf ns"; break;
+                default: fmt = "%.2lf";
                 }
-                marker.ms->setLabelText(j, ssprintf(32, "%.2f %s", series->at(marker.freqIndex).y(), unit));
+                marker.ms->setLabelText(j, ssprintf(32, fmt, series->at(marker.freqIndex).y()));
             }
         }
     }
