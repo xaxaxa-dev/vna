@@ -9,12 +9,12 @@ QT       += core gui charts
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 
-CONFIG += static
+#CONFIG += static
 #CONFIG -= import_plugins
 
-
-#QTPLUGIN = xcb
-#QTPLUGIN.imageformats = -
+QT += svg
+QTPLUGIN.iconengines += svgicon
+QTPLUGIN.imageformats += svg
 
 #QMAKE_LFLAGS += --static -lexpat -lz -lXext -lXau -lbsd -lXdmcp
 #QMAKE_LFLAGS += -L../lib -lxavna
