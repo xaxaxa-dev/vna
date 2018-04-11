@@ -17,6 +17,8 @@ vhdl/spiflash.*
 /xavna-src/*
 /*.zip
 /*.tar.gz
+libtool
+*.AppImage
 
 */.deps/*
 */.libs/*
