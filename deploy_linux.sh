@@ -29,7 +29,6 @@ make -j8
 popd
 
 export LD_LIBRARY_PATH="$(pwd)/libxavna/.libs:$(pwd)/libxavna/xavna_mock_ui:$QT/lib"
-mkdir -p scratch
-cp -a vna_qt/vna_qt scratch/
-"$LINUXDEPLOYQT" scratch/vna_qt -qmake="$QMAKE" -appimage
+cp -a vna_qt/vna_qt appimage/
+"$LINUXDEPLOYQT" appimage/vna_qt -qmake="$QMAKE" -appimage
 

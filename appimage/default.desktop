@@ -1,0 +1,7 @@
+[Desktop Entry]
+Type=Application
+Name=xaVNA GUI
+Exec=AppRun %F
+Icon=icon
+Comment=Example application using libxavna
+Terminal=false
