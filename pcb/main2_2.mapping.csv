@@ -21,7 +21,7 @@ cmy210	custom_cmy211	*	('CMY210', 'cmy210', 'SOT23-6', value)
 ad8342	*	*	'AD8342ACPZ'	
 nc7s04	SC70_5	*	'NC7S04P5X'	
 pe4312	QFN20_4_EP	*	'PE4312MLBA-Z'	
-si53365	TSSOP16	*	'SI53365-B-GT'	
+si53360	TSSOP16	*	'SI53360-B-GT'	
 tcxo3225	tcxo3225	*	('ASVTX-11-121-19.200MHZ-T', 'tcxo', '3225', value)	
 trf37a75	trf37a75	*	'TRF37A75IDSGR'	
 terminal	custom_shield1	*	'DNI'	
