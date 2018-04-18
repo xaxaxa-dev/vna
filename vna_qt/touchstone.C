@@ -71,13 +71,12 @@ string serializeTouchstone(vector<Matrix2cd> data, double startFreqHz, double st
 }
 
 
-void parseTouchstone(string data, double &startFreqHz, double &stepFreqHz, int& nPorts, vector<Matrix2cd> &results) {
+void parseTouchstone(string data, int& nPorts, map<double, MatrixXcd> &results) {
     istringstream iss(data);
     string line;
 
     double freqMultiplier = 1e9; //GHz by default
     char format = 'd';      // d: db-angle; m: mag-angle; r: real-imag
-    double lastFreq = 0.;
     results.clear();
     while (getline(iss, line)) {
         // if part (or all) of the line is commented out, remove the comment
@@ -127,22 +126,8 @@ void parseTouchstone(string data, double &startFreqHz, double &stepFreqHz, int& 
         if(i < 0) throw logic_error("bad line in S parameter file: " + line);
         string valuesStr = line.substr(i + 1);
 
-        // calculate and verify frequency
+        // calculate frequency
         double freq = atof(line.substr(0,i).c_str()) * freqMultiplier;
-        if(results.size() == 0) {
-            startFreqHz = freq;
-        }
-        lastFreq = freq;
-        /* else if(results.size() == 1) {
-            stepFreqHz = freq - startFreqHz;
-            if(stepFreqHz <= 0)
-                throw logic_error("frequency points in S parameter file must be equally spaced and in increasing order");
-        } else {
-            double correctFreq = startFreqHz + stepFreqHz*results.size();
-            if(abs(freq - correctFreq) > 1000.)
-                throw logic_error("frequency points in S parameter file must be equally spaced and in increasing order; freq should be "
-                                  + to_string(correctFreq) + "; is " + to_string(freq));
-        }*/
 
         // set the function for parsing the S parameter values depending on format
         function<complex<double>(double a, double b)> processValue;
@@ -175,18 +160,15 @@ void parseTouchstone(string data, double &startFreqHz, double &stepFreqHz, int& 
             else if(ret == 8) nPorts = 2;
             else throw logic_error("bad data line in S parameter file: " + line);
         }
+        Matrix2cd tmp;
         if(nPorts == 1) {
             if(ret != 2) throw logic_error("bad data line in S parameter file: " + line);
-            Matrix2cd tmp;
             tmp << processValue(values[0], values[1]), 0., 0., 0.;
-            results.push_back(tmp);
         } else if(nPorts == 2) {
             if(ret != 8) throw logic_error("bad data line in S parameter file: " + line);
-            Matrix2cd tmp;
             tmp << processValue(values[0], values[1]), processValue(values[4], values[5]),
                     processValue(values[2], values[3]), processValue(values[6], values[7]);
-            results.push_back(tmp);
         } else assert(false);
+        results[freq] = tmp;
     }
-    stepFreqHz = (lastFreq-startFreqHz)/(results.size()-1);
 }

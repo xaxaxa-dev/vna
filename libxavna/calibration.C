@@ -1,10 +1,18 @@
 #include "include/calibration.H"
 #include "include/workarounds.H"
+#include <iostream>
+#include <string>
 
+using namespace std;
 typedef Matrix<complex<double>,5,1> Vector5cd;
 typedef Matrix<complex<double>,6,1> Vector6cd;
 
 namespace xaxaxa {
+    
+MatrixXcd scalar(complex<double> value) {
+    return MatrixXcd::Constant(1,1,value);
+}
+
 // T/R SOLT calibration and one port SOL calibration
 class SOLTCalibrationTR: public VNACalibration {
 public:
@@ -27,8 +35,13 @@ public:
     // given the measurements for each of the calibration standards, compute the coefficients
     MatrixXcd computeCoefficients(const vector<VNARawValue>& measurements,
                                   const vector<VNACalibratedValue>& calStdModels) const override {                    
-        // TODO(xaxaxa): actually use calStdModels rather than just assume ideal cal standards
-        auto tmp = SOL_compute_coefficients(measurements.at(0)(0,0), measurements.at(1)(0,0), measurements.at(2)(0,0));
+        CalibrationEngine ce(1);
+        ce.addFullEquation(scalar(calStdModels.at(0)(0,0)), measurements.at(0));
+        ce.addFullEquation(scalar(calStdModels.at(1)(0,0)), measurements.at(1));
+        ce.addFullEquation(scalar(calStdModels.at(2)(0,0)), measurements.at(2));
+        ce.addNormalizingEquation();
+        MatrixXcd tmp = ce.computeCoefficients();
+        
         
         auto x1 = measurements[2](0,0),
             y1 = measurements[2](1,0),
@@ -40,23 +53,27 @@ public:
         complex<double> thru = 1.;
         if(!noThru) thru = measurements.at(3)(1,0);
         
-        Vector6cd ret;
-        ret << tmp[0],tmp[1],tmp[2], cal_thru_leak, cal_thru_leak_r, thru;
-        return ret;
+        tmp.conservativeResize(4, 2);
+        tmp(2,0) = cal_thru_leak;
+        tmp(2,1) = cal_thru_leak_r;
+        tmp(3,0) = thru;
+        tmp(3,1) = 0.;
+        return tmp;
     }
     // given cal coefficients and a raw value, compute S parameters
     VNACalibratedValue computeValue(MatrixXcd coeffs, VNARawValue val) const override {
-        array<complex<double>, 3> tmp {coeffs(0), coeffs(1), coeffs(2)};
-        VNACalibratedValue ret = val;
-        ret(0,0) = SOL_compute_reflection(tmp, val(0,0));
+        VNACalibratedValue ret;
+        ret(0,0) = CalibrationEngine::computeSParams(coeffs.topRows(2), scalar(val(0,0)))(0,0);
         
-        complex<double> cal_thru_leak_r = coeffs(4);
-        complex<double> cal_thru_leak = coeffs(3);
+        complex<double> cal_thru_leak_r = coeffs(2,1);
+        complex<double> cal_thru_leak = coeffs(2,0);
         
         complex<double> thru = val(1,0) - (cal_thru_leak + val(0,0)*cal_thru_leak_r);
-        complex<double> refThru = coeffs(5) - (cal_thru_leak + val(0,0)*cal_thru_leak_r);
+        complex<double> refThru = coeffs(3,0) - (cal_thru_leak + val(0,0)*cal_thru_leak_r);
         
         ret(1,0) = thru/refThru;
+        ret(0,1) = 0.;
+        ret(1,1) = 0.;
         return ret;
     }
 };
@@ -204,15 +221,45 @@ void CalibrationEngine::addFullEquation(const MatrixXcd &actualSParams, const Ma
         }
 }
 
-void CalibrationEngine::addEquation(const MatrixXcd &actualSParams, const MatrixXcd &measuredSParams, const MatrixXi &map) {
+void CalibrationEngine::addOnePortEquation(const MatrixXcd &actualSParams, const MatrixXcd &measuredSParams, int n) {
+    int TSize = _nPorts*_nPorts;
+    const MatrixXcd& S = actualSParams;
+    const MatrixXcd& M = measuredSParams;
+    int col = n;
+    for(int row=0;row<_nPorts;row++) {
+        if(_nEquations >= nCoeffs()) throw logic_error("calibration engine: too many equations; required: " + to_string(nCoeffs()));
+        VectorXcd equation = VectorXcd::Zero(nCoeffs());
 
+        // + T1*S
+        for(int i=0;i<_nPorts;i++) {
+            T1(row, i) = S(i, col);
+        }
+
+        // + T2
+        T2(row, col) = 1.;
+
+        // - M*T3*S
+        for(int i=0;i<_nPorts;i++)
+            for(int j=0;j<_nPorts;j++) {
+                T3(i, j) = -M(row,i)*S(j,col);
+            }
+
+        // - M*T4
+        for(int i=0;i<_nPorts;i++) {
+            T4(i,col) = -M(row,i);
+        }
+
+        _equations.row(_nEquations) = equation;
+        _rhs(_nEquations) = 0.;
+        _nEquations++;
+    }
 }
 
 void CalibrationEngine::addNormalizingEquation() {
     int TSize = _nPorts*_nPorts;
     if(_nEquations >= nCoeffs()) throw logic_error("calibration engine: too many equations; required: " + to_string(nCoeffs()));
     VectorXcd equation = VectorXcd::Zero(nCoeffs());
-    T3(0,0) = 1.;
+    T4(0,0) = 1.;
     _equations.row(_nEquations) = equation;
     _rhs(_nEquations) = 1.;
     _nEquations++;
@@ -224,8 +271,9 @@ void CalibrationEngine::addNormalizingEquation() {
 #undef T4
 
 MatrixXcd CalibrationEngine::computeCoefficients() {
+    //cout << _equations << endl;
     auto tmp = _equations.colPivHouseholderQr();
-    if(tmp.rank() != nCoeffs()) throw runtime_error("matrix rank is not full!");
+    if(tmp.rank() != nCoeffs()) throw runtime_error("matrix rank is not full! should be " + to_string(nCoeffs()) + ", is " + to_string(tmp.rank()));
 
     int TSize = _nPorts*_nPorts;
 

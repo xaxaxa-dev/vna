@@ -385,7 +385,8 @@ void MainWindow::saveFile(QString path, const string &data) {
 void MainWindow::saveCalibration(QString path) {
     CalibrationInfo cal = {vna->nPoints,vna->startFreqHz,vna->stepFreqHz,
                            vna->attenuation1,vna->attenuation2,
-                           curCal->name(),curCalMeasurements};
+                           curCal->name(),curCalMeasurements,
+                           cks};
     saveFile(path, serializeCalibration(cal));
     addRecentFile(path);
 }
@@ -578,14 +579,19 @@ void MainWindow::on_b_apply_clicked() {
         string name = names[i];
         // if the cal standard not set in settings, use ideal parameters
         if(cks.calKitModels.find(name) == cks.calKitModels.end()) {
+            printf("using ideal parameters for %s\n", name.c_str());
             assert(idealCalStds.find(name) != idealCalStds.end());
             auto tmp = idealCalStds[name];
             for(int j=0;j<(int)measurements.size();j++)
                 calStdModels[j][i] = tmp;
         } else {
+            printf("using user parameters for %s\n", name.c_str());
             auto tmp = cks.calKitModels[name];
-            for(int j=0;j<(int)measurements.size();j++)
-                calStdModels[j][i] = tmp.interpolate(vna->freqAt(j));
+            for(int j=0;j<(int)measurements.size();j++) {
+                auto sss = tmp.interpolate(vna->freqAt(j));
+                printf("%lf dB, %lf deg\n", dB(norm(sss(0,0))), arg(sss(0,0))*180/M_PI);
+                calStdModels[j][i] = sss;
+            }
         }
     }
     curCal = cal;

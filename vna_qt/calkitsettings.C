@@ -33,37 +33,33 @@ QDataStream &operator>>(QDataStream &in, string &myObj) {
 }
 
 
-QDataStream &operator<<(QDataStream &out, const Matrix2cd &myObj) {
+QDataStream &operator<<(QDataStream &out, const MatrixXcd &myObj) {
+    out << (int)myObj.rows();
+    out << (int)myObj.cols();
     for(int i=0; i<(myObj.cols()*myObj.rows()); i++)
         out << myObj(i);
     return out;
 }
 
-QDataStream &operator>>(QDataStream &in, Matrix2cd &myObj) {
+QDataStream &operator>>(QDataStream &in, MatrixXcd &myObj) {
+    int rows,cols;
+    in >> rows;
+    in >> cols;
+    if(rows<0 || cols<0 || rows>1024 || cols>1024) {
+        fprintf(stderr, "warning: matrix not deserialized because of invalid size %d x %d\n", rows,cols);
+        return in;
+    }
+    myObj.resize(rows,cols);
     for(int i=0; i<(myObj.cols()*myObj.rows()); i++)
         in >> myObj(i);
     return in;
 }
 
-QDataStream &operator<<(QDataStream &out, const SParamSeries &myObj) {
-    out << myObj.startFreqHz;
-    out << myObj.stepFreqHz;
-    out << (int)myObj.values.size();
-    for(int i=0; i<(int)myObj.values.size(); i++)
-        out << myObj.values.at(i);
-    return out;
-}
+template<class S,class T>
+QDataStream &operator<<(QDataStream &out, const map<S,T> &m);
+template<class S,class T>
+QDataStream &operator>>(QDataStream &in, map<S,T> &m);
 
-QDataStream &operator>>(QDataStream &in, SParamSeries &myObj) {
-    int n=0;
-    in >> myObj.startFreqHz;
-    in >> myObj.stepFreqHz;
-    in >> n;
-    myObj.values.resize(n);
-    for(int i=0; i<n; i++)
-        in >> myObj.values.at(i);
-    return in;
-}
 
 template<class S,class T>
 QDataStream &operator<<(QDataStream &out, const map<S,T> &m) {
@@ -80,6 +76,10 @@ QDataStream &operator>>(QDataStream &in, map<S,T> &m) {
     int sz = 0;
     in >> sz;
     m.clear();
+    if(sz<0 || sz > 1024*1024) {
+        fprintf(stderr, "warning: map not deserialized because of invalid length %d\n", sz);
+        return in;
+    }
     for(int i=0;i<sz;i++) {
         S key;
         in >> key;
@@ -87,6 +87,17 @@ QDataStream &operator>>(QDataStream &in, map<S,T> &m) {
     }
     return in;
 }
+
+QDataStream &operator<<(QDataStream &out, const SParamSeries &myObj) {
+    out << myObj.values;
+    return out;
+}
+
+QDataStream &operator>>(QDataStream &in, SParamSeries &myObj) {
+    in >> myObj.values;
+    return in;
+}
+
 
 QDataStream &operator<<(QDataStream &out, const CalKitSettings &myObj) {
     out << myObj.calKitModels;
@@ -102,3 +113,19 @@ QDataStream &operator>>(QDataStream &in, CalKitSettings &myObj) {
 
 
 
+
+void serialize(ostream &out, const SParamSeries &obj) {
+
+}
+
+void deserialize(istream &in, SParamSeries &obj) {
+
+}
+
+void serialize(ostream &out, const CalKitSettings &obj) {
+
+}
+
+void deserialize(istream &in, CalKitSettings &obj) {
+
+}

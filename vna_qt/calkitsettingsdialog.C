@@ -86,7 +86,7 @@ void CalKitSettingsDialog::fromSettings(const CalKitSettings &settings) {
                     int nPorts;
                     try {
                         QFileInfo fileInfo(fileName);
-                        parseTouchstone(data,series.startFreqHz, series.stepFreqHz,nPorts,series.values);
+                        parseTouchstone(data,nPorts,series.values);
                         info[name].useIdeal = false;
                         info[name].data = series;
                         info[name].ui.l_status->setText(fileInfo.fileName());

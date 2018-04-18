@@ -43,6 +43,7 @@ struct CalibrationInfo {
     int attenuation1,attenuation2;
     string calName;
     map<string, vector<VNARawValue> > measurements;
+    CalKitSettings cks;
 };
 class MainWindow : public QMainWindow
 {
@@ -63,8 +64,6 @@ public:
 
     // array of values directly from the vna, updated every time a frequency point arrives
     vector<VNARawValue> rawValues;
-    // time domain values; usually the fourier transform of this->values
-    vector<VNACalibratedValue> values_td;
 
     // for each reference standard, map from name to the measure button
     map<string, QWidget*> calButtons;
