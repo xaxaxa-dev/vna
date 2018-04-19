@@ -3,7 +3,7 @@
 #define _USE_MATH_DEFINES
 #include <stdio.h>
 #include <stdarg.h>
-#include <math.h>
+#include <cmath>
 #include <string>
 #include <vector>
 #include <sstream>
