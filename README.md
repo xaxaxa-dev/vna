@@ -27,7 +27,6 @@ Table of Contents
    * [Pictures](#pictures)
    * [Screenshots](#screenshots)
    * [Block diagram](#block-diagram)
-   * [Parts selection](#parts-selection)
 
 # Downloads
 For pre-compiled executables go to:
@@ -123,10 +122,7 @@ export PATH="/PATH/TO/MXE/usr/bin:$PATH"
 ##### FPGA logic
 <img src="pictures/fpga_logic.png" width="600">
 
-
-
-
-# Parts selection
+##### Parts selection
 * fpga: XC6SLX9-2TQG144C 
 * adc: AD9200
 * mixer: AD8342
