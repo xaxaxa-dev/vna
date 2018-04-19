@@ -22,12 +22,16 @@ __Interfacing__
 
 Table of Contents
 =================
+   * [Downloads](#downloads)
    * [Building the software](#building-the-software)
    * [Pictures](#pictures)
    * [Screenshots](#screenshots)
    * [Block diagram](#block-diagram)
    * [Parts selection](#parts-selection)
 
+# Downloads
+For pre-compiled executables go to:
+https://github.com/xaxaxa-dev/vna/releases
 
 # Building the software
 
