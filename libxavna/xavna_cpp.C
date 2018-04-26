@@ -86,6 +86,7 @@ namespace xaxaxa {
 							values[0][3]/values[0][0], 0;
 				else throw logic_error("not yet implemented");
                 frequencyCompletedCallback(i, tmp);
+                frequencyCompletedCallback2_(i, values);
                 
 				results[i]=tmp;
 				if(_shouldExit) return NULL;

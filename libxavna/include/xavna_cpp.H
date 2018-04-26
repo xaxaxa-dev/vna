@@ -3,6 +3,7 @@
 #include <pthread.h>
 #include <complex>
 #include <vector>
+#include <array>
 #include <stdexcept>
 #include "common.H"
 
@@ -23,6 +24,7 @@ namespace xaxaxa {
 		
 		// called by background thread when a single frequency measurement is done
         function<void(int freqIndex, VNARawValue val)> frequencyCompletedCallback;
+        
 		
 		// called by background thread when a complete sweep of all frequencies is done
 		function<void(const vector<VNARawValue>& vals)> sweepCompletedCallback;
@@ -64,6 +66,12 @@ namespace xaxaxa {
 			return 10;
 		}
 		
+		
+		// diagnostics
+		
+		// called by background thread after frequencyCompletedCallback(); provides signal values
+        // directly from hardware
+        function<void(int freqIndex, const vector<array<complex<double>, 4> >& values)> frequencyCompletedCallback2_;
 		
 		
 		// internal variables
