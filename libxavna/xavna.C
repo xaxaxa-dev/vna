@@ -21,31 +21,8 @@ using namespace std;
 // named virtual devices
 map<string, xavna_constructor> xavna_virtual_devices;
 xavna_constructor xavna_default_constructor;
-
 extern "C" {
 	int nWait=50;		//number of data points to skip after changing frequency
-	
-	void* xavna_open(const char* dev) {
-		auto it = xavna_virtual_devices.find(dev);
-		if(it != xavna_virtual_devices.end()) return (*it).second(dev);
-		return xavna_default_constructor(dev);
-	}
-
-	int xavna_set_params(void* dev, int freq_khz, int atten1, int atten2) {
-		return ((xavna_generic*)dev)->set_params(freq_khz, atten1, atten2);
-	}
-
-	int xavna_read_values(void* dev, double* out_values, int n_samples) {
-		return ((xavna_generic*)dev)->read_values(out_values, n_samples);
-	}
-	
-	int xavna_read_values_raw(void* dev, double* out_values, int n_samples) {
-		return ((xavna_generic*)dev)->read_values_raw(out_values, n_samples);
-	}
-
-	void xavna_close(void* dev) {
-		delete ((xavna_generic*)dev);
-	}
 }
 
 
@@ -231,4 +208,34 @@ static int __init_xavna_default() {
 
 static int ghsfkghfjkgfs = __init_xavna_default();
 
+
+
+extern "C" {
+	void* xavna_open(const char* dev) {
+		auto it = xavna_virtual_devices.find(dev);
+		if(it != xavna_virtual_devices.end()) return (*it).second(dev);
+		return xavna_default_constructor(dev);
+	}
+
+	int xavna_set_params(void* dev, int freq_khz, int atten1, int atten2) {
+		return ((xavna_generic*)dev)->set_params(freq_khz, atten1, atten2);
+	}
+
+	int xavna_read_values(void* dev, double* out_values, int n_samples) {
+		return ((xavna_generic*)dev)->read_values(out_values, n_samples);
+	}
+	
+	int xavna_read_values_raw(void* dev, double* out_values, int n_samples) {
+		return ((xavna_generic*)dev)->read_values_raw(out_values, n_samples);
+	}
+	
+	int xavna_read_values_raw2(void* dev, double* out_values, int n_samples) {
+		xavna_generic* tmp = (xavna_generic*)dev;
+		return dynamic_cast<xavna_default*>(tmp)->read_values_raw2(out_values, n_samples);
+	}
+
+	void xavna_close(void* dev) {
+		delete ((xavna_generic*)dev);
+	}
+}
 
