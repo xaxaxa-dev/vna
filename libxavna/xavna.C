@@ -214,7 +214,11 @@ extern "C" {
 	void* xavna_open(const char* dev) {
 		auto it = xavna_virtual_devices.find(dev);
 		if(it != xavna_virtual_devices.end()) return (*it).second(dev);
-		return xavna_default_constructor(dev);
+		try {
+			return xavna_default_constructor(dev);
+		} catch(exception& ex) {
+			return NULL;
+		}
 	}
 
 	int xavna_set_params(void* dev, int freq_khz, int atten1, int atten2) {
