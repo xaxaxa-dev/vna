@@ -14,6 +14,7 @@ inline QString qs(const string& s) {
     return QString::fromStdString(s);
 }
 inline double dB(double power) {
+    if(power == 0.) return -300;
     return log10(power)*10;
 }
 // freq is in Hz, Z is in ohms

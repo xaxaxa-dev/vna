@@ -79,7 +79,8 @@ MainWindow::MainWindow(QWidget *parent) :
     ((QBoxLayout*)ui->dock_impedance_contents->layout())->insertWidget(0,impdisp);
 
     connect(timer, &QTimer::timeout, [this](){
-        this->polarView->repaint();
+        if(!ui->actionDisable_polarView_refresh->isChecked())
+            this->polarView->repaint();
         //this->chartView->update();
         nv.updateMarkerViews();
         updateValueDisplays();
@@ -152,13 +153,14 @@ void MainWindow::setupViews() {
     });
     polarView->setSizePolicy(QSizePolicy::Ignored, QSizePolicy::Preferred);
 
-    GraphPanel* gp = nv.createGraphView();
+    GraphPanel* gp = nv.createGraphView(true, false);
     ui->w_graph->layout()->addWidget(gp);
     connect(gp->maximizeButton(), &QPushButton::clicked, [this, gp](){
         if(maximizePane(gp))
             gp->maximizeButton()->setIcon(QIcon(":/icons/unmaximize"));
         else gp->maximizeButton()->setIcon(QIcon(":/icons/maximize"));
     });
+    graphs.push_back(gp);
 }
 
 void MainWindow::setCallbacks() {
@@ -635,6 +637,7 @@ void MainWindow::updateViews(int freqIndex) {
     if(curCal)
         nv.values.at(freqIndex) = curCal->computeValue(curCalCoeffs.at(freqIndex), this->rawValues.at(freqIndex));
     else nv.values.at(freqIndex) = (VNACalibratedValue) this->rawValues.at(freqIndex);
+    if(ui->actionDisable_chart_update->isChecked()) return;
     nv.updateViews(freqIndex);
 
     time_t t = time(nullptr);

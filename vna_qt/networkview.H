@@ -92,7 +92,7 @@ public:
     double xAxisAt(int i) {
         return i*xAxisStep + xAxisStart;
     }
-    GraphPanel* createGraphView(bool freqDomain=true);
+    GraphPanel* createGraphView(bool freqDomain=true, bool tr=true);
     void updateXAxis(double start, double step, int cnt);
     // update a single point on all views in this->views
     void updateViews(int freqIndex=-1);

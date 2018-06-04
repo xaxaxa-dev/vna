@@ -34,7 +34,7 @@ void NetworkView::init(QLayout *sliderContainer) {
     this->sliderContainer = sliderContainer;
 }
 
-GraphPanel* NetworkView::createGraphView(bool freqDomain) {
+GraphPanel* NetworkView::createGraphView(bool freqDomain, bool tr) {
     vector<string> graphTraces;
     vector<SParamViewSource> graphSources;
     for(int i=SParamViewSource::UNDEFINED+1;i<SParamViewSource::_LAST;i++) {
@@ -47,7 +47,7 @@ GraphPanel* NetworkView::createGraphView(bool freqDomain) {
         }
         for(int row=0;row<2;row++)
             for(int col=0;col<2;col++) {
-                if(col==1) continue;
+                if(tr && col==1) continue;
                 // group delay only makes sense in frequency domain view
                 if(!freqDomain && i==SParamViewSource::TYPE_GRPDELAY) continue;
                 string desc = name + "(S" + to_string(row+1) + to_string(col+1) + ")";
@@ -88,7 +88,7 @@ GraphPanel* NetworkView::createGraphView(bool freqDomain) {
         updateYAxis(curViews.at(index));
         updateMarkerViews();
     });
-    gp->comboBox(0)->setCurrentIndex(1);
+    gp->comboBox(0)->setCurrentIndex(2);
     gp->comboBox(1)->setCurrentIndex(0);
 
     return gp;

@@ -18,6 +18,7 @@ class QWidget;
 class QPushButton;
 class PolarView;
 class ImpedanceDisplay;
+class GraphPanel;
 
 namespace QtCharts {
 class QChartView;
@@ -61,6 +62,7 @@ public:
     PolarView* polarView=NULL;
     NetworkView nv;
     DTFWindow dtf;
+    vector<GraphPanel*> graphs;
 
     // array of values directly from the vna, updated every time a frequency point arrives
     vector<VNARawValue> rawValues;

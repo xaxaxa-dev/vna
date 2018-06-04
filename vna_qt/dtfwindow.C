@@ -17,7 +17,7 @@ DTFWindow::DTFWindow(QWidget *parent) :
         return ssprintf(32, "%.3lf ns", val);
     };
 
-    GraphPanel* gp = nv.createGraphView(false);
+    GraphPanel* gp = nv.createGraphView(false, false);
     gp->maximizeButton()->hide();
     ui->w_graph->layout()->addWidget(gp);
 
