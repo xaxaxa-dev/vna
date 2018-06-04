@@ -103,13 +103,15 @@ use work.ejx;
 entity ejxGenerator is
 	port(clk: in std_logic;
 			freq: in unsigned(27 downto 0); -- fraction only; cycles per clk rising edge
-			outp_re,outp_im: out signed(8 downto 0));
+			outp_re,outp_im: out signed(8 downto 0);
+			reset: in std_logic := '0');
 end entity;
 architecture a of ejxGenerator is
-	signal x: unsigned(27 downto 0);
+	signal x,xNext: unsigned(27 downto 0);
 	signal t: unsigned(10 downto 0);
 begin
-	x <= x+freq when rising_edge(clk);
+	xNext <= to_unsigned(0,28) when reset='1' else x+freq;
+	x <= xNext when rising_edge(clk);
 	t <= x(27 downto 17);
 	rom: entity ejx port map(clk,t,outp_re,outp_im);
 end architecture;

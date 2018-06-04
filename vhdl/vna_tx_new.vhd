@@ -21,7 +21,8 @@ use work.vnaTxNew_misc.all;
 
 entity vnaTxNew is
 	generic(adcBits: integer := 10;
-			sgBits: integer := 9
+			sgBits: integer := 9;
+			disableInput0: boolean := false
 			);
 	port(clk: in std_logic;
 		adcData0: in signed(adcBits-1 downto 0);
@@ -67,8 +68,6 @@ architecture a of vnaTxNew is
 	signal txvalPrev: std_logic;
 	signal checksumReg,checksumRegNext: unsigned(7 downto 0);
 begin
-
-    
 	inputs(0) <= adcData0 when rising_edge(clk);
 	inputs(1) <= adcData1 when rising_edge(clk);
 	inputs(2) <= adcData2 when rising_edge(clk);
@@ -87,6 +86,8 @@ g1:	for I in 0 to nInputs-1 generate
 		accum_re(I) <= accum_reNext(I) when rising_edge(clk);
 		accum_im(I) <= accum_imNext(I) when rising_edge(clk);
 	end generate;
+	
+	
 	
 	-- tx shift register
 g2:	for I in 0 to nInputs-1 generate

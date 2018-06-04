@@ -2,15 +2,19 @@ library ieee;
 library work;
 use ieee.numeric_std.all;
 use ieee.std_logic_1164.all;
+USE ieee.math_real.log2;
+USE ieee.math_real.ceil;
 
 entity spiDataTx is
 	generic(words: integer;
-			wordsize: integer);
+			wordsize: integer;
+			addrBits: integer := 3);
 
 	-- data is transmitted MSB first
 	port(datarom: std_logic_vector(words*wordsize-1 downto 0);
 		clk,doSend: in std_logic;
-		scl,le,sdi: out std_logic);
+		scl,le,sdi: out std_logic;
+		startAddr: in unsigned(addrBits-1 downto 0) := to_unsigned(0, addrBits));
 end entity;
 
 architecture a of spiDataTx is
@@ -19,8 +23,7 @@ architecture a of spiDataTx is
 
 	type states is (stop,load,send,done);
 	signal state,stateNext: states;
-	constant addrLen: integer := 4;
-	signal addr,addrNext: unsigned(3 downto 0);
+	signal addr,addrNext: unsigned(addrBits-1 downto 0);
 	signal cnt,cntNext: unsigned(7 downto 0);
 	signal sr,srNext: unsigned(wordsize-1 downto 0);
 	signal data: unsigned(wordsize-1 downto 0);
@@ -28,9 +31,10 @@ architecture a of spiDataTx is
 	
 	signal outClk,outData,outLe,leNext: std_logic;
 begin
+	assert(addrBits=integer(ceil(log2(real(words)))));
 	-- cast datarom to internal type
 g:	for I in 0 to words-1 generate
-		rom(I) <= datarom((I+1)*wordsize-1 downto I*wordsize);
+		rom(I) <= datarom((words-I)*wordsize-1 downto (words-I-1)*wordsize);
 	end generate;
 
 	state <= stateNext when rising_edge(clk);
@@ -47,12 +51,12 @@ g:	for I in 0 to words-1 generate
 						cnt+1 when state=send else
 						to_unsigned(0,8); --when state=done else
 	addrNext <= addr+1 when state=done else
-						to_unsigned(0,addrLen) when state=stop else
+						startAddr when state=stop else
 						addr;
 	srNext <= sr(wordsize-2 downto 0)&"0" when state=send else
 						data;
 
-	data <= unsigned(rom(to_integer(unsigned(words-1+addr))));
+	data <= unsigned(rom(to_integer(unsigned(addr))));
 	
 	le <= leNext when rising_edge(clk);
 	leNext <= '0' when state=send else
@@ -61,5 +65,5 @@ g:	for I in 0 to words-1 generate
 	clken <= clkenNext when rising_edge(clk);
 	clkenNext <= '1' when state=send else '0';
 	scl <= clken and (not clk);
-	sdi <= sr(wordsize-1) when rising_edge(clk);
+	sdi <= sr(wordsize-1) and clkenNext when rising_edge(clk);
 end architecture;

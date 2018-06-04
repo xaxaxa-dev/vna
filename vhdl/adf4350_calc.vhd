@@ -52,7 +52,8 @@ use work.adf4350_calc_misc.all;
 -- modulus must be chosen so that channel spacing is 10kHz;
 -- freq is in steps of 10kHz.
 entity adf4350_calc is
-	generic(modulus: integer := 1920);
+	generic(modulus: integer := 1920;
+			fb_divided: boolean := false);
 	port(clk: in std_logic;
 		freq: in unsigned(19 downto 0);
 		N: out std_logic_vector(15 downto 0);
@@ -65,19 +66,21 @@ architecture a of adf4350_calc is
 	signal N0: unsigned(15 downto 0);
 	signal frac0: unsigned(11 downto 0);
 begin
-	vcoFreq <= freq when freq>220000 else
+	vcoFreq <= freq when freq>220000 or fb_divided else
 				shift_left(freq,1) when freq>110000 else
 				shift_left(freq,2) when freq>55000 else
 				shift_left(freq,3) when freq>27500 else
-				shift_left(freq,4); -- when freq>13750 else
-				--freq(10 downto 0)&"00000";
+				shift_left(freq,4) when freq>13750 else
+				shift_left(freq,5) when freq>6875 else
+				shift_left(freq,6);
 	
 	odiv <= to_unsigned(0,3) when freq>220000 else
 			to_unsigned(1,3) when freq>110000 else
 			to_unsigned(2,3) when freq>55000 else
 			to_unsigned(3,3) when freq>27500 else
-			to_unsigned(4,3); -- when freq>13750 else
-			--to_unsigned(5,3);
+			to_unsigned(4,3) when freq>13750 else
+			to_unsigned(5,3) when freq>6875 else
+			to_unsigned(6,3);
 	vcoFreq1 <= vcoFreq when rising_edge(clk);
 	odiv1 <= odiv when rising_edge(clk);
 	
