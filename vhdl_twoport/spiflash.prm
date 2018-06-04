@@ -1,0 +1,14 @@
+PROMGEN: Xilinx Prom Generator P.20131013
+Copyright (c) 1995-2013 Xilinx, Inc.  All rights reserved.
+
+promgen -spi -p mcs -o spiflash.mcs -s 512 -u 0 top.bit -w 
+
+PROM spiflash.prm map: Thu May 24 17:48:50 2018
+
+Format        Mcs86 (32-bit)
+Size          512K
+PROM start    0000:0000
+PROM end      0007:ffff
+
+        Addr1        Addr2                     Date File(s)
+    0000:0000    0005:34eb     May 24 17:48:39 2018 top.bit
