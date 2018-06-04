@@ -22,7 +22,7 @@ using namespace std;
 map<string, xavna_constructor> xavna_virtual_devices;
 xavna_constructor xavna_default_constructor;
 extern "C" {
-	int nWait=50;		//number of data points to skip after changing frequency
+    int nWait=30;		//number of data points to skip after changing frequency
 }
 
 
@@ -98,14 +98,32 @@ static tuple<complex5,int> readValue3(int ttyFD, int cnt) {
 class xavna_default: public xavna_generic {
 public:
 	int ttyFD;
+	bool _first = true;
+	bool tr = false;
+	bool mirror = false;
+	int _curPort = 0;
 	xavna_default(const char* dev) {
 		ttyFD=xavna_open_serial(dev);
 		if(ttyFD < 0) {
 			throw runtime_error(strerror(errno));
 		}
+		complex5 result;
+		int n;
+		tie(result, n) = readValue3(ttyFD, 10);
+		if(result.val[0] == 0.) {
+			tr = false;
+			fprintf(stderr, "detected full two port vna\n");
+		} else {
+			tr = true;
+			fprintf(stderr, "detected T/R vna\n");
+			fprintf(stderr, "%d %d\n", result.val[0]);
+		}
 	}
-	virtual int set_params(int freq_khz, int atten1, int atten2) {
-		int attenuation=atten1;
+	virtual bool is_tr() {
+		return tr;
+	}
+	virtual int set_params(int freq_khz, int atten, int port) {
+		int attenuation=atten;
 		double freq = double(freq_khz)/1000.;
 		int N = (int)round(freq*100);
 		
@@ -125,12 +143,16 @@ public:
 		
 		if(attenuation > 31) attenuation = 31;
 		
+		if(mirror) _curPort = (port==1?0:1);
+		else _curPort = port;
 		u8 buf[] = {
+			0, 0,
 			1, u8(N>>16),
 			2, u8(N>>8),
 			3, u8(N),
 			5, u8(attenuation*2),
-			6, u8(0b00001100 | txpower),
+			6, u8(0b00000100 | txpower),
+		    7, (_first?0:1) | ((_curPort==1?1:0) << 2),
 			0, 0,
 			4, 1
 		};
@@ -138,6 +160,11 @@ public:
 		
 		xavna_drainfd(ttyFD);
 		readValue3(ttyFD, nWait);
+
+		//if(_first) usleep(1000*10);
+		//_first = false;
+		
+		
 		return 0;
 	}
 
@@ -151,19 +178,73 @@ public:
 		out_values[3] = result.val[4].imag();
 		return n;
 	}
-	
+	static inline void swap(double& a, double& b) {
+		double tmp = b;
+		b = a;
+		a = tmp;
+	}
 	virtual int read_values_raw(double* out_values, int n_samples) {
 		complex5 result;
 		int n;
-		tie(result, n) = readValue3(ttyFD, n_samples);
-		out_values[0] = result.val[0].real();
-		out_values[1] = result.val[0].imag();
-		out_values[2] = result.val[1].real();
-		out_values[3] = result.val[1].imag();
-		out_values[4] = 0.;
-		out_values[5] = 0.;
-		out_values[6] = result.val[2].real();
-		out_values[7] = result.val[2].imag();
+		if(tr) {
+			tie(result, n) = readValue3(ttyFD, n_samples);
+			out_values[0] = result.val[0].real();
+			out_values[1] = result.val[0].imag();
+			out_values[2] = result.val[1].real();
+			out_values[3] = result.val[1].imag();
+			out_values[4] = 0.;
+			out_values[5] = 0.;
+			out_values[6] = result.val[2].real();
+			out_values[7] = result.val[2].imag();
+		} else {
+			u8 reg6 = (_first?0:1) | ((_curPort==1?1:0) << 2);
+			// measure outgoing wave
+			tie(result, n) = readValue3(ttyFD, n_samples);
+			out_values[0] = result.val[1].real();
+			out_values[1] = result.val[1].imag();
+			out_values[6] = result.val[2].real();
+			out_values[7] = result.val[2].imag();
+			
+			{
+				u8 buf[] = {
+					0, 0,
+					7, reg6 | (1<<1),
+					0, 0,
+				};
+				
+				// measure incoming wave
+				if(write(ttyFD,buf,sizeof(buf))!=(int)sizeof(buf)) return -1;
+				readValue3(ttyFD, 20);
+			}
+			
+			tie(result, n) = readValue3(ttyFD, n_samples);
+			out_values[2] = result.val[1].real();
+			out_values[3] = result.val[1].imag();
+			out_values[4] = result.val[2].real();
+			out_values[5] = result.val[2].imag();
+			/*
+			{
+				// reset switch back to measure outgoing wave
+				u8 buf[] = {
+					7, reg6,
+					0, 0,
+				};
+				if(write(ttyFD,buf,sizeof(buf))!=(int)sizeof(buf)) return -1;
+				readValue3(ttyFD, 20);
+			}*/
+			
+			if(mirror) {
+				swap(out_values[0], out_values[4]);
+				swap(out_values[1], out_values[5]);
+				swap(out_values[2], out_values[6]);
+				swap(out_values[3], out_values[7]);
+			}
+		}
+
+		double scale = 1./double((int64_t(1)<<12) * (int64_t(1)<<19));
+
+		for(int i=0;i<8;i++)
+			out_values[i] *= scale;
 		return n;
 	}
 	
@@ -221,8 +302,12 @@ extern "C" {
 		}
 	}
 
-	int xavna_set_params(void* dev, int freq_khz, int atten1, int atten2) {
-		return ((xavna_generic*)dev)->set_params(freq_khz, atten1, atten2);
+	bool xavna_is_tr(void* dev) {
+		return ((xavna_generic*)dev)->is_tr();
+	}
+
+	int xavna_set_params(void* dev, int freq_khz, int atten, int port) {
+		return ((xavna_generic*)dev)->set_params(freq_khz, atten, port);
 	}
 
 	int xavna_read_values(void* dev, double* out_values, int n_samples) {

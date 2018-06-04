@@ -17,8 +17,8 @@ namespace xaxaxa {
 		double stepFreqHz=25e6;		// step frequency in Hz
 		int nPoints=50;				// how many frequency points
 		int nValues=50;	 		// how many values to average over
-		bool tr = true;			// whether to measure with only port 1 signal gen enabled
-		
+		bool disableReference = false;	// if true, do not divide by reference value
+
 		// rf parameters
 		int attenuation1=35, attenuation2=35;
 		
@@ -42,6 +42,9 @@ namespace xaxaxa {
 		// open a vna device
 		// dev: path to the serial device; if empty, it will be selected automatically
 		void open(string dev);
+		
+		// returns whether the device is a T/R vna
+		bool is_tr();
 		
 		// start the frequency sweep background thread, which repeatedly performs
 		// scans until it is stopped using stopScan()

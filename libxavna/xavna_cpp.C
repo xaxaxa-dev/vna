@@ -13,6 +13,7 @@ namespace xaxaxa {
 
 	VNADevice::VNADevice() {
         _cb_ = &_cb;
+        frequencyCompletedCallback2_ = [](int freqIndex, const vector<array<complex<double>, 4> >& values) {};
 	}
 	VNADevice::~VNADevice() {
 		
@@ -30,6 +31,10 @@ namespace xaxaxa {
 		}
 		_dev = xavna_open(dev.c_str());
 		if(!_dev) throw runtime_error(strerror(errno));
+	}
+	bool VNADevice::is_tr() {
+		if(!_dev) return true;
+		return xavna_is_tr(_dev);
 	}
 	void VNADevice::startScan() {
 		if(!_dev) throw logic_error("VNADevice: you must call open() before calling startScan()");
@@ -61,6 +66,7 @@ namespace xaxaxa {
 	}
 	
 	void* VNADevice::_mainThread() {
+		bool tr = is_tr();
 		uint32_t last_measurementCnt = _measurementCnt;
 		int cnt=0;
 		while(!_shouldExit) {
@@ -71,7 +77,7 @@ namespace xaxaxa {
 				vector<array<complex<double>, 4> > values(ports);
 				for(int port=0; port<ports; port++) {
                     if(xavna_set_params(_dev, (int)round(freqAt(i)/1000.),
-                                        (port==0?attenuation1:-1), (port==1?attenuation2:-1)) < 0) {
+                                        (port==0?attenuation1:attenuation2), port) < 0) {
 						backgroundErrorCallback(runtime_error("xavna_set_params failed: " + string(strerror(errno))));
 						return NULL;
 					}
@@ -81,10 +87,36 @@ namespace xaxaxa {
 					}
 				}
 				VNARawValue tmp;
-				if(tr)
-					tmp << values[0][1]/values[0][0], 0,
-							values[0][3]/values[0][0], 0;
-				else throw logic_error("not yet implemented");
+				if(tr) {
+					if(disableReference)
+						tmp << values[0][1], 0,
+						        values[0][3], 0;
+					else
+						tmp << values[0][1]/values[0][0], 0,
+						        values[0][3]/values[0][0], 0;
+				} else {
+					complex<double> a0,b0,a3,b3;
+					complex<double> a0p,b0p,a3p,b3p;
+					a0 = values[0][0];
+					b0 = values[0][1];
+					a3 = values[0][2];
+					b3 = values[0][3];
+					a0p = values[1][0];
+					b0p = values[1][1];
+					a3p = values[1][2];
+					b3p = values[1][3];
+					
+					complex<double> d = 1. - (a3*a0p)/(a0*a3p);
+					
+					// S11M
+					tmp(0,0) = ((b0/a0) - (b0p*a3)/(a3p*a0))/d;
+					// S21M
+					tmp(1,0) = ((b3/a0) - (b3p*a3)/(a3p*a0))/d;
+					// S12M
+					tmp(0,1) = ((b0p/a3p) - (b0*a0p)/(a3p*a0))/d;
+					// S22M
+					tmp(1,1) = ((b3p/a3p) - (b3*a0p)/(a3p*a0))/d;
+				}
                 frequencyCompletedCallback(i, tmp);
                 frequencyCompletedCallback2_(i, values);
                 
