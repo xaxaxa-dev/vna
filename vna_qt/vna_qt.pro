@@ -75,7 +75,8 @@ FORMS    += mainwindow.ui \
     configureviewdialog.ui \
     calkitsettingsdialog.ui \
     calkitsettingswidget.ui \
-    dtfwindow.ui
+    dtfwindow.ui \
+    graphlimitsdialog.ui
 
 RESOURCES += \
     resources.qrc

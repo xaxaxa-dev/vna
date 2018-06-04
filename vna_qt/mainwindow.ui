@@ -300,7 +300,7 @@ Measurements</string>
      <x>0</x>
      <y>0</y>
      <width>900</width>
-     <height>20</height>
+     <height>22</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuCalibration">
@@ -319,6 +319,7 @@ Measurements</string>
     <addaction name="actionImpedance_pane"/>
     <addaction name="actionCalibration_pane"/>
     <addaction name="actionTime_to_fault"/>
+    <addaction name="actionGraph_limits"/>
    </widget>
    <widget class="QMenu" name="menuS_parameters">
     <property name="title">
@@ -340,10 +341,18 @@ Measurements</string>
     <addaction name="actionMock_device"/>
     <addaction name="actionOther"/>
    </widget>
+   <widget class="QMenu" name="menuDebug">
+    <property name="title">
+     <string>Debug</string>
+    </property>
+    <addaction name="actionDisable_polarView_refresh"/>
+    <addaction name="actionDisable_chart_update"/>
+   </widget>
    <addaction name="menuCalibration"/>
    <addaction name="menuS_parameters"/>
    <addaction name="menuView"/>
    <addaction name="menuDevice"/>
+   <addaction name="menuDebug"/>
   </widget>
   <widget class="QDockWidget" name="dock_bottom">
    <property name="sizePolicy">
@@ -482,6 +491,27 @@ Measurements</string>
   <action name="actionMock_device">
    <property name="text">
     <string>   Mock device</string>
+   </property>
+  </action>
+  <action name="actionDisable_polarView_refresh">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Disable polarView refresh</string>
+   </property>
+  </action>
+  <action name="actionDisable_chart_update">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Disable chart update</string>
+   </property>
+  </action>
+  <action name="actionGraph_limits">
+   <property name="text">
+    <string>Graph limits...</string>
    </property>
   </action>
  </widget>

@@ -22,11 +22,11 @@ NetworkView::NetworkView() {
         return to_string(val);
     };
     graphLimits = {
-        {-1000,-999},
-        {-80, 30},      //TYPE_MAG=1
-        {-180, 180},    //TYPE_PHASE
-        {0, 50},        //TYPE_GRPDELAY
-        {-1000,-999}    //TYPE_COMPLEX
+        {-1000,-999, 12},
+        {-80, 30, 12},      //TYPE_MAG=1
+        {-180, 180, 12},    //TYPE_PHASE
+        {0, 50, 10},        //TYPE_GRPDELAY
+        {-1000,-999, 10}    //TYPE_COMPLEX
     };
 }
 
@@ -263,6 +263,7 @@ void NetworkView::updateYAxis(int viewIndex) {
     int typeIndex = view.src.type;
     if(view.yAxis == nullptr) return;
     view.yAxis->setRange(graphLimits.at(typeIndex)[0], graphLimits.at(typeIndex)[1]);
+    view.yAxis->setTickCount(graphLimits.at(typeIndex)[2]);
 }
 
 int NetworkView::addMarker(bool removable) {

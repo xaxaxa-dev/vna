@@ -13,6 +13,7 @@
 #include "utility.H"
 #include "touchstone.H"
 #include "calkitsettingsdialog.H"
+#include "ui_graphlimitsdialog.h"
 #include <xavna/calibration.H>
 #include <xavna/xavna_cpp.H>
 #include <xavna/xavna_generic.H>
@@ -118,11 +119,11 @@ void MainWindow::loadSettings() {
     cks = settings.value("calkits").value<CalKitSettings>();
 
     nv.graphLimits = {
-        {-1000,-999},
-        {-80, 30},      //TYPE_MAG=1
-        {-180, 180},    //TYPE_PHASE
-        {0, 50},        //TYPE_GRPDELAY
-        {-1000,-999}    //TYPE_COMPLEX
+        {-1000,-999, 12},
+        {-80, 30, 12},      //TYPE_MAG=1
+        {-180, 180, 12},    //TYPE_PHASE
+        {0, 50, 10},        //TYPE_GRPDELAY
+        {-1000,-999, 10}    //TYPE_COMPLEX
     };
 }
 
@@ -758,4 +759,22 @@ void MainWindow::on_menuDevice_aboutToShow() {
 void MainWindow::on_actionTime_to_fault_toggled(bool arg1) {
     if(arg1) dtf.show();
     else dtf.hide();
+}
+
+void MainWindow::on_actionGraph_limits_triggered() {
+    QDialog dialog;
+    {
+        Ui::GraphLimitsDialog ui1;
+        ui1.setupUi(&dialog);
+        auto& limits = nv.graphLimits.at(SParamViewSource::TYPE_MAG);
+        ui1.t_min->setText(qs(ssprintf(32, "%.0f", limits.at(0))));
+        ui1.t_max->setText(qs(ssprintf(32, "%.0f", limits.at(1))));
+        ui1.t_lines->setText(qs(ssprintf(32, "%.0f", limits.at(2))));
+        if(dialog.exec() == QDialog::Accepted) {
+            limits.at(0) = atoi(ui1.t_min->text().toStdString().c_str());
+            limits.at(1) = atoi(ui1.t_max->text().toStdString().c_str());
+            limits.at(2) = atoi(ui1.t_lines->text().toStdString().c_str());
+            nv.updateYAxis();
+        }
+    }
 }

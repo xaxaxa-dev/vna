@@ -27,7 +27,8 @@ struct SParamViewSource {
         TYPE_MAG=1,     // view must be QLineSeries
         TYPE_PHASE,     // view must be QLineSeries
         TYPE_GRPDELAY,  // view must be QLineSeries
-        TYPE_COMPLEX,    // view must be PolarView
+        TYPE_SWR,       // view must be QLineSeries
+        TYPE_COMPLEX,   // view must be PolarView
         _LAST
     } type;
 };
@@ -80,8 +81,8 @@ public:
     vector<QValueAxis*> xAxis;
     // user-added markers
     vector<Marker> markers;
-    // min and max of the y axis of the graph, indexed by SParamViewSource::Types
-    vector<array<double,2> > graphLimits;
+    // min, max, and tick count of the y axis of the graph, indexed by SParamViewSource::Types
+    vector<array<double,3> > graphLimits;
 
 
 

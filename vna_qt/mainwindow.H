@@ -187,6 +187,7 @@ private slots:
 
 
     void on_actionTime_to_fault_toggled(bool arg1);
+    void on_actionGraph_limits_triggered();
 };
 
 #endif // MAINWINDOW_H
