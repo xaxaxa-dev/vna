@@ -5,4 +5,4 @@ Exec=AppRun %F
 Icon=icon
 Comment=Example application using libxavna
 Terminal=false
-Categories=Science
+Categories=Science;
