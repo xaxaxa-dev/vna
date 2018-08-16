@@ -72,6 +72,7 @@ MainWindow::MainWindow(QWidget *parent) :
     populateCalTypes();
     populateDevicesMenu();
 
+    ui->dock_ext->setVisible(false);
 
     ui->w_polar->layout()->addWidget(polarView);
 
@@ -315,6 +316,15 @@ QWidget *MainWindow::createTopRightFloat(QWidget *w) {
     w->setLayout(layout);
     layout->setMargin(4);
     return widget2;
+}
+
+void MainWindow::setPortExtension(double t1_seconds, double t2_seconds) {
+    portExt1Seconds = t1_seconds;
+    portExt2Seconds = t2_seconds;
+    ui->t_ext1->setText(qs(ssprintf(32, "%.0f ps", round(t1_seconds*1e12))));
+    ui->t_ext2->setText(qs(ssprintf(32, "%.0f ps", round(t2_seconds*1e12))));
+    for(int i=0;i<vna->nPoints;i++)
+        updateViews(i);
 }
 
 static string calFileVer = "calFileVersion 1";
@@ -638,6 +648,18 @@ void MainWindow::updateViews(int freqIndex) {
     if(curCal)
         nv.values.at(freqIndex) = curCal->computeValue(curCalCoeffs.at(freqIndex), this->rawValues.at(freqIndex));
     else nv.values.at(freqIndex) = (VNACalibratedValue) this->rawValues.at(freqIndex);
+
+    // calculate port extension
+    double freqHz = vna->freqAt(freqIndex);
+    // S11
+    nv.values.at(freqIndex)(0, 0) *= polar(1., 4*M_PI*freqHz*portExt1Seconds);
+    // S21
+    nv.values.at(freqIndex)(1, 0) *= polar(1., 2*M_PI*freqHz*(portExt1Seconds+portExt2Seconds));
+    // S12
+    nv.values.at(freqIndex)(0, 1) *= polar(1., 2*M_PI*freqHz*(portExt1Seconds+portExt2Seconds));
+    // S22
+    nv.values.at(freqIndex)(1, 1) *= polar(1., 4*M_PI*freqHz*portExt2Seconds);
+
     if(ui->actionDisable_chart_update->isChecked()) return;
     nv.updateViews(freqIndex);
 
@@ -777,4 +799,40 @@ void MainWindow::on_actionGraph_limits_triggered() {
             nv.updateYAxis();
         }
     }
+}
+
+void MainWindow::on_actionPort_length_extension_toggled(bool arg1) {
+    ui->dock_ext->setVisible(arg1);
+}
+
+void MainWindow::on_slider_ext1_valueChanged(int) {
+    setPortExtension(ui->slider_ext1->value()*1e-12, ui->slider_ext2->value()*1e-12);
+}
+
+void MainWindow::on_slider_ext2_valueChanged(int) {
+    setPortExtension(ui->slider_ext1->value()*1e-12, ui->slider_ext2->value()*1e-12);
+}
+
+void MainWindow::on_dock_ext_visibilityChanged(bool visible) {
+    if(visible != ui->actionPort_length_extension->isChecked())
+        ui->actionPort_length_extension->setChecked(visible);
+}
+
+void MainWindow::on_b_reset_ext_clicked() {
+    ui->slider_ext1->setValue(0);
+    ui->slider_ext2->setValue(0);
+}
+
+void MainWindow::on_t_ext1_returnPressed() {
+    string txt = ui->t_ext1->text().toStdString();
+    double lengthPs = atof(txt.c_str());
+    ui->slider_ext1->setValue(int(lengthPs));
+    setPortExtension(lengthPs*1e-12, portExt2Seconds);
+}
+
+void MainWindow::on_t_ext2_returnPressed() {
+    string txt = ui->t_ext2->text().toStdString();
+    double lengthPs = atof(txt.c_str());
+    ui->slider_ext2->setValue(int(lengthPs));
+    setPortExtension(portExt1Seconds, lengthPs*1e-12);
 }

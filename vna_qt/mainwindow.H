@@ -1,4 +1,4 @@
-#ifndef MAINWINDOW_H
+﻿#ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
 #include <QMainWindow>
@@ -79,6 +79,8 @@ public:
     map<string, vector<VNARawValue> > curCalMeasurements;
     // the current global cal kit settings
     CalKitSettings cks;
+    // the current length extension adjustment
+    double portExt1Seconds = 0., portExt2Seconds = 0.;
 
     vector<complex<double> > tmp_s11;
     vector<VNACalibratedValue> tmp_sn1,tmp_sn2;
@@ -128,6 +130,8 @@ public:
     void enableUI(bool enable);
     bool maximizePane(QWidget* w);
     QWidget* createTopRightFloat(QWidget* w);
+
+    void setPortExtension(double t1_seconds, double t2_seconds);
 
     string serializeCalibration(const CalibrationInfo& cal);
     CalibrationInfo deserializeCalibration(QTextStream &inp);
@@ -188,6 +192,13 @@ private slots:
 
     void on_actionTime_to_fault_toggled(bool arg1);
     void on_actionGraph_limits_triggered();
+    void on_actionPort_length_extension_toggled(bool arg1);
+    void on_slider_ext1_valueChanged(int value);
+    void on_slider_ext2_valueChanged(int value);
+    void on_dock_ext_visibilityChanged(bool visible);
+    void on_b_reset_ext_clicked();
+    void on_t_ext1_returnPressed();
+    void on_t_ext2_returnPressed();
 };
 
 #endif // MAINWINDOW_H
