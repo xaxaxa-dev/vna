@@ -275,6 +275,10 @@ public:
     xavna_mock(const char*) {
         virt.init();
 	}
+
+    bool is_tr() {
+        return false;
+        }
 	
     int set_params(int freq_khz, int atten1, int atten2) {
 		if(atten1 == -1) atten1=100;

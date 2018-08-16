@@ -50,6 +50,7 @@ make
 
 Build & run QT GUI:
 ```bash
+sudo apt-get install libqt5charts5-dev
 cd /PATH/TO/vna
 cd vna_qt
 /PATH/TO/qmake
