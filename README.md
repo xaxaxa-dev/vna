@@ -124,6 +124,8 @@ export PATH="/PATH/TO/MXE/usr/bin:$PATH"
 <img src="pictures/fpga_logic.png" width="600">
 
 ##### Parts selection
+
+# T/R version
 * fpga: XC6SLX9-2TQG144C 
 * adc: AD9200
 * mixer: AD8342
@@ -131,5 +133,13 @@ export PATH="/PATH/TO/MXE/usr/bin:$PATH"
 * rf switches: BGS14GA14
 * programmable attenuator: PE4312
 
+# Full two port version
+* fpga: XC6SLX9-2TQG144C 
+* adc: ADC10080
+* adc driver: ADA4932-1
+* mixer: AD8342
+* synthesizers: ADF4351
+* rf switches: RFSW6024, BGS12PL6
+* programmable attenuator: PE4312
 
 
