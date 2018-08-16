@@ -117,7 +117,7 @@ public:
 		} else {
 			tr = true;
 			fprintf(stderr, "detected T/R vna\n");
-			fprintf(stderr, "%d %d\n", result.val[0]);
+			fprintf(stderr, "%f %f\n", result.val[0]);
 		}
 	}
 	virtual bool is_tr() {
@@ -153,7 +153,7 @@ public:
 			3, u8(N),
 			5, u8(attenuation*2),
 			6, u8(0b00000100 | txpower),
-		    7, (_first?0:1) | ((_curPort==1?1:0) << 2),
+		    7, u8(_first?0:1) | (u8(_curPort==1?1:0) << 2),
 			0, 0,
 			4, 1
 		};
