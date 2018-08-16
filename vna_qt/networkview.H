@@ -81,7 +81,7 @@ public:
     vector<QValueAxis*> xAxis;
     // user-added markers
     vector<Marker> markers;
-    // min, max, and tick count of the y axis of the graph, indexed by SParamViewSource::Types
+    // min, max, and division count of the y axis of the graph, indexed by SParamViewSource::Types
     vector<array<double,3> > graphLimits;
 
 
