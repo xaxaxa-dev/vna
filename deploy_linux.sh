@@ -30,5 +30,6 @@ popd
 
 export LD_LIBRARY_PATH="$(pwd)/libxavna/.libs:$(pwd)/libxavna/xavna_mock_ui:$QT/lib"
 cp -a vna_qt/vna_qt appimage/
+rm -rf appimage/lib appimage/plugins
 "$LINUXDEPLOYQT" appimage/vna_qt -qmake="$QMAKE" -appimage
 
