@@ -246,8 +246,6 @@ public:
 
 		for(int i=0;i<8;i++)
 			out_values[i] *= scale;
-		
-		printf("%f\n", out_values[0]);
 		return n;
 	}
 	
