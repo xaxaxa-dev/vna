@@ -2,5 +2,5 @@
 if [ "$QT" == "" ]; then
     QT=/persist/qt/5.10.1/gcc_64
 fi
-cd "$(dirname $0)"
-LD_LIBRARY_PATH="$(pwd)/libxavna/.libs:$(pwd)/libxavna/xavna_mock_ui:$QT/lib" ./vna_qt/vna_qt "$@"
+LIBDIR="$(dirname $0)"
+LD_LIBRARY_PATH="$LIBDIR/libxavna/.libs:$LIBDIR/libxavna/xavna_mock_ui:$QT/lib" "$@"

@@ -56,7 +56,7 @@ cd vna_qt
 /PATH/TO/qmake
 make
 export QT=/PATH/TO/QT # e.g. ~/qt/5.10.1/gcc_64
-../run
+../run ./vna_qt
 ```
 
 __Building on mac os__
