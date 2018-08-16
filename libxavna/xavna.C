@@ -99,7 +99,7 @@ class xavna_default: public xavna_generic {
 public:
 	int ttyFD;
 	bool _first = true;
-	bool tr = false;
+	bool tr = true;
 	bool mirror = false;
 	int _curPort = 0;
 	xavna_default(const char* dev) {
@@ -107,6 +107,7 @@ public:
 		if(ttyFD < 0) {
 			throw runtime_error(strerror(errno));
 		}
+		return;
 		complex5 result;
 		int n;
 		tie(result, n) = readValue3(ttyFD, 10);
@@ -241,10 +242,12 @@ public:
 			}
 		}
 
-		double scale = 1./double((int64_t(1)<<12) * (int64_t(1)<<19));
+		double scale = 1./double((int64_t(1)<<12) * (int64_t(1)<<20));
 
 		for(int i=0;i<8;i++)
 			out_values[i] *= scale;
+		
+		printf("%f\n", out_values[0]);
 		return n;
 	}
 	
