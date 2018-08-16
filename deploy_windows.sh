@@ -36,4 +36,6 @@ for x in libgcc_s_sjlj-1 libstdc++-6 libpcre2-16-0 zlib1 libharfbuzz-0 \
 done
 cp ../libxavna/.libs/libxavna-0.dll release/
 cp ../libxavna/xavna_mock_ui/release/xavna_mock_ui.dll release/
+rm release/*.cpp release/*.o release/*.h 
+rm ../*.zip
 zip -r ../xaVNA_win32.zip release
