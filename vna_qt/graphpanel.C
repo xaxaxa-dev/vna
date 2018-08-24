@@ -45,7 +45,6 @@ GraphPanel::GraphPanel(QWidget *parent) :
 
         series[i] = new QLineSeries();
         series[i]->setPen(QPen(axisY[i]->linePenColor(), 2.));
-        series[i]->setUseOpenGL(true);
         chart->addSeries(series[i]);
         chart->legend()->hide();
         chart->layout()->setContentsMargins(0, 0, 0, 0);
