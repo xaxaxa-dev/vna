@@ -135,7 +135,7 @@ void MainWindow::updateViews(int freqIndex) {
     fflush(stderr);
     if(freqIndex >= (int)rawValues.size()) return;
 
-    double offset = -193;
+    double offset = 0; //-193;
     double y = dB(norm(rawValues.at(freqIndex)[0][0])) + offset;
     series[0]->replace(freqIndex, series[0]->at(freqIndex).x(), y);
 
