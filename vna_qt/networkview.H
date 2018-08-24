@@ -71,7 +71,7 @@ class NetworkView: public QObject
 public:
     QLayout* sliderContainer;
     vector<VNACalibratedValue> values;
-    double xAxisStart, xAxisStep;
+    double xAxisStart = 0., xAxisStep = 1.;
     // called to convert a x value to a display string on the slider widget
     function<string(double)> xAxisValueStr;
     // array of UI views of the data; each view has a source (describing what data to display) and a widget
