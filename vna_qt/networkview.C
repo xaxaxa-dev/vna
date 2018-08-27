@@ -13,7 +13,6 @@
 #include <QPushButton>
 #include <QComboBox>
 
-
 using namespace std;
 using namespace xaxaxa;
 
@@ -26,7 +25,8 @@ NetworkView::NetworkView() {
         {-80, 30, 11},      //TYPE_MAG=1
         {-180, 180, 12},    //TYPE_PHASE
         {0, 50, 10},        //TYPE_GRPDELAY
-        {-1000,-999, 10}    //TYPE_COMPLEX
+        {1, 11, 10},        //TYPE_SWR
+        {-1000,-999, 10}    //TYPE_COMPLEX  
     };
 }
 
@@ -44,6 +44,7 @@ GraphPanel* NetworkView::createGraphView(bool freqDomain, bool tr) {
         case SParamViewSource::TYPE_GRPDELAY: name = "GroupDelay"; break;
         case SParamViewSource::TYPE_MAG: name = "mag"; break;
         case SParamViewSource::TYPE_PHASE: name = "arg"; break;
+        case SParamViewSource::TYPE_SWR: name = "swr"; break;
         }
         for(int row=0;row<2;row++)
             for(int col=0;col<2;col++) {
@@ -102,6 +103,7 @@ void NetworkView::updateXAxis(double start, double step, int cnt) {
         SParamView tmp = views[i];
         switch(tmp.src.type) {
         case SParamViewSource::TYPE_MAG:
+        case SParamViewSource::TYPE_SWR:
         case SParamViewSource::TYPE_PHASE:
         case SParamViewSource::TYPE_GRPDELAY:
         {
@@ -131,7 +133,6 @@ void NetworkView::updateXAxis(double start, double step, int cnt) {
     }
 }
 
-
 void NetworkView::updateViews(int freqIndex) {
     if(freqIndex >= (int)values.size()) return;
     for(int i=0;i<(int)this->views.size();i++) {
@@ -156,6 +157,7 @@ void NetworkView::updateView(int viewIndex, int freqIndex) {
 
     switch(tmp.src.type) {
     case SParamViewSource::TYPE_MAG:
+    case SParamViewSource::TYPE_SWR:
     case SParamViewSource::TYPE_PHASE:
     case SParamViewSource::TYPE_GRPDELAY:
     {
@@ -164,6 +166,9 @@ void NetworkView::updateView(int viewIndex, int freqIndex) {
         switch(tmp.src.type) {
         case SParamViewSource::TYPE_MAG:
             y = dB(norm(entry));
+            break;
+        case SParamViewSource::TYPE_SWR:
+            y = swr(norm(entry));
             break;
         case SParamViewSource::TYPE_PHASE:
             y = arg(entry)*180./M_PI;
@@ -244,6 +249,7 @@ void NetworkView::updateBottomLabels(int marker) {
                 const char* fmt = "";
                 switch(lineViews[j]->src.type) {
                 case SParamViewSource::TYPE_MAG: fmt = "%.1lf dB"; break;
+                case SParamViewSource::TYPE_SWR: fmt = "%.2lf:1"; break;
                 case SParamViewSource::TYPE_PHASE: fmt = "%.1lf °"; break;
                 case SParamViewSource::TYPE_GRPDELAY: fmt = "%.2lf ns"; break;
                 default: fmt = "%.2lf";
