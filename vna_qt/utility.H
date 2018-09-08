@@ -17,6 +17,12 @@ inline double dB(double power) {
     if(power == 0.) return -300;
     return log10(power)*10;
 }
+
+inline double swr(double power) {
+    float d = powf(10,(abs(dB(power)))/20);
+    return (double)fmin(11.0,(d+1)/(d-1));
+}
+
 // freq is in Hz, Z is in ohms
 inline double capacitance_inductance(double freq, double Z) {
     if(Z>0) return Z/(2*M_PI*freq);
