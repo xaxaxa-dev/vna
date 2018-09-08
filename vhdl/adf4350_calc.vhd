@@ -66,20 +66,20 @@ architecture a of adf4350_calc is
 	signal N0: unsigned(15 downto 0);
 	signal frac0: unsigned(11 downto 0);
 begin
-	vcoFreq <= freq when freq>220000 or fb_divided else
-				shift_left(freq,1) when freq>110000 else
-				shift_left(freq,2) when freq>55000 else
-				shift_left(freq,3) when freq>27500 else
-				shift_left(freq,4) when freq>13750 else
-				shift_left(freq,5) when freq>6875 else
+	vcoFreq <= freq when freq>=220000 or fb_divided else
+				shift_left(freq,1) when freq>=110000 else
+				shift_left(freq,2) when freq>=55000 else
+				shift_left(freq,3) when freq>=27500 else
+				shift_left(freq,4) when freq>=13750 else
+				shift_left(freq,5) when freq>=6875 else
 				shift_left(freq,6);
 	
-	odiv <= to_unsigned(0,3) when freq>220000 else
-			to_unsigned(1,3) when freq>110000 else
-			to_unsigned(2,3) when freq>55000 else
-			to_unsigned(3,3) when freq>27500 else
-			to_unsigned(4,3) when freq>13750 else
-			to_unsigned(5,3) when freq>6875 else
+	odiv <= to_unsigned(0,3) when freq>=220000 else
+			to_unsigned(1,3) when freq>=110000 else
+			to_unsigned(2,3) when freq>=55000 else
+			to_unsigned(3,3) when freq>=27500 else
+			to_unsigned(4,3) when freq>=13750 else
+			to_unsigned(5,3) when freq>=6875 else
 			to_unsigned(6,3);
 	vcoFreq1 <= vcoFreq when rising_edge(clk);
 	odiv1 <= odiv when rising_edge(clk);
