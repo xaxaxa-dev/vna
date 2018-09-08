@@ -17,7 +17,7 @@ use work.slow_clock_odd;
 use work.resetGenerator;
 use work.configRegisterTypes.all;
 use work.serialConfigRegister;
-use work.vnaTxNew;
+use work.vnaTxNew2;
 use work.ejxGenerator;
 use work.adf4350_calc;
 use work.pulseExtenderCounted;
@@ -39,12 +39,21 @@ use work.sr_bit;
 -- 05: 
 --   [1..0]: signal generator output power
 --   [3..2]: LO output power
---   [5..4]: reserved
---   [7..6]: output data mode: 0: normal; 1: adc0 data; 2: adc1 data
+--   [7..4]: output data mode:
+--				0: normal
+--				1: adc0 data (filtered and decimated to 19.2MSPS)
+--				2: adc1 data (filtered and decimated to 19.2MSPS)
+--				3: adc0 data unfiltered (downsampled to 19.2MSPS)
+--				4: adc1 data unfiltered (downsampled to 19.2MSPS)
 -- 06:
 --   [0]: enable pll partial update (only update counters)
 --	 [1]: measurement direction; 0: outgoing; 1: incoming
 --   [2]: output signal on which port; 0: port 1; 1: port 2
+-- 07: bb_offset [8..0]
+-- 08: bb_frequency [31..24]
+-- 09: bb_frequency [23..16]
+-- 0a: bb_frequency [15..8]
+-- 0b: bb_frequency [7..0]
 -- note: the output signal frequency is pll_frequency * 10kHz
 
 entity top is
@@ -83,8 +92,8 @@ architecture a of top is
 	
 	
 	--usb serial data
-	signal rxval,rxrdy,realrxval,rxclk,txval,txrdy,txclk: std_logic;
-	signal rxdat,txdat: std_logic_vector(7 downto 0);
+	signal rxval,rxrdy,realrxval,rxclk,txval,txrdy,txclk,txval1: std_logic;
+	signal rxdat,txdat,txdat1: std_logic_vector(7 downto 0);
 	signal usbtxval,usbtxrdy,usbrxval,usbrxrdy: std_logic;
 	signal usbtxdat,usbrxdat: std_logic_vector(7 downto 0);
 	signal txroom: unsigned(13 downto 0);
@@ -95,23 +104,26 @@ architecture a of top is
 	signal vna_txdat: std_logic_vector(7 downto 0);
 	signal vna_txval: std_logic;
 	
+	signal txdat_sel: unsigned(3 downto 0);
+	
 	signal fifo1empty,fifo1full: std_logic;
 	
 	-- adc
 	signal adc0_data1, adc1_data1: unsigned(9 downto 0);
 	signal data0, data1: signed(9 downto 0);
-	signal filtered0, filtered1, filtered2: signed(17 downto 0);
+	signal filtered0, filtered1, filtered2: signed(20 downto 0);
 	signal adc_overflows: std_logic_vector(1 downto 0);
 	signal adc_overflow, adc_overflow_ignore: std_logic;
 	signal pll_update1_adcclk, pll_update2_adcclk, pll_update3_adcclk, pll_do_update_adcclk: std_logic;
 	
 	-- sine generator
+	signal sg_freq: unsigned(31 downto 0);
 	signal sg_re,sg_im: signed(8 downto 0);
 	signal sg_reset: std_logic;
 	
 	-- adf4350 config
 	signal config_freq: unsigned(19 downto 0);				-- configured sgen frequency (10kHz increments)
-	signal lo_freq: unsigned(19 downto 0);
+	signal lo_freq, lo_offset: unsigned(19 downto 0);
 	signal odiv: unsigned(5 downto 0);						-- rf divide factor
 	
 	signal pll1_R, pll2_R: std_logic_vector(9 downto 0);
@@ -139,8 +151,19 @@ architecture a of top is
 	signal RFSW_SG, RFSW_DIR: std_logic;
 	
 	-- config registers
-	constant cfgCount: integer := 7;
+	constant cfgCount: integer := 15;
 	signal cfg: array8(0 to cfgCount-1);
+	signal cfg_default: array8(0 to 254) :=
+		(X"00", 	-- pll_frequency
+		X"00",		-- pll_frequency
+		std_logic_vector(to_unsigned(190, 8)),	-- pll_frequency
+		X"00",		-- update trigger
+		X"00",		-- attenuation
+		"00001100", -- mode
+		X"00", 		-- dir
+		std_logic_vector(to_unsigned(70, 8)),	-- bb_offset
+		X"09", X"55", X"55", X"50",				-- bb_frequency
+		others=>X"00");
 	signal cfg_wrIndicate: std_logic;
 	signal cfg_wrAddr: unsigned(7 downto 0);
 	-- how long to ignore adc overflow for after a pll reconfig; in adcclk cycles
@@ -185,14 +208,14 @@ begin
 	adcFiltClk <= CLOCK_19_2_i2;
 	-- 250kHz state machine clock => 62.5kHz i2c clock
 	i2cc: entity slow_clock generic map(200,100) port map(internalclk,i2cclk);
-	-- 300kHz spi clock
-	spic: entity slow_clock generic map(150,75) port map(internalclk,spiclk);
+	-- 2MHz spi clock
+	spic: entity slow_clock generic map(26,13) port map(internalclk,spiclk);
 	
 	rg: entity resetGenerator generic map(25000) port map(spiclk,reset);
 	
 	
 	--############# usb serial port device ##############
-	usbdev: entity ulpi_serial generic map(minTxSize=>300) port map(USB_DATA, USB_DIR, USB_NXT,
+	usbdev: entity ulpi_serial generic map(minTxSize=>150) port map(USB_DATA, USB_DIR, USB_NXT,
 		USB_STP, open, usbclk, usbrxval,usbrxrdy,usbtxval,usbtxrdy, usbrxdat,usbtxdat,
 		LED=>led_usbserial, txroom=>txroom, txcork=>'0');
 	USB_RESET_B <= '1';
@@ -206,13 +229,15 @@ begin
 	
 	--txval <= '1';
 	--txclk <= adcFiltClk;
-	txdat <= std_logic_vector(filtered0(17 downto 10)) when cfg(5)(7 downto 6)="01" else
-			std_logic_vector(filtered1(17 downto 10)) when cfg(5)(7 downto 6)="10" else
+	txdat1 <= std_logic_vector(filtered0(17 downto 10)) when txdat_sel=1 else
+			std_logic_vector(filtered1(17 downto 10)) when txdat_sel=2 else
+			std_logic_vector(data0(9 downto 2)) when txdat_sel=3 else
+			std_logic_vector(data1(9 downto 2)) when txdat_sel=4 else
 			vna_txdat;
-	txval <= '1' when cfg(5)(7 downto 6)="01" else
-			'1' when cfg(5)(7 downto 6)="10" else
+	txval1 <= '1' when txdat_sel>0 and txdat_sel<5 else
 			vna_txval;
-	
+	txdat <= txdat1 when rising_edge(txclk);
+	txval <= txval1 when rising_edge(txclk);
 	
 	-- adcs
 	adc0_data1 <= ADC0_DATA when rising_edge(adcclk);
@@ -228,9 +253,9 @@ begin
 	pe2: entity pulseExtenderCounted generic map(192000) port map(adcclk, adc_overflow, led_adc_overflow);
 	
 	-- filters
-	filt0: entity cic_lpf_2_d generic map(inbits=>10, outbits=>18, decimation=>4, stages=>3, bw_div=>3)
+	filt0: entity cic_lpf_2_d generic map(inbits=>10, outbits=>21, decimation=>4, stages=>3, bw_div=>3)
 		port map(adcclk, adcFiltClk, data0, filtered0);
-	filt1: entity cic_lpf_2_d generic map(inbits=>10, outbits=>18, decimation=>4, stages=>3, bw_div=>3)
+	filt1: entity cic_lpf_2_d generic map(inbits=>10, outbits=>21, decimation=>4, stages=>3, bw_div=>3)
 		port map(adcclk, adcFiltClk, data1, filtered1);
 	
 	-- leds
@@ -238,7 +263,7 @@ begin
 	
 	
 	-- adf4350
-	lo_freq <= config_freq+70;
+	lo_freq <= config_freq+lo_offset;
 	pll1_pwr <= cfg(5)(3 downto 2);
 	pll2_pwr <= cfg(5)(1 downto 0);
 	
@@ -306,22 +331,27 @@ begin
 	
 	
 	-- config registers
-	cfgInst: entity serialConfigRegister generic map(bytes=>cfgCount, defaultValue =>
-		(X"00", X"00", std_logic_vector(to_unsigned(190, 8)), X"00", X"00", "00001100", others=>X"00"))
+	cfgInst: entity serialConfigRegister generic map(bytes=>cfgCount, defaultValue => cfg_default)
 		port map(usbclk, usbrxdat, usbrxval, cfg, cfg_wrIndicate, cfg_wrAddr);
 	usbrxrdy <= '1';
 	config_freq <= unsigned(cfg(0)(3 downto 0)) & unsigned(cfg(1)) & unsigned(cfg(2));
 	pll_update_usbclk <= not pll_update_usbclk when cfg_wrIndicate='1' and cfg_wrAddr=X"03" and rising_edge(usbclk);
 	pe4312_attenuation <= unsigned(cfg(4)(5 downto 0));
+	txdat_sel <= unsigned(cfg(5)(7 downto 4));
 	pll_spi_partial_update <= cfg(6)(0) when rising_edge(spiclk);
-	RFSW_DIR <= not cfg(6)(1);
+	--RFSW_DIR <= not cfg(6)(1);
 	RFSW_SG <= cfg(6)(2);
+	sg_freq(31 downto 24) <= unsigned(cfg(8));
+	sg_freq(23 downto 16) <= unsigned(cfg(9));
+	sg_freq(15 downto 8) <= unsigned(cfg(10));
+	sg_freq(7 downto 0) <= unsigned(cfg(11));
+	lo_offset <= resize(unsigned(cfg(7)), 20);
 	
 	-- vna data
 	sg_reset1: entity slow_clock generic map(192,1) port map(adcFiltClk,sg_reset);
-	sg: entity ejxGenerator port map(adcFiltClk,to_unsigned(9786709,28),sg_re,sg_im,sg_reset);
-	vnaTx1: entity vnaTxNew generic map(adcBits=>14) port map(adcFiltClk,
-		(others=>'1'),filtered1(17 downto 4),filtered0(17 downto 4), sg_im,sg_re, vna_txdat, vna_txval);
+	sg: entity ejxGenerator port map(adcFiltClk,sg_freq(31 downto 4),sg_re,sg_im,sg_reset);
+	vnaTx1: entity vnaTxNew2 generic map(adcBits=>18) port map(adcFiltClk,
+		filtered1(20 downto 3),filtered0(20 downto 3), sg_im,sg_re, RFSW_DIR, vna_txdat, vna_txval);
 	txclk <= adcFiltClk;
 	
 	

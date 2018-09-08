@@ -218,3 +218,13 @@ TIMESPEC TS_pll_update_ignore = FROM "pll_update_usbclk" TO "FFS" TIG;
 #Created by Constraints Editor (xc6slx9-tqg144-3) - 2017/09/05
 INST "*rdRpos*" TNM = rdRpos;
 INST "*wrWpos*" TNM = wrWpos;
+
+INST "*cfgInst/*" TNM = cfgRegs;
+TIMESPEC TS_configReg_ignore1 = FROM "cfgRegs" TO "FFS" TIG;
+
+INST "*calc1/*" TNM = calc1;
+TIMESPEC TS_calc1_ignore1 = FROM "calc1" TO "FFS" TIG;
+
+INST "*calc2/*" TNM = calc2;
+TIMESPEC TS_calc2_ignore1 = FROM "calc2" TO "FFS" TIG;
+
