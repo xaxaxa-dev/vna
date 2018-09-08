@@ -21,13 +21,15 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
     vna = new VNADevice();
+    vna->startFreqHz = 35e6;
+    vna->nPoints = 100;
     rawValues.resize(vna->nPoints);
-    series.resize(3);
+    series.resize(4);
 
     setCallbacks();
 
-    //                      reference  refl      thru
-    vector<QColor> colors {Qt::blue, Qt::green, Qt::red};
+    //                      reference  refl   			   thru
+    vector<QColor> colors {Qt::blue, Qt::green, Qt::yellow, Qt::red};
 
 
 
@@ -134,16 +136,22 @@ void MainWindow::updateViews(int freqIndex) {
 
     fflush(stderr);
     if(freqIndex >= (int)rawValues.size()) return;
+    
+    int exIndex = excitation;
 
     double offset = 0; //-193;
-    double y = dB(norm(rawValues.at(freqIndex)[0][0])) + offset;
+    double y = dB(norm(rawValues.at(freqIndex)[exIndex][0])) + offset;
     series[0]->replace(freqIndex, series[0]->at(freqIndex).x(), y);
+    printf("%f %f\n", series[0]->at(freqIndex).x(), y);
 
-    y = dB(norm(rawValues.at(freqIndex)[0][1])) + offset;
+    y = dB(norm(rawValues.at(freqIndex)[exIndex][1])) + offset;
     series[1]->replace(freqIndex, series[0]->at(freqIndex).x(), y);
-
-    y = dB(norm(rawValues.at(freqIndex)[0][3])) + offset;
+    
+    y = dB(norm(rawValues.at(freqIndex)[exIndex][2])) + offset;
     series[2]->replace(freqIndex, series[0]->at(freqIndex).x(), y);
+
+    y = dB(norm(rawValues.at(freqIndex)[exIndex][3])) + offset;
+    series[3]->replace(freqIndex, series[0]->at(freqIndex).x(), y);
 }
 
 void MainWindow::handleBackgroundError(QString msg) {
@@ -175,4 +183,12 @@ inline string ssprintf(int maxLen, const char* fmt, ...) {
 void MainWindow::on_slider_valueChanged(int value) {
     vna->attenuation1 = vna->attenuation2 = vna->maxPower() - value;
     ui->label->setText(qs(ssprintf(32, "%d dBm", value)));
+}
+
+void MainWindow::on_r_port1_clicked() {
+    excitation = 0;
+}
+
+void MainWindow::on_r_port2_clicked() {
+    excitation = 1;
 }

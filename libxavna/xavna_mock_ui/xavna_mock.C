@@ -278,15 +278,14 @@ public:
 
     bool is_tr() {
         return false;
-        }
+    }
 	
-    int set_params(int freq_khz, int atten1, int atten2) {
-		if(atten1 == -1) atten1=100;
-		if(atten2 == -1) atten2=100;
+    int set_params(int freq_khz, int atten, int port, int nWait) {
+		if(atten == -1) atten=100;
 		
         virt.curFreq = double(freq_khz)*1000;
-        virt.excitations[0] = polar(2.5*pow(10,-atten1/10.), virt.phaseOffset + 1.23);
-        virt.excitations[1] = polar(3.6*pow(10,-atten2/10.), virt.phaseOffset + 2.5);
+        virt.excitations[0] = (port==0?polar(2.5*pow(10,-atten1/10.), virt.phaseOffset + 1.23):0.);
+        virt.excitations[1] = (port==1?polar(3.6*pow(10,-atten2/10.), virt.phaseOffset + 2.5):0.);
 		
 		// simulate some switch leakage
         //complex<double> tmp = virt.excitations[0];
@@ -295,6 +294,10 @@ public:
 		
 		return 0;
 	}
+
+    int set_if_freq(int freq_khz) {
+        return 0;
+    }
 	
 	double noise(double amplitude) {
 		return ((rand() / (RAND_MAX + 1.0))*2-1) * amplitude;

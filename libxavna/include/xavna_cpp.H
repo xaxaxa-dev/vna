@@ -16,11 +16,14 @@ namespace xaxaxa {
 		double startFreqHz=200e6;	// start frequency in Hz
 		double stepFreqHz=25e6;		// step frequency in Hz
 		int nPoints=50;				// how many frequency points
-		int nValues=50;	 		// how many values to average over
+		int nValues=50;	 			// how many values to average over
+		int nWait=20;				// how many values to skip after changing frequency
 		bool disableReference = false;	// if true, do not divide by reference value
+		bool forceTR = false;		// if device is full two port vna, force T/R mode
+		bool swapPorts = false;		// only supported on full two port vna
 
 		// rf parameters
-		int attenuation1=35, attenuation2=35;
+		int attenuation1=25, attenuation2=25;
 		
 		// called by background thread when a single frequency measurement is done
         function<void(int freqIndex, VNARawValue val)> frequencyCompletedCallback;
@@ -39,12 +42,18 @@ namespace xaxaxa {
 		// find all xaVNA devices present
 		static vector<string> findDevices();
 		
+		// returns the device handle as returned by xavna_open(), or NULL
+		void* device();
+		
 		// open a vna device
 		// dev: path to the serial device; if empty, it will be selected automatically
 		void open(string dev);
 		
 		// returns whether the device is a T/R vna
-		bool is_tr();
+		bool isTR();
+		
+		// returns true if either device is a T/R vna or forceTR is true
+		bool isTRMode();
 		
 		// start the frequency sweep background thread, which repeatedly performs
 		// scans until it is stopped using stopScan()
@@ -52,6 +61,9 @@ namespace xaxaxa {
 		
 		// stop the background thread
 		void stopScan();
+		
+		// whether the background thread is running
+		bool isScanning();
 		
 		// close the vna device
 		void close();

@@ -34,6 +34,16 @@ void NetworkView::init(QLayout *sliderContainer) {
     this->sliderContainer = sliderContainer;
 }
 
+void NetworkView::clear() {
+    for(auto marker: markers) {
+        delete marker.ms;
+    }
+    views.clear();
+    xAxis.clear();
+    markers.clear();
+    values.clear();
+}
+
 GraphPanel* NetworkView::createGraphView(bool freqDomain, bool tr) {
     vector<string> graphTraces;
     vector<SParamViewSource> graphSources;
@@ -88,7 +98,7 @@ GraphPanel* NetworkView::createGraphView(bool freqDomain, bool tr) {
         updateYAxis(curViews.at(index));
         updateMarkerViews();
     });
-    gp->comboBox(0)->setCurrentIndex(2);
+    gp->comboBox(0)->setCurrentIndex(tr?1:2);
     gp->comboBox(1)->setCurrentIndex(0);
 
     return gp;

@@ -89,6 +89,7 @@ public:
     NetworkView();
 
     void init(QLayout* sliderContainer);
+    void clear();
 
     double xAxisAt(int i) {
         return i*xAxisStep + xAxisStart;

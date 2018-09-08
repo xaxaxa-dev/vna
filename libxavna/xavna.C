@@ -9,6 +9,7 @@
 #include <complex>
 #include <tuple>
 #include <map>
+#include <array>
 #include <functional>
 
 #include "include/xavna_generic.H"
@@ -21,9 +22,6 @@ using namespace std;
 // named virtual devices
 map<string, xavna_constructor> xavna_virtual_devices;
 xavna_constructor xavna_default_constructor;
-extern "C" {
-    int nWait=30;		//number of data points to skip after changing frequency
-}
 
 
 struct complex5 {
@@ -35,12 +33,87 @@ static u64 sx(u64 data, int bits) {
 	return data|((data>>(bits-1))?mask:0);
 }
 static complex<double> processValue(u64 data1,u64 data2) {
-	data1=sx(data1,35);
-	data2=sx(data2,35);
-	
 	return {double((ll)data2), double((ll)data1)};
 }
+
+// returns [adc0r, adc0i, adc1r, adc1i, adc2r, adc2i, ...]
+// unnormalized
+static tuple<array<int64_t,8>,int> readValue2(int ttyFD, int cnt) {
+	array<int64_t,8> res;
+	for(int i=0;i<8;i++) res[i] = 0;
+	
+	// we accept either 6 or 8 values in each datapoint
+	int N=8;
+	int N2=6;
+	
+	int bufsize=1024;
+	u8 buf[bufsize];
+	int br;
+	u64 values[N+1];
+	int n=0;	// how many sample groups we've read so far
+	int j=0;	// bit offset into current value
+	int k=0;	// which value in the sample group we are currently expecting
+	
+	u8 msb=1<<7;
+	u8 mask=msb-1;
+	u8 checksum = 0, checksumPrev = 0;
+	while((br=read(ttyFD,buf,sizeof(buf)))>0) {
+		for(int i=0;i<br;i++) {
+			if((buf[i]&msb)==0) {
+				if((k == N || k == N2) && j == 7) {
+					checksumPrev &= 0b1111111;
+					if(checksumPrev != u8(values[k])) {
+						printf("ERROR: checksum should be %d, is %d\n", (int)checksumPrev, (int)(u8)values[6]);
+					}
+					for(int g=0;g<k;g++)
+						res[g] += sx(values[g], 35);
+					if(++n >= cnt) {
+						return make_tuple(res, n);
+					}
+				}
+				for(int ii=0;ii<N+1;ii++)
+					values[ii] = 0;
+				j=0;
+				k=0;
+				checksum=0b01000110;
+			}
+			checksumPrev = checksum;
+			checksum = (checksum xor ((checksum<<1) | 1)) xor buf[i];
+			if(k < N+1)
+				values[k] |= u64(buf[i]&mask) << j;
+			j+=7;
+			if(j>=35) {
+				j=0;
+				k++;
+			}
+		}
+	}
+	return make_tuple(res, n);
+}
 // returns [adc0, adc1, adc2, adc1/adc0, adc2/adc0]
+static tuple<complex5,int> readValue3(int ttyFD, int cnt) {
+	complex5 result=complex5{{0.,0.,0.,0.,0.}};
+	tuple<array<int64_t,8>,int> tmp = readValue2(ttyFD, cnt);
+	array<int64_t,8> vals = get<0>(tmp);
+	result.val[0] = processValue(vals[0], vals[1]);
+	result.val[1] = processValue(vals[2], vals[3]);
+	result.val[2] = processValue(vals[4], vals[5]);
+	result.val[3] = result.val[1]/result.val[0];
+	result.val[4] = result.val[2]/result.val[0];
+	return {result, get<1>(tmp)};
+}
+
+static tuple<array<complex<double>,4>,int> readValue4(int ttyFD, int cnt) {
+	array<complex<double>, 4> result = {0.,0.,0.,0.};
+	tuple<array<int64_t,8>,int> tmp = readValue2(ttyFD, cnt);
+	array<int64_t,8> vals = get<0>(tmp);
+	result[0] = processValue(vals[0], vals[1]);
+	result[1] = processValue(vals[2], vals[3]);
+	result[2] = processValue(vals[4], vals[5]);
+	result[3] = processValue(vals[6], vals[7]);
+	return {result, get<1>(tmp)};
+}
+/*
 static tuple<complex5,int> readValue3(int ttyFD, int cnt) {
 	complex5 result=complex5{{0.,0.,0.,0.,0.}};
 	int bufsize=1024;
@@ -92,38 +165,48 @@ static tuple<complex5,int> readValue3(int ttyFD, int cnt) {
 		}
 	}
 	return make_tuple(result, n);
-}
+}*/
 
 
 class xavna_default: public xavna_generic {
 public:
 	int ttyFD;
 	bool _first = true;
-	bool tr = true;
+	bool tr = false;
 	bool mirror = false;
 	int _curPort = 0;
+	int _nWait = 20;
 	xavna_default(const char* dev) {
 		ttyFD=xavna_open_serial(dev);
 		if(ttyFD < 0) {
 			throw runtime_error(strerror(errno));
 		}
-		return;
-		complex5 result;
+		
+		set_params(100000, 31, 0, 20);
+		
+		xavna_drainfd(ttyFD);
+		readValue2(ttyFD, 50);
+		
+		array<int64_t, 8> result;
 		int n;
-		tie(result, n) = readValue3(ttyFD, 10);
-		if(result.val[0] == 0.) {
+		tie(result, n) = readValue2(ttyFD, 10);
+		if(result[6] != 0 && result[7] != 0) {
 			tr = false;
 			fprintf(stderr, "detected full two port vna\n");
 		} else {
 			tr = true;
 			fprintf(stderr, "detected T/R vna\n");
-			fprintf(stderr, "%f %f\n", result.val[0]);
+			fprintf(stderr, "%lld %lld\n", result[0], result[1]);
 		}
+		
+		if(!tr)
+			set_if_freq(700);
 	}
 	virtual bool is_tr() {
 		return tr;
 	}
-	virtual int set_params(int freq_khz, int atten, int port) {
+	virtual int set_params(int freq_khz, int atten, int port, int nWait) {
+		_nWait = nWait;
 		int attenuation=atten;
 		double freq = double(freq_khz)/1000.;
 		int N = (int)round(freq*100);
@@ -152,20 +235,49 @@ public:
 			2, u8(N>>8),
 			3, u8(N),
 			5, u8(attenuation*2),
-			6, u8(0b00000100 | txpower),
-		    7, u8((_first?0:1) | ((_curPort==1?1:0) << 2)),
+			6, u8(0b00001000 | txpower),
+		    7, u8((_first?0:1) | ((_curPort==1?0:1) << 2)),
 			0, 0,
 			4, 1
 		};
 		if(write(ttyFD,buf,sizeof(buf))!=(int)sizeof(buf)) return -1;
 		
 		xavna_drainfd(ttyFD);
-		readValue3(ttyFD, nWait);
+		readValue2(ttyFD, nWait);
 
 		//if(_first) usleep(1000*10);
 		//_first = false;
 		
 		
+		return 0;
+	}
+	virtual int set_if_freq(int freq_khz) {
+		if(is_tr()) {
+			errno = ENOTSUP;
+			return -1;
+		}
+		freq_khz = freq_khz/10;
+		freq_khz = freq_khz*10;
+		
+		if(freq_khz > 2550) {
+			errno = EDOM;
+			return -1;
+		}
+		
+		int bb_samp_rate_khz = 19200;
+		double bb_rate = double(freq_khz)/double(bb_samp_rate_khz);
+		uint32_t rate = uint32_t(bb_rate*double(1LL<<32));
+		u8 buf[] = {
+			0, 0,
+		    8, u8(freq_khz/10),
+		    9, u8(rate>>24),
+		    10, u8(rate>>16),
+		    11, u8(rate>>8),
+		    12, u8(rate>>0),
+			0, 0,
+			4, 1
+		};
+		if(write(ttyFD,buf,sizeof(buf))!=(int)sizeof(buf)) return -1;
 		return 0;
 	}
 
@@ -185,9 +297,9 @@ public:
 		a = tmp;
 	}
 	virtual int read_values_raw(double* out_values, int n_samples) {
-		complex5 result;
 		int n;
 		if(tr) {
+			complex5 result;
 			tie(result, n) = readValue3(ttyFD, n_samples);
 			out_values[0] = result.val[0].real();
 			out_values[1] = result.val[0].imag();
@@ -198,7 +310,17 @@ public:
 			out_values[6] = result.val[2].real();
 			out_values[7] = result.val[2].imag();
 		} else {
-			u8 reg6 = (_first?0:1) | ((_curPort==1?1:0) << 2);
+			array<complex<double>,4> result;
+			tie(result, n) = readValue4(ttyFD, n_samples);
+			out_values[0] = result[1].real();
+			out_values[1] = result[1].imag();
+			out_values[2] = result[0].real();
+			out_values[3] = result[0].imag();
+			out_values[4] = result[2].real();
+			out_values[5] = result[2].imag();
+			out_values[6] = result[3].real();
+			out_values[7] = result[3].imag();
+			/*u8 reg6 = (_first?0:1) | ((_curPort==1?0:1) << 2);
 			// measure outgoing wave
 			tie(result, n) = readValue3(ttyFD, n_samples);
 			out_values[0] = result.val[1].real();
@@ -215,24 +337,14 @@ public:
 				
 				// measure incoming wave
 				if(write(ttyFD,buf,sizeof(buf))!=(int)sizeof(buf)) return -1;
-				readValue3(ttyFD, 20);
+				readValue3(ttyFD, _nWait);
 			}
 			
 			tie(result, n) = readValue3(ttyFD, n_samples);
 			out_values[2] = result.val[1].real();
 			out_values[3] = result.val[1].imag();
 			out_values[4] = result.val[2].real();
-			out_values[5] = result.val[2].imag();
-			/*
-			{
-				// reset switch back to measure outgoing wave
-				u8 buf[] = {
-					7, reg6,
-					0, 0,
-				};
-				if(write(ttyFD,buf,sizeof(buf))!=(int)sizeof(buf)) return -1;
-				readValue3(ttyFD, 20);
-			}*/
+			out_values[5] = result.val[2].imag();*/
 			
 			if(mirror) {
 				swap(out_values[0], out_values[4]);
@@ -307,8 +419,8 @@ extern "C" {
 		return ((xavna_generic*)dev)->is_tr();
 	}
 
-	int xavna_set_params(void* dev, int freq_khz, int atten, int port) {
-		return ((xavna_generic*)dev)->set_params(freq_khz, atten, port);
+	int xavna_set_params(void* dev, int freq_khz, int atten, int port, int nWait) {
+		return ((xavna_generic*)dev)->set_params(freq_khz, atten, port, nWait);
 	}
 
 	int xavna_read_values(void* dev, double* out_values, int n_samples) {

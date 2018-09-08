@@ -10,6 +10,8 @@ FrequencyDialog::FrequencyDialog(QWidget *parent) :
     ui(new Ui::FrequencyDialog)
 {
     ui->setupUi(this);
+    ui->w_advanced->setVisible(false);
+    this->resize(this->width(),0);
 }
 
 FrequencyDialog::~FrequencyDialog()
@@ -23,6 +25,8 @@ void FrequencyDialog::fromVNA(const VNADevice &dev) {
     ui->t_points->setText(qs(to_string(dev.nPoints)));
     ui->slider_power->setRange(dev.maxPower()-40, dev.maxPower());
     ui->slider_power->setValue(dev.maxPower() - dev.attenuation1);
+    ui->t_nValues->setText(qs(ssprintf(32, "%d", dev.nValues)));
+    ui->t_nWait->setText(qs(ssprintf(32, "%d", dev.nWait)));
     emit on_slider_power_valueChanged(ui->slider_power->value());
 }
 
@@ -34,7 +38,8 @@ bool FrequencyDialog::toVNA(VNADevice &dev) {
     dev.stepFreqHz = atof(ui->t_step->text().toUtf8().data())*1e6;
     dev.nPoints = atoi(ui->t_points->text().toUtf8().data());
     dev.attenuation1 = dev.attenuation2 = dev.maxPower() - ui->slider_power->value();
-
+    dev.nValues = atoi(ui->t_nValues->text().toUtf8().data());
+    dev.nWait = atoi(ui->t_nWait->text().toUtf8().data());
     return (dev.startFreqHz != oldStartFreq) || (dev.stepFreqHz != oldStepFreq) || (dev.nPoints != oldNPoints);
 }
 
@@ -60,4 +65,8 @@ void FrequencyDialog::on_t_step_textChanged(const QString &) {
 
 void FrequencyDialog::on_t_points_textChanged(const QString &) {
     updateLabels();
+}
+
+void FrequencyDialog::on_c_advanced_stateChanged(int) {
+    ui->w_advanced->setVisible(ui->c_advanced->isChecked());
 }

@@ -340,6 +340,8 @@ Measurements</string>
      <string>Device</string>
     </property>
     <addaction name="actionSweep_params"/>
+    <addaction name="actionT_R_mode"/>
+    <addaction name="actionSwap_ports"/>
     <addaction name="separator"/>
     <addaction name="actionSelect_device"/>
     <addaction name="actionRefresh"/>
@@ -694,6 +696,22 @@ Measurements</string>
    </property>
    <property name="text">
     <string>Port length extension</string>
+   </property>
+  </action>
+  <action name="actionT_R_mode">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>T/R mode</string>
+   </property>
+  </action>
+  <action name="actionSwap_ports">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Swap ports</string>
    </property>
   </action>
  </widget>

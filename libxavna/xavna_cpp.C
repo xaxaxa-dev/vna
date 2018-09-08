@@ -22,6 +22,10 @@ namespace xaxaxa {
 		return xavna_find_devices();
 	}
 	
+	void* VNADevice::device() {
+		return _dev;
+	}
+	
 	void VNADevice::open(string dev) {
 		if(_dev) close();
 		if(dev == "") {
@@ -32,9 +36,13 @@ namespace xaxaxa {
 		_dev = xavna_open(dev.c_str());
 		if(!_dev) throw runtime_error(strerror(errno));
 	}
-	bool VNADevice::is_tr() {
+	bool VNADevice::isTR() {
 		if(!_dev) return true;
+		//return true;
 		return xavna_is_tr(_dev);
+	}
+	bool VNADevice::isTRMode() {
+		return isTR() || forceTR;
 	}
 	void VNADevice::startScan() {
 		if(!_dev) throw logic_error("VNADevice: you must call open() before calling startScan()");
@@ -49,6 +57,9 @@ namespace xaxaxa {
 		pthread_join(_pth, NULL);
 		_shouldExit = false;
 		_threadRunning = false;
+	}
+	bool VNADevice::isScanning() {
+		return _threadRunning;
 	}
 	void VNADevice::close() {
 		if(_threadRunning) stopScan();
@@ -65,8 +76,13 @@ namespace xaxaxa {
 		__sync_add_and_fetch(&_measurementCnt, 1);
 	}
 	
+	static inline void swap(VNARawValue& a, VNARawValue& b) {
+		VNARawValue tmp = a;
+		a = b;
+		b = tmp;
+	}
 	void* VNADevice::_mainThread() {
-		bool tr = is_tr();
+		bool tr = isTRMode();
 		uint32_t last_measurementCnt = _measurementCnt;
 		int cnt=0;
 		while(!_shouldExit) {
@@ -74,10 +90,14 @@ namespace xaxaxa {
 			for(int i=0;i<nPoints;i++) {
 				fflush(stdout);
 				int ports = tr?1:2;
+				
+				// values is indexed by excitation #, then wave #
+				// e.g. values[0][1] is wave 1 measured with excitation on port 0
 				vector<array<complex<double>, 4> > values(ports);
 				for(int port=0; port<ports; port++) {
+					int p = swapPorts?(1-port):port;
                     if(xavna_set_params(_dev, (int)round(freqAt(i)/1000.),
-                                        (port==0?attenuation1:attenuation2), port) < 0) {
+                                        (p==0?attenuation1:attenuation2), p, nWait) < 0) {
 						backgroundErrorCallback(runtime_error("xavna_set_params failed: " + string(strerror(errno))));
 						return NULL;
 					}
@@ -86,6 +106,13 @@ namespace xaxaxa {
 						return NULL;
 					}
 				}
+				if(swapPorts) {
+					for(int port=0;port<ports;port++) {
+						swap(values[port][0], values[port][2]);
+						swap(values[port][1], values[port][3]);
+					}
+				}
+				
 				VNARawValue tmp;
 				if(tr) {
 					if(disableReference)
@@ -106,6 +133,9 @@ namespace xaxaxa {
 					a3p = values[1][2];
 					b3p = values[1][3];
 					
+					// solving for two port S parameters given two sets of
+					// observed waves (port 1 in, port 1 out, port 2 in, port 2 out)
+					
 					complex<double> d = 1. - (a3*a0p)/(a0*a3p);
 					
 					// S11M
@@ -117,6 +147,8 @@ namespace xaxaxa {
 					// S22M
 					tmp(1,1) = ((b3p/a3p) - (b3*a0p)/(a3p*a0))/d;
 				}
+				//tmp(0,0) = tmp(1,0)*6.;
+				
                 frequencyCompletedCallback(i, tmp);
                 frequencyCompletedCallback2_(i, values);
                 

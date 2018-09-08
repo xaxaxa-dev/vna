@@ -63,6 +63,7 @@ public:
     NetworkView nv;
     DTFWindow dtf;
     vector<GraphPanel*> graphs;
+    bool viewIsTR = true;
 
     // array of values directly from the vna, updated every time a frequency point arrives
     vector<VNARawValue> rawValues;
@@ -113,6 +114,7 @@ public:
     void populateCalTypes();
     // setup the line graph and smith chart widgets, and populate this->views
     void setupViews();
+    void destroyViews();
     // set the callbacks of this->vna
     void setCallbacks();
     // find devices and populate the devices menu
@@ -129,7 +131,7 @@ public:
     void updateUIState();
     void enableUI(bool enable);
     bool maximizePane(QWidget* w);
-    QWidget* createTopRightFloat(QWidget* w);
+    QWidget* createTopFloat(QWidget* w);
 
     void setPortExtension(double t1_seconds, double t2_seconds);
 
@@ -199,6 +201,8 @@ private slots:
     void on_b_reset_ext_clicked();
     void on_t_ext1_returnPressed();
     void on_t_ext2_returnPressed();
+    void on_actionT_R_mode_toggled(bool checked);
+    void on_actionSwap_ports_toggled(bool checked);
 };
 
 #endif // MAINWINDOW_H

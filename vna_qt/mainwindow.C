@@ -49,7 +49,6 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
 
     vna = new VNADevice();
-    polarView = new PolarView();
     impdisp = new ImpedanceDisplay();
     timer = new QTimer();
 
@@ -68,13 +67,10 @@ MainWindow::MainWindow(QWidget *parent) :
     loadSettings();
     setCallbacks();
     setupViews();
-    updateSweepParams();
     populateCalTypes();
     populateDevicesMenu();
 
     ui->dock_ext->setVisible(false);
-
-    ui->w_polar->layout()->addWidget(polarView);
 
     ui->dock_bottom->setTitleBarWidget(new QWidget());
 
@@ -91,7 +87,6 @@ MainWindow::MainWindow(QWidget *parent) :
     timer->start(200);
 
     setAttribute(Qt::WA_DeleteOnClose);
-    nv.addMarker(false);
 
     enableUI(false);
 }
@@ -136,6 +131,10 @@ void MainWindow::populateCalTypes() {
 }
 
 void MainWindow::setupViews() {
+    // create smith chart view
+    polarView = new PolarView();
+    polarView->setSizePolicy(QSizePolicy::Ignored, QSizePolicy::Preferred);
+    ui->w_polar->layout()->addWidget(polarView);
     nv.views.push_back(SParamView{
                         {0,0,
                         SParamViewSource::TYPE_COMPLEX},
@@ -144,18 +143,38 @@ void MainWindow::setupViews() {
                     });
 
 
+    // create top-right buttons section on smith chart
+    auto* topFloat = createTopFloat(polarView);
+    auto* topFloatLayout = (QBoxLayout*)topFloat->layout();
+
+    // S11/S22 radiobuttons
+    for(int i=0;i<2;i++) {
+        QRadioButton* rb = new QRadioButton(qs(ssprintf(32, "S%d%d", i+1, i+1)));
+        rb->setChecked(i==0);
+        if(vna->isTRMode() && i != 0)
+            rb->setEnabled(false);
+        topFloatLayout->insertWidget(i, rb);
+        connect(rb, &QRadioButton::clicked, [this,i](){
+            nv.views.at(0).src.col = i;
+            nv.views.at(0).src.row = i;
+            nv.updateView(0);
+        });
+    }
+
+    // maximize button
     QPushButton* polarView_maximize = new QPushButton();
     polarView_maximize->setIcon(QIcon(":/icons/maximize"));
     polarView_maximize->setFlat(true);
-    createTopRightFloat(polarView)->layout()->addWidget(polarView_maximize);
+    topFloatLayout->addWidget(polarView_maximize);
     connect(polarView_maximize, &QPushButton::clicked, [this, polarView_maximize](){
         if(maximizePane(polarView))
             polarView_maximize->setIcon(QIcon(":/icons/unmaximize"));
         else polarView_maximize->setIcon(QIcon(":/icons/maximize"));
     });
-    polarView->setSizePolicy(QSizePolicy::Ignored, QSizePolicy::Preferred);
 
-    GraphPanel* gp = nv.createGraphView(true, false);
+
+
+    GraphPanel* gp = nv.createGraphView(true, vna->isTRMode());
     ui->w_graph->layout()->addWidget(gp);
     connect(gp->maximizeButton(), &QPushButton::clicked, [this, gp](){
         if(maximizePane(gp))
@@ -163,6 +182,20 @@ void MainWindow::setupViews() {
         else gp->maximizeButton()->setIcon(QIcon(":/icons/maximize"));
     });
     graphs.push_back(gp);
+
+    updateSweepParams();
+    nv.addMarker(false);
+    viewIsTR = vna->isTRMode();
+}
+
+void MainWindow::destroyViews() {
+    nv.clear();
+    for(auto* graph: graphs) {
+        delete graph;
+    }
+    graphs.clear();
+    delete polarView;
+    polarView = nullptr;
 }
 
 void MainWindow::setCallbacks() {
@@ -213,6 +246,15 @@ void MainWindow::populateDevicesMenu() {
 void MainWindow::openDevice(string dev) {
     try {
         vna->open(dev);
+        // views need to be recreated if going in or out of T/R mode
+        if(vna->isTRMode() != viewIsTR) {
+            destroyViews();
+            setupViews();
+        }
+        ui->actionT_R_mode->setChecked(vna->isTRMode());
+        ui->actionT_R_mode->setEnabled(!vna->isTR());
+        ui->actionSwap_ports->setEnabled(!vna->isTR());
+        if(vna->isTR()) ui->actionSwap_ports->setChecked(false);
         vna->startScan();
         enableUI(true);
     } catch(exception& ex) {
@@ -301,7 +343,7 @@ bool MainWindow::maximizePane(QWidget *w) {
     return true;
 }
 
-QWidget *MainWindow::createTopRightFloat(QWidget *w) {
+QWidget *MainWindow::createTopFloat(QWidget *w) {
     QBoxLayout* layout = new QBoxLayout(QBoxLayout::TopToBottom);
     QBoxLayout* layout2 = new QBoxLayout(QBoxLayout::LeftToRight);
 
@@ -835,4 +877,22 @@ void MainWindow::on_t_ext2_returnPressed() {
     double lengthPs = atof(txt.c_str());
     ui->slider_ext2->setValue(int(lengthPs));
     setPortExtension(portExt1Seconds, lengthPs*1e-12);
+}
+
+void MainWindow::on_actionT_R_mode_toggled(bool checked) {
+    if(vna->isTR()) return;
+    bool scanning = vna->isScanning();
+    vna->stopScan();
+
+    vna->forceTR = checked;
+    if(viewIsTR != vna->isTRMode()) {
+        destroyViews();
+        setupViews();
+    }
+
+    if(scanning) vna->startScan();
+}
+
+void MainWindow::on_actionSwap_ports_toggled(bool checked) {
+    vna->swapPorts = checked;
 }

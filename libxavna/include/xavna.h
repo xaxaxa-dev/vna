@@ -12,8 +12,9 @@ extern "C" {
 	// freq_khz: frequency in kHz
 	// atten: attenuation in dB (positive integer) of signal generator
 	// port: which port to output the signal on
+	// nWait: number of data samples to skip after changing settings
 	// returns: 0 if success; -1 if failure
-	int xavna_set_params(void* dev, int freq_khz, int atten, int port);
+	int xavna_set_params(void* dev, int freq_khz, int atten, int port, int nWait=20);
 
 	// read vector values from device; applicable for T/R VNA only
 	// out_values: array of size 4 holding the following values (in order):

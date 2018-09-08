@@ -45,9 +45,14 @@ public slots:
 private slots:
     void on_slider_valueChanged(int value);
 
+    void on_r_port1_clicked();
+
+    void on_r_port2_clicked();
+
 private:
     Ui::MainWindow *ui;
     VNADevice* vna=NULL;
+    int excitation=0;
 
     vector<vector<array<complex<double>, 4> > > rawValues;
 

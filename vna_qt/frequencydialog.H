@@ -33,6 +33,8 @@ private slots:
     void on_t_step_textChanged(const QString &arg1);
     void on_t_points_textChanged(const QString &arg1);
 
+    void on_c_advanced_stateChanged(int);
+
 private:
     Ui::FrequencyDialog *ui;
 };
