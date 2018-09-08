@@ -284,8 +284,8 @@ public:
 		if(atten == -1) atten=100;
 		
         virt.curFreq = double(freq_khz)*1000;
-        virt.excitations[0] = (port==0?polar(2.5*pow(10,-atten1/10.), virt.phaseOffset + 1.23):0.);
-        virt.excitations[1] = (port==1?polar(3.6*pow(10,-atten2/10.), virt.phaseOffset + 2.5):0.);
+        virt.excitations[0] = (port==0?polar(2.5*pow(10,-atten/10.), virt.phaseOffset + 1.23):0.);
+        virt.excitations[1] = (port==1?polar(3.6*pow(10,-atten/10.), virt.phaseOffset + 2.5):0.);
 		
 		// simulate some switch leakage
         //complex<double> tmp = virt.excitations[0];
