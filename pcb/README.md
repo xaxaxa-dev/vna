@@ -21,7 +21,25 @@ To open the schematic files, first add the symbol library by editing ~/.gEDA/gaf
 ```
 (Replace /path/to/vna with the location of the vna repository)
 
-##### Notes (release 2)
+##### Notes (Two port version 2)
+* PCB stackup (4 layers; total thickness 1.5mm):
+  * Top copper
+  * __0.2mm FR4__
+  * Inner copper 1
+  * __1.0mm FR4__
+  * Inner copper 2
+  * __0.2mm FR4__
+  * Bottom copper
+* For all ferrite beads (value="fb") use FBMH1608HM601-T or any ferrite bead with high impedance (>100ohm) across the entire range of frequencies covered by the VNA
+* The tcxo (footprint="tcxo3225") is ASVTX-11-121-19.200MHZ-T or any compatible 3.3V 19.2MHz TCXO with the same package and pinout
+* The micro usb connector (footprint="custom_microusb1") used is 10118193-0001LF
+* Port 1 and 2 shield can dimensions (LxWxH, mm): 46 x 12.5 x 11
+* (old) Port 2 shield can dimensions (LxWxH, mm): 45.5 x 14 x 11
+* Signal generator shield can dimensions (LxWxH, mm): 27 x 17.4 x 3
+* enclosure SMA connector hole x,y: 14 mm, 13.5 mm
+* enclosure usb connector hole x,y: 16.7 mm, 10 mm from bottom-right
+
+##### Notes (T/R version 2)
 * PCB stackup (4 layers; total thickness 1.5mm):
   * Top copper
   * __0.2mm FR4__
@@ -36,7 +54,7 @@ To open the schematic files, first add the symbol library by editing ~/.gEDA/gaf
 * The SMA connectors used are CON-SMA-EDGE-S, but any edge mount SMA connector will work
 
 
-##### Notes (release 1)
+##### Notes (T/R version 1)
 * 2 layer PCB
 * PCB thickness: 1.0mm
 * Inductors with value="fb" are power supply filtering ferrite beads; the HZ0603B112R-10 (0603) and MI0805J102R-10 (0805) were used in the prototype, but any ferrite bead with sufficient current handling will work.
