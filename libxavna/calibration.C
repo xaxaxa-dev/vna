@@ -32,6 +32,13 @@ public:
         if(noThru) return {{"short1","Short"},{"open1","Open"},{"load1","Load"}};
         else return {{"short1","Short"},{"open1","Open"},{"load1","Load"},{"thru","Thru"}};
     }
+    Matrix2cd combineValues(Matrix2cd p1, Matrix2cd p2) {
+        Matrix2cd tmp;
+        tmp << p1(0,0), 0.,
+                0., p2(1,1);
+        return tmp;
+    }
+    
     // given the measurements for each of the calibration standards, compute the coefficients
     MatrixXcd computeCoefficients(const vector<VNARawValue>& measurements,
                                   const vector<VNACalibratedValue>& calStdModels) const override {                    
@@ -86,7 +93,7 @@ public:
         return "solt";
     }
     string description() const override {
-        return "SOLT (two port)";
+        return "SOLT (UXYZ)";
     }
     // get a list of calibration standards required
     vector<array<string, 2> > getRequiredStandards() const override {
@@ -98,16 +105,66 @@ public:
     // given the measurements for each of the calibration standards, compute the coefficients
     MatrixXcd computeCoefficients(const vector<VNARawValue>& measurements,
                                   const vector<VNACalibratedValue>& calStdModels) const override {
-        auto tmp = SOL_compute_coefficients(measurements[0](0,0), measurements[1](0,0), measurements[2](0,0));
-        Vector4cd ret(tmp[0],tmp[1],tmp[2],measurements[3](1,0));
-        return ret;
+        // perform two SOL calibrations, one for each port
+        vector<VNARawValue> m1 {measurements[0], measurements[2], measurements[4]};
+        vector<VNACalibratedValue> s1 {calStdModels[0], calStdModels[2], calStdModels[4]};
+        vector<VNARawValue> m2 {mirror(measurements[1]), mirror(measurements[3]), mirror(measurements[5])};
+        vector<VNACalibratedValue> s2 {calStdModels[1], calStdModels[3], calStdModels[5]};
+        
+        MatrixXcd out1 = getSOLCoeffs(m1, s1);
+        MatrixXcd out2 = getSOLCoeffs(m2, s2);
+        
+        // since both SOL calibration error models are normalized, we are missing one term
+        // which is the ratio factor between the two error parameters.
+        
+        // calculate ratio factor using unknown thru standard
+        VNACalibratedValue thru = applySOL(out1, out2, measurements[6]);
+        complex<double> c = sqrt(thru(0,1)/thru(1,0));
+        
+        // there is a 180 degree phase uncertainty; c can be positive or negative.
+        // choose the value that makes -90 degrees < arg(S21) < 90 degrees
+        if(abs(arg(applySOL(out1*c, out2, measurements[6])(1,0))) > M_PI/2)
+            c = -c;
+        out1 = out1*c;
+        
+        MatrixXcd out(4, 2);
+        out << out1, out2;
+        return out;
     }
     // given cal coefficients and a raw value, compute S parameters
     VNACalibratedValue computeValue(MatrixXcd coeffs, VNARawValue val) const override {
-        array<complex<double>, 3> tmp {coeffs(0), coeffs(1), coeffs(2)};
-        VNACalibratedValue ret = val;
-        ret(0,0) = SOL_compute_reflection(tmp, val(0,0));
-        return ret;
+        assert(coeffs.rows() == 4);
+        assert(coeffs.cols() == 2);
+        return applySOL(coeffs.topRows(2), coeffs.bottomRows(2), val);
+    }
+    
+    MatrixXcd getSOLCoeffs(const vector<VNARawValue>& measurements,
+                                  const vector<VNACalibratedValue>& calStdModels) const {                    
+        CalibrationEngine ce(1);
+        ce.addFullEquation(scalar(calStdModels.at(0)(0,0)), measurements.at(0));
+        ce.addFullEquation(scalar(calStdModels.at(1)(0,0)), measurements.at(1));
+        ce.addFullEquation(scalar(calStdModels.at(2)(0,0)), measurements.at(2));
+        ce.addNormalizingEquation();
+        return ce.computeCoefficients();
+    }
+    // given two one-port SOL cal coefficients, compute S parameters
+    VNACalibratedValue applySOL(const MatrixXcd& coeffs1, const MatrixXcd& coeffs2, VNARawValue val) const {
+        // place the two 2-port T parameters into the 4-port T parameters
+        // to go from two 1-port error adapters to one 2-port error adapter.
+        // see page 22, 36, and 37 of
+        // Network_Analyzer_Error_Models_and_Calibration_Methods.pdf for more info
+        MatrixXcd tmp = MatrixXcd::Zero(4, 4);
+        tmp(0,0) = coeffs1(0,0);
+        tmp(0,2) = coeffs1(0,1);
+        tmp(2,0) = coeffs1(1,0);
+        tmp(2,2) = coeffs1(1,1);
+        
+        tmp(1,1) = coeffs2(0,0);
+        tmp(1,3) = coeffs2(0,1);
+        tmp(3,1) = coeffs2(1,0);
+        tmp(3,3) = coeffs2(1,1);
+        
+        return CalibrationEngine::computeSParams(tmp, val);
     }
 };
 
