@@ -100,7 +100,10 @@ static tuple<complex5,int> readValue3(int ttyFD, int cnt) {
 	result.val[2] = processValue(vals[4], vals[5]);
 	result.val[3] = result.val[1]/result.val[0];
 	result.val[4] = result.val[2]/result.val[0];
-	return {result, get<1>(tmp)};
+	
+	// TODO(xaxaxa): get rid of the explicit typing here once mxe switches
+	// to newer gcc without this bug
+	return tuple<complex5,int> {result, get<1>(tmp)};
 }
 
 static tuple<array<complex<double>,4>,int> readValue4(int ttyFD, int cnt) {
@@ -111,7 +114,11 @@ static tuple<array<complex<double>,4>,int> readValue4(int ttyFD, int cnt) {
 	result[1] = processValue(vals[2], vals[3]);
 	result[2] = processValue(vals[4], vals[5]);
 	result[3] = processValue(vals[6], vals[7]);
-	return {result, get<1>(tmp)};
+	
+	// TODO(xaxaxa): get rid of the explicit typing here once mxe switches
+	// to newer gcc without this bug
+	return tuple<array<complex<double>,4>,int> 
+			{result, get<1>(tmp)};
 }
 /*
 static tuple<complex5,int> readValue3(int ttyFD, int cnt) {
