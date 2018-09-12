@@ -27,6 +27,11 @@ public:
     string description() const override {
         return noThru?"SOL (1 port)":"SOLT (T/R)";
     }
+    string helpText() const override {
+        if(noThru)
+            return "5-term two port calibration using 3 fully known standards Short, Open, and Load. Removes port-to-port leakage.";
+        return "6-term two port calibration using Short, Open, Load, and zero-length thru. Removes port-to-port leakage and normalizes S21 using thru standard.";
+    }
     // get a list of calibration standards required
     vector<array<string, 2> > getRequiredStandards() const override {
         if(noThru) return {{"short1","Short"},{"open1","Open"},{"load1","Load"}};
@@ -108,6 +113,18 @@ public:
     string description() const override {
         return matchedThru?"SOLT (modified UXYZ)":"SOLT (UXYZ)";
     }
+    string helpText() const override {
+        if(matchedThru)
+            return "Unknown thru calibration using 3 fully known one port standards"
+                    " and a reciprocal thru standard. Thru standard must have "
+                    "an electrical delay between -90 and 90 degrees, should be "
+                    "well matched (or as short as possible), and have less than 10dB of loss. "
+                    "Matching error of the two instrument ports is fully removed.";
+        return "Unknown thru calibration using 3 fully known one port standards"
+                    " and a reciprocal thru standard. Thru standard must have "
+                    "an electrical delay between -90 and 90 degrees and have "
+                    "less than 10dB of loss. It is recommended to use the modified UXYZ"
+                    " calibration unless the thru standard is known to be poorly matched.";
     }
     // get a list of calibration standards required
     vector<array<string, 2> > getRequiredStandards() const override {

@@ -22,6 +22,9 @@ public:
     // return the descriptive name of this calibration type
     virtual string description() const=0;
     
+    // return the detailed description of this calibration type
+    virtual string helpText() const=0;
+    
     // get a list of calibration standards required (name/desc pair)
     virtual vector<array<string, 2> > getRequiredStandards() const=0;
     
