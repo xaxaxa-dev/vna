@@ -22,7 +22,7 @@ end entity;
 
 architecture a of vnaTxNew2 is
 	constant resultBits: integer := adcBits+sgBits;
-	constant accumPeriodOrder: integer := 12;
+	constant accumPeriodOrder: integer := 15;
 	constant accumBits: integer := resultBits+accumPeriodOrder-1;
 	constant outBits: integer := 35;
 	constant nInputs: integer := 2;
@@ -33,7 +33,7 @@ architecture a of vnaTxNew2 is
 
 	-- state machine
 	signal accumPhase: unsigned(accumPeriodOrder-1 downto 0);
-	signal accumPhaseLSB: unsigned(11 downto 0);
+	signal accumPhaseLSB: unsigned(13 downto 0);
 	signal swNext, sw0: std_logic;
 	signal accumEnable,accumEnableNext: std_logic;
 
@@ -79,7 +79,7 @@ g1:	for I in 0 to nInputs-1 generate
 	-- and rest of accumPhaseLSB is used for timing
 	swNext <= accumPhaseLSB(accumPhaseLSB'left);
 	-- whenever switch position is changed, wait 10 periods before starting integration
-	accumEnableNext <= '1' when accumPhaseLSB(accumPhaseLSB'left-1 downto 0) > 200 else '0';
+	accumEnableNext <= '1' when accumPhaseLSB(accumPhaseLSB'left-1 downto 0) > 1024 else '0';
 	sw0 <= swNext when rising_edge(clk);
 	sw <= sw0;
 	accumEnable <= accumEnableNext when rising_edge(clk);
@@ -104,8 +104,16 @@ g1_2:
 		accum_re(I) <= accum_reNext(I) when rising_edge(clk);
 		accum_im(I) <= accum_imNext(I) when rising_edge(clk);
 		
-		out_re(I) <= accum_re(I)(accum_re(I)'left downto accum_re(I)'left-outBits+1);
-		out_im(I) <= accum_im(I)(accum_im(I)'left downto accum_im(I)'left-outBits+1);
+	g1_2_1:
+		if outBits >= accumBits generate
+			out_re(I) <= resize(accum_re(I), outBits);
+			out_im(I) <= resize(accum_im(I), outBits);
+		end generate;
+	g1_2_2:
+		if outBits < accumBits generate
+			out_re(I) <= accum_re(I)(accum_re(I)'left downto accum_re(I)'left-outBits+1);
+			out_im(I) <= accum_im(I)(accum_im(I)'left downto accum_im(I)'left-outBits+1);
+		end generate;
 	end generate;
 	
 	-- tx shift register

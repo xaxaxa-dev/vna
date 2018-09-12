@@ -92,7 +92,7 @@ architecture a of top is
 	
 	
 	--usb serial data
-	signal rxval,rxrdy,realrxval,rxclk,txval,txrdy,txclk,txval1: std_logic;
+	signal rxval,rxrdy,realrxval,rxclk,txval,txrdy,txclk,txval1,txclk_sel,txclk_sel1: std_logic;
 	signal rxdat,txdat,txdat1: std_logic_vector(7 downto 0);
 	signal usbtxval,usbtxrdy,usbrxval,usbrxrdy: std_logic;
 	signal usbtxdat,usbrxdat: std_logic_vector(7 downto 0);
@@ -102,7 +102,7 @@ architecture a of top is
 	signal usb_txcork: std_logic;
 	
 	signal vna_txdat: std_logic_vector(7 downto 0);
-	signal vna_txval: std_logic;
+	signal vna_txval, vna_txclk: std_logic;
 	
 	signal txdat_sel: unsigned(3 downto 0);
 	
@@ -162,7 +162,8 @@ architecture a of top is
 		"00001100", -- mode
 		X"00", 		-- dir
 		std_logic_vector(to_unsigned(70, 8)),	-- bb_offset
-		X"09", X"55", X"55", X"50",				-- bb_frequency
+		--X"09", X"55", X"55", X"50",			-- bb_frequency
+		X"02", X"55", X"55", X"55",				-- bb_frequency
 		others=>X"00");
 	signal cfg_wrIndicate: std_logic;
 	signal cfg_wrAddr: unsigned(7 downto 0);
@@ -236,8 +237,12 @@ begin
 			vna_txdat;
 	txval1 <= '1' when txdat_sel>0 and txdat_sel<5 else
 			vna_txval;
+	txclk_sel1 <= '0' when txdat_sel>0 and txdat_sel<5 else '1';
+	
+	txclk_buf: BUFGMUX port map(I0=>adcFiltClk, I1=>vna_txclk, S=>txclk_sel, O=>txclk);
 	txdat <= txdat1 when rising_edge(txclk);
 	txval <= txval1 when rising_edge(txclk);
+	txclk_sel <= txclk_sel1 when rising_edge(adcFiltClk);
 	
 	-- adcs
 	adc0_data1 <= ADC0_DATA when rising_edge(adcclk);
@@ -348,11 +353,11 @@ begin
 	lo_offset <= resize(unsigned(cfg(7)), 20);
 	
 	-- vna data
-	sg_reset1: entity slow_clock generic map(192,1) port map(adcFiltClk,sg_reset);
-	sg: entity ejxGenerator port map(adcFiltClk,sg_freq(31 downto 4),sg_re,sg_im,sg_reset);
-	vnaTx1: entity vnaTxNew2 generic map(adcBits=>18) port map(adcFiltClk,
-		filtered1(20 downto 3),filtered0(20 downto 3), sg_im,sg_re, RFSW_DIR, vna_txdat, vna_txval);
-	txclk <= adcFiltClk;
+	sg_reset1: entity slow_clock generic map(1920*4,1) port map(adcclk,sg_reset); -- reset every 10khz
+	sg: entity ejxGenerator port map(adcclk,sg_freq(31 downto 4),sg_re,sg_im,sg_reset);
+	vnaTx1: entity vnaTxNew2 generic map(adcBits=>10) port map(adcclk,
+		data1,data0, sg_im,sg_re, RFSW_DIR, vna_txdat, vna_txval);
+	vna_txclk <= adcclk;
 	
 	
 	-- lcd controller
