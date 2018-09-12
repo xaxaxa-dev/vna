@@ -191,8 +191,8 @@ begin
 	adcclk <= CLOCK_19_2_i;
 	-- 250kHz state machine clock => 62.5kHz i2c clock
 	i2cc: entity slow_clock generic map(200,100) port map(internalclk,i2cclk);
-	-- 300kHz spi clock
-	spic: entity slow_clock generic map(150,75) port map(internalclk,spiclk);
+	-- 2MHz spi clock
+	spic: entity slow_clock generic map(26,13) port map(internalclk,spiclk);
 	
 	--############# usb serial port device ##############
 	usbdev: entity ulpi_serial generic map(minTxSize=>300) port map(USB_DATA, USB_DIR, USB_NXT,
