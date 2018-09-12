@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>392</width>
-    <height>399</height>
+    <height>447</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -31,7 +31,7 @@
      <property name="minimumSize">
       <size>
        <width>0</width>
-       <height>70</height>
+       <height>60</height>
       </size>
      </property>
      <property name="text">
@@ -176,13 +176,38 @@
     </layout>
    </item>
    <item row="2" column="0">
+    <widget class="QLabel" name="label_15">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="minimumSize">
+      <size>
+       <width>0</width>
+       <height>50</height>
+      </size>
+     </property>
+     <property name="text">
+      <string>Note: accuracy is best from -15dBm to 0dBm (full two port VNA) and -25dBm to -10dBm (T/R VNA)</string>
+     </property>
+     <property name="wordWrap">
+      <bool>true</bool>
+     </property>
+     <property name="margin">
+      <number>10</number>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="0">
     <widget class="QCheckBox" name="c_advanced">
      <property name="text">
       <string>Show advanced settings</string>
      </property>
     </widget>
    </item>
-   <item row="3" column="0">
+   <item row="4" column="0">
     <widget class="QWidget" name="w_advanced" native="true">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
@@ -254,10 +279,10 @@
      </layout>
     </widget>
    </item>
-   <item row="4" column="0">
+   <item row="5" column="0">
     <widget class="QWidget" name="widget" native="true"/>
    </item>
-   <item row="5" column="0">
+   <item row="6" column="0">
     <widget class="QDialogButtonBox" name="buttonBox">
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
