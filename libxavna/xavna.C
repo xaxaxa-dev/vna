@@ -264,7 +264,7 @@ public:
 			return -1;
 		}
 		
-		int bb_samp_rate_khz = 19200;
+		int bb_samp_rate_khz = 19200*4;
 		double bb_rate = double(freq_khz)/double(bb_samp_rate_khz);
 		uint32_t rate = uint32_t(bb_rate*double(1LL<<32));
 		u8 buf[] = {
