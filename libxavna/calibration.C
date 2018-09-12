@@ -85,15 +85,29 @@ public:
     }
 };
 
+// solve for the nodes in a signal flow graph, given excitation applied to each node
+static VectorXcd solveSFG(MatrixXcd sfg, VectorXcd excitation) {
+	assert(sfg.rows() == sfg.cols());
+	assert(sfg.rows() == excitation.size());
+	
+	VectorXcd rhs = -excitation;
+	MatrixXcd A = sfg - MatrixXcd::Identity(sfg.rows(), sfg.rows());
+	auto tmp = A.colPivHouseholderQr();
+	assert(tmp.rank() == sfg.rows());
+	return tmp.solve(rhs);
+}
 
 class SOLTCalibration: public VNACalibration {
 public:
+    bool matchedThru;
+    SOLTCalibration(bool matchedThru=true): matchedThru(matchedThru) {}
     // return the name of this calibration type
     virtual string name() const override {
-        return "solt";
+        return matchedThru?"solt":"solr";
     }
     string description() const override {
-        return "SOLT (UXYZ)";
+        return matchedThru?"SOLT (modified UXYZ)":"SOLT (UXYZ)";
+    }
     }
     // get a list of calibration standards required
     vector<array<string, 2> > getRequiredStandards() const override {
@@ -127,15 +141,51 @@ public:
             c = -c;
         out1 = out1*c;
         
-        MatrixXcd out(4, 2);
-        out << out1, out2;
-        return out;
+        if(matchedThru) {
+            // assume that the thru standard is well-matched, measure S11
+            // of the two ports
+            VNACalibratedValue thru_sparams = applySOL(out1, out2, measurements[6]);
+            complex<double> delay = thru_sparams(1,0)*thru_sparams(0,1);
+            complex<double> refl2 = thru_sparams(0,0)/delay;
+            complex<double> refl1 = thru_sparams(1,1)/delay;
+            MatrixXcd out(5, 2);
+            out << out1,
+                    out2,
+                    refl2, refl1;
+            return out;
+        } else {
+            MatrixXcd out(4, 2);
+            out << out1,
+                    out2;
+            return out;
+        }
     }
     // given cal coefficients and a raw value, compute S parameters
     VNACalibratedValue computeValue(MatrixXcd coeffs, VNARawValue val) const override {
-        assert(coeffs.rows() == 4);
+        assert(coeffs.rows() == 4 || coeffs.rows() == 5);
         assert(coeffs.cols() == 2);
-        return applySOL(coeffs.topRows(2), coeffs.bottomRows(2), val);
+        VNACalibratedValue tmp = applySOL(coeffs.topRows(2), coeffs.block(2,0,2,2), val);
+        
+        if(matchedThru) {
+            assert(coeffs.rows() == 5);
+            // calibrate out the match error of the vna ports;
+            // since we know the refl coeff of the two ports from measuring
+            // the thru standard, we can add an opposing edge to the sfg
+            // of the DUT S parameters and re-calculate S11 and S22.
+            MatrixXcd sfg = MatrixXcd::Zero(4, 4);
+            sfg(0,1) = tmp(0,0);
+            sfg(0,2) = tmp(0,1);
+            sfg(3,1) = tmp(1,0);
+            sfg(3,2) = tmp(1,1);
+            sfg(2,3) = -coeffs(4,0);
+            complex<double> s11 = solveSFG(sfg, Vector4cd{0.,1.,0.,0.})(0);
+            sfg(2,3) = 0.;
+            sfg(1,0) = -coeffs(4,1);
+            complex<double> s22 = solveSFG(sfg, Vector4cd{0.,0.,1.,0.})(3);
+            tmp(0,0) = s11;
+            tmp(1,1) = s22;
+        }
+        return tmp;
     }
     
     MatrixXcd getSOLCoeffs(const vector<VNARawValue>& measurements,
@@ -169,7 +219,8 @@ public:
 };
 
 vector<const VNACalibration*> initCalTypes() {
-    return {new SOLTCalibrationTR(true), new SOLTCalibrationTR(false), new SOLTCalibration()};
+    return {new SOLTCalibrationTR(true), new SOLTCalibrationTR(false),
+        new SOLTCalibration(true), new SOLTCalibration(false)};
 }
 
 
