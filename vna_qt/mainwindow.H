@@ -207,6 +207,7 @@ private slots:
     void on_t_ext2_returnPressed();
     void on_actionT_R_mode_toggled(bool checked);
     void on_actionSwap_ports_toggled(bool checked);
+    void on_b_cal_help_clicked();
 };
 
 #endif // MAINWINDOW_H

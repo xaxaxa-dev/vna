@@ -934,3 +934,9 @@ void MainWindow::on_actionT_R_mode_toggled(bool checked) {
 void MainWindow::on_actionSwap_ports_toggled(bool checked) {
     vna->swapPorts = checked;
 }
+
+void MainWindow::on_b_cal_help_clicked() {
+    int index = ui->d_caltype->currentIndex();
+    auto* cal = calibrationTypes.at(index);
+    QMessageBox::information(this,"Info",qs(cal->helpText()));
+}
