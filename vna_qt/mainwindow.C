@@ -132,6 +132,7 @@ void MainWindow::populateCalTypes() {
 }
 
 void MainWindow::setupViews() {
+    bool tr = vna->isTRMode();
     // create smith chart view
     polarView = new PolarView();
     polarView->setSizePolicy(QSizePolicy::Ignored, QSizePolicy::Preferred);
@@ -186,7 +187,13 @@ void MainWindow::setupViews() {
 
     updateSweepParams();
     nv.addMarker(false);
-    viewIsTR = vna->isTRMode();
+
+    // enable/disable menu items based on device type
+    ui->actionCapture_S_1->setEnabled(tr);
+    ui->actionCapture_S_2->setEnabled(tr);
+    ui->actionExport_s1p_port_2->setEnabled(!tr);
+
+    viewIsTR = tr;
 }
 
 void MainWindow::destroyViews() {
@@ -272,6 +279,12 @@ void MainWindow::handleBackgroundError(QString msg) {
 
 void MainWindow::s11MeasurementCompleted(QString fileName) {
     string data = serializeTouchstone(tmp_s11,vna->startFreqHz,vna->stepFreqHz);
+    saveFile(fileName, data);
+    enableUI(true);
+}
+
+void MainWindow::sparamsMeasurementCompleted(QString fileName) {
+    string data = serializeTouchstone(tmp_sparams,vna->startFreqHz,vna->stepFreqHz);
     saveFile(fileName, data);
     enableUI(true);
 }
@@ -732,7 +745,7 @@ void MainWindow::on_actionSave_triggered() {
     saveCalibration(fileName);
 }
 
-void MainWindow::on_actionExport_s1p_triggered() {
+void MainWindow::export_s1p(int port) {
     QString fileName = fileDialogSave(
             tr("Save S parameters"),
             tr("Touchstone .s1p (*.s1p);;All Files (*)"), "s1p");
@@ -740,12 +753,20 @@ void MainWindow::on_actionExport_s1p_triggered() {
 
     tmp_s11.resize(vna->nPoints);
     enableUI(false);
-    vna->takeMeasurement([this,fileName](const vector<VNARawValue>& vals){
+    vna->takeMeasurement([this,fileName,port](const vector<VNARawValue>& vals){
         assert(curCal != nullptr);
         for(int i=0;i<vna->nPoints;i++)
-            tmp_s11.at(i) = curCal->computeValue(curCalCoeffs.at(i),vals.at(i))(0,0);
+            tmp_s11.at(i) = curCal->computeValue(curCalCoeffs.at(i),vals.at(i))(port,port);
         QMetaObject::invokeMethod(this, "s11MeasurementCompleted", Qt::QueuedConnection, Q_ARG(QString, fileName));
     });
+}
+
+void MainWindow::on_actionExport_s1p_triggered() {
+    export_s1p(0);
+}
+
+void MainWindow::on_actionExport_s1p_port_2_triggered() {
+    export_s1p(1);
 }
 
 void MainWindow::on_actionCapture_S_1_triggered() {
@@ -757,25 +778,41 @@ void MainWindow::on_actionCapture_S_2_triggered() {
 }
 
 void MainWindow::on_actionExport_s2p_triggered() {
-    if(int(tmp_sn1.size())!=vna->nPoints) {
-        QMessageBox::critical(this,"Error","S*1 has not been captured");
-        return;
-    }
-    if(int(tmp_sn2.size())!=vna->nPoints) {
-        QMessageBox::critical(this,"Error","S*2 has not been captured");
-        return;
-    }
     vector<VNACalibratedValue> res(vna->nPoints);
-    for(int i=0;i<vna->nPoints;i++) {
-        res[i] << tmp_sn1[i](0,0), tmp_sn2[i](1,0),
-                tmp_sn1[i](1,0), tmp_sn2[i](0,0);
+    if(vna->isTRMode()) {
+        if(int(tmp_sn1.size())!=vna->nPoints) {
+            QMessageBox::critical(this,"Error","S*1 has not been captured");
+            return;
+        }
+        if(int(tmp_sn2.size())!=vna->nPoints) {
+            QMessageBox::critical(this,"Error","S*2 has not been captured");
+            return;
+        }
+        for(int i=0;i<vna->nPoints;i++) {
+            res[i] << tmp_sn1[i](0,0), tmp_sn2[i](1,0),
+                    tmp_sn1[i](1,0), tmp_sn2[i](0,0);
+        }
     }
-    string data = serializeTouchstone(res,vna->startFreqHz,vna->stepFreqHz);
+
     QString fileName = fileDialogSave(
             tr("Save S parameters"),
             tr("Touchstone .s2p (*.s2p);;All Files (*)"), "s2p");
     if (fileName.isEmpty()) return;
-    saveFile(fileName, data);
+
+    if(vna->isTRMode()) {
+        string data = serializeTouchstone(res,vna->startFreqHz,vna->stepFreqHz);
+        saveFile(fileName, data);
+    } else {
+        tmp_sparams.resize(vna->nPoints);
+        enableUI(false);
+        vna->takeMeasurement([this,fileName](const vector<VNARawValue>& vals){
+            assert(curCal != nullptr);
+            for(int i=0;i<vna->nPoints;i++)
+                tmp_sparams.at(i) = curCal->computeValue(curCalCoeffs.at(i),vals.at(i));
+            QMetaObject::invokeMethod(this, "sparamsMeasurementCompleted", Qt::QueuedConnection, Q_ARG(QString, fileName));
+        });
+    }
+
 }
 
 void MainWindow::on_actionImpedance_pane_toggled(bool arg1) {

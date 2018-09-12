@@ -84,7 +84,7 @@ public:
     double portExt1Seconds = 0., portExt2Seconds = 0.;
 
     vector<complex<double> > tmp_s11;
-    vector<VNACalibratedValue> tmp_sn1,tmp_sn2;
+    vector<VNACalibratedValue> tmp_sn1,tmp_sn2,tmp_sparams;
     QString tmp_fileName;
 
     QStringList recentFiles;
@@ -174,11 +174,15 @@ private slots:
 
     // called after measurement complete when the user clicks "export s1p"
     void s11MeasurementCompleted(QString fileName);
+    // called after measurement complete when the user clicks "export s2p"
+    void sparamsMeasurementCompleted(QString fileName);
     void sMeasurementCompleted();
 
     void on_actionLoad_triggered();
     void on_actionSave_triggered();
+    void export_s1p(int port);
     void on_actionExport_s1p_triggered();
+    void on_actionExport_s1p_port_2_triggered();
     void on_actionCapture_S_1_triggered();
     void on_actionCapture_S_2_triggered();
     void on_actionExport_s2p_triggered();

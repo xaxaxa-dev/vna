@@ -331,6 +331,7 @@ Measurements</string>
      <string>S parameters</string>
     </property>
     <addaction name="actionExport_s1p"/>
+    <addaction name="actionExport_s1p_port_2"/>
     <addaction name="actionCapture_S_1"/>
     <addaction name="actionCapture_S_2"/>
     <addaction name="actionExport_s2p"/>
@@ -610,7 +611,7 @@ Measurements</string>
   </action>
   <action name="actionExport_s1p">
    <property name="text">
-    <string>Export s1p</string>
+    <string>Export s1p (port 1)</string>
    </property>
   </action>
   <action name="actionCapture_S_1">
@@ -712,6 +713,11 @@ Measurements</string>
    </property>
    <property name="text">
     <string>Swap ports</string>
+   </property>
+  </action>
+  <action name="actionExport_s1p_port_2">
+   <property name="text">
+    <string>Export s1p (port 2)</string>
    </property>
   </action>
  </widget>
