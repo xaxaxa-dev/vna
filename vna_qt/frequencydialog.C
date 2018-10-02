@@ -12,6 +12,7 @@ FrequencyDialog::FrequencyDialog(QWidget *parent) :
     ui->setupUi(this);
     ui->w_advanced->setVisible(false);
     this->resize(this->width(),0);
+    this->setWindowTitle("Sweep Parameters");
 }
 
 FrequencyDialog::~FrequencyDialog()
@@ -20,9 +21,9 @@ FrequencyDialog::~FrequencyDialog()
 }
 
 void FrequencyDialog::fromVNA(const VNADevice &dev) {
-    ui->t_start->setText(qs(ssprintf(32,"%.2f",dev.startFreqHz*1e-6)));
-    ui->t_step->setText(qs(ssprintf(32,"%.2f",dev.stepFreqHz*1e-6)));
-    ui->t_points->setText(qs(to_string(dev.nPoints)));
+    ui->t_start->setValue(dev.startFreqHz*1e-6);
+    ui->t_stop->setValue(dev.startFreqHz*1e-6 + dev.stepFreqHz*1e-6 *(dev.nPoints - 1));
+    ui->t_points->setValue(dev.nPoints);
     ui->slider_power->setRange(dev.maxPower()-40, dev.maxPower());
     ui->slider_power->setValue(dev.maxPower() - dev.attenuation1);
     ui->t_nValues->setText(qs(ssprintf(32, "%d", dev.nValues)));
@@ -34,9 +35,17 @@ bool FrequencyDialog::toVNA(VNADevice &dev) {
     double oldStartFreq = dev.startFreqHz;
     double oldStepFreq = dev.stepFreqHz;
     double oldNPoints = dev.nPoints;
-    dev.startFreqHz = atof(ui->t_start->text().toUtf8().data())*1e6;
-    dev.stepFreqHz = atof(ui->t_step->text().toUtf8().data())*1e6;
-    dev.nPoints = atoi(ui->t_points->text().toUtf8().data());
+    dev.startFreqHz = ui->t_start->value()*1e6;
+    double stopFreqHz = ui->t_stop->value()*1e6;
+
+    if(stopFreqHz <= dev.startFreqHz){ //sanity check
+        stopFreqHz=dev.startFreqHz + 1e6;
+        QMessageBox::critical(this, "Error","Invalid Stop Frequency");
+    }
+
+    dev.nPoints = ui->t_points->value();
+    dev.stepFreqHz=(stopFreqHz - dev.startFreqHz)/(dev.nPoints - 1); //-1 to not skip the last step
+
     dev.attenuation1 = dev.attenuation2 = dev.maxPower() - ui->slider_power->value();
     dev.nValues = atoi(ui->t_nValues->text().toUtf8().data());
     dev.nWait = atoi(ui->t_nWait->text().toUtf8().data());
@@ -44,26 +53,25 @@ bool FrequencyDialog::toVNA(VNADevice &dev) {
 }
 
 void FrequencyDialog::updateLabels() {
-    double endFreq = atof(ui->t_start->text().toUtf8().data())
-            + (atoi(ui->t_points->text().toUtf8().data())
-               * atof(ui->t_step->text().toUtf8().data()));
-    if(!std::isnan(endFreq))
-        ui->l_end->setText(qs(ssprintf(32, "%.2f", endFreq)));
+    double stepSize = ( ui->t_stop->value() - ui->t_start->value()) / ui->t_points->value();
+
+    if(!std::isnan(stepSize) && stepSize>0)
+        ui->l_end->setText(qs(ssprintf(32, "%.2f", stepSize)));
 }
 
 void FrequencyDialog::on_slider_power_valueChanged(int value) {
     ui->l_power->setText(qs(ssprintf(32, "%d dBm", value)));
 }
 
-void FrequencyDialog::on_t_start_textChanged(const QString &) {
+void FrequencyDialog::on_t_start_valueChanged(const QString &) {
     updateLabels();
 }
 
-void FrequencyDialog::on_t_step_textChanged(const QString &) {
+void FrequencyDialog::on_t_stop_valueChanged(const QString &) {
     updateLabels();
 }
 
-void FrequencyDialog::on_t_points_textChanged(const QString &) {
+void FrequencyDialog::on_t_points_valueChanged(const QString &) {
     updateLabels();
 }
 
