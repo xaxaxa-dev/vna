@@ -2,6 +2,7 @@
 #define FREQUENCYDIALOG_H
 
 #include <QDialog>
+#include <QMessageBox>
 
 namespace Ui {
 class FrequencyDialog;
@@ -29,9 +30,9 @@ public:
 
 private slots:
     void on_slider_power_valueChanged(int value);
-    void on_t_start_textChanged(const QString &arg1);
-    void on_t_step_textChanged(const QString &arg1);
-    void on_t_points_textChanged(const QString &arg1);
+    void on_t_start_valueChanged(const QString &arg1);
+    void on_t_stop_valueChanged(const QString &arg1);
+    void on_t_points_valueChanged(const QString &arg1);
 
     void on_c_advanced_stateChanged(int);
 
