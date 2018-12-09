@@ -54,4 +54,4 @@ add_executable(vna_qt ${vna_qt_SRCS} ${vna_qt_FRMS} ${vna_qt_HDRS})
 target_link_libraries(vna_qt Qt5::Charts ${FFTW3_LIBRARIES} xavna xavna_mock_ui)
 
 # Install destinations
-install(TARGETS vna_qt RUNTIME DESTINATION lib)
+install(TARGETS vna_qt RUNTIME DESTINATION ${BIN_INSTALL_DIR})

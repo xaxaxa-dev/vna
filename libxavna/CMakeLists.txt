@@ -19,5 +19,5 @@ target_link_libraries(xavna ${xa_LIBRARIES})
 
 # Declare destinations
 install(TARGETS xavna
-        LIBRARY DESTINATION lib
-        ARCHIVE DESTINATION lib)
+        LIBRARY DESTINATION ${LIB_INSTALL_DIR}
+        ARCHIVE DESTINATION ${LIB_INSTALL_DIR})

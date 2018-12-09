@@ -22,12 +22,21 @@ set(xaVNA_VERSION_STRING ${xaVNA_VERSION_MAJOR}.${xaVNA_VERSION_MINOR})
 set(CMAKE_CXX_STANDARD 11)
 
 if(UNIX)
-  set(CMAKE_CXX_FLAGS "-O3" ${CMAKE_CXX_FLAGS})
-  set(CMAKE_CXX_FLAGS_DEBUG "-g ${CMAKE_CXX_FLAGS}")
+  set(CMAKE_CXX_FLAGS "-O2 ${CMAKE_CXX_FLAGS}")
+  set(CMAKE_CXX_FLAGS_DEBUG "-O2 -g ${CMAKE_CXX_FLAGS}")
+endif()
+
+if(NOT LIB_INSTALL_DIR)
+    set(LIB_INSTALL_DIR lib)
+endif()
+
+if(NOT BIN_INSTALL_DIR)
+    set(BIN_INSTALL_DIR bin)
 endif()
 
 # Set version
 add_definitions(-DVERSION=\"${xaVNA_VERSION_STRING}\")
+add_definitions(-DEIGEN_DONT_VECTORIZE -DEIGEN_DISABLE_UNALIGNED_ARRAY_ASSERT)
 
 # CMake policies
 cmake_policy(SET CMP0022 NEW)
@@ -67,7 +76,7 @@ endif()
 # ==============================================================================
 find_package(Qt5 COMPONENTS Core Gui Widgets Charts REQUIRED)
 if(Qt5Charts_FOUND)
-  message(STATUS "Found qt5 version: ${Qt5_VERSION}")
+  message(STATUS "Found QT5 version: ${Qt5_VERSION}")
   message(STATUS "  qt5 charts dir: ${Qt5Charts_DIR}")
 endif()
 
@@ -77,4 +86,3 @@ endif()
 add_subdirectory(libxavna)
 add_subdirectory(libxavna/xavna_mock_ui)
 add_subdirectory(vna_qt)
-
