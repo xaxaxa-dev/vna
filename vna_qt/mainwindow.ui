@@ -397,6 +397,8 @@ Measurements</string>
     <addaction name="actionCapture_S_1"/>
     <addaction name="actionCapture_S_2"/>
     <addaction name="actionExport_s2p"/>
+    <addaction name="separator"/>
+    <addaction name="actionExport_csv"/>
    </widget>
    <widget class="QMenu" name="menuDevice">
     <property name="title">
@@ -780,6 +782,11 @@ Measurements</string>
   <action name="actionExport_s1p_port_2">
    <property name="text">
     <string>Export s1p (port 2)</string>
+   </property>
+  </action>
+  <action name="actionExport_csv">
+   <property name="text">
+    <string>Export impedances (csv)</string>
    </property>
   </action>
  </widget>

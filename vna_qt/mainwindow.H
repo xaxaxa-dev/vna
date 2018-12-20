@@ -208,6 +208,7 @@ private slots:
     void on_actionT_R_mode_toggled(bool checked);
     void on_actionSwap_ports_toggled(bool checked);
     void on_b_cal_help_clicked();
+    void on_actionExport_csv_triggered();
 };
 
 #endif // MAINWINDOW_H

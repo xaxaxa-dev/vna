@@ -940,3 +940,38 @@ void MainWindow::on_b_cal_help_clicked() {
     auto* cal = calibrationTypes.at(index);
     QMessageBox::information(this,"Info",qs(cal->helpText()));
 }
+
+string serializeCSV(vector<Matrix2cd> data, double startFreqHz, double stepFreqHz) {
+    string res;
+    res += "Freq (MHz),re(S11),im(S11),re(Z),im(Z)\n";
+    for(int i=0;i<(int)data.size();i++) {
+        double freqHz = startFreqHz + i*stepFreqHz;
+        double freqMHz = freqHz*1e-6;
+        complex<double> s11 = data[i](0,0);
+        double z0 = 50.;
+        complex<double> Z = -z0*(s11+1.)/(s11-1.);
+        res += ssprintf(256,"%.3f,%.5f,%.5f,%.3f,%.3f\n",
+                 freqMHz, s11.real(), s11.imag(), Z.real(),Z.imag());
+    }
+    return res;
+}
+
+void MainWindow::on_actionExport_csv_triggered() {
+    vector<VNACalibratedValue> res(vna->nPoints);
+
+    QString fileName = fileDialogSave(
+            tr("Save impedance parameters"),
+            tr("CSV files (*.csv);;All Files (*)"), "csv");
+    if (fileName.isEmpty()) return;
+
+    enableUI(false);
+    vna->takeMeasurement([this,fileName](const vector<VNARawValue>& vals) {
+        assert(curCal != nullptr);
+        tmp_sparams.resize(vna->nPoints);
+        for(int i=0;i<vna->nPoints;i++)
+            tmp_sparams.at(i) = curCal->computeValue(curCalCoeffs.at(i), vals.at(i));
+        string data = serializeCSV(tmp_sparams,vna->startFreqHz,vna->stepFreqHz);
+        saveFile(fileName, data);
+        QMetaObject::invokeMethod(this, "sMeasurementCompleted", Qt::QueuedConnection);
+    });
+}
