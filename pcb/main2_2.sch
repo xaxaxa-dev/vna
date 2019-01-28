@@ -1399,7 +1399,7 @@ device=BNC
 T 15700 20100 5 10 1 1 0 0 1
 refdes=CONN1
 T 15700 19300 5 10 0 0 0 0 1
-footprint=custom_sma4
+footprint=custom_sma5
 }
 C 15700 19000 1 0 0 gnd-1.sym
 C 43500 30900 1 180 0 ad9200.sym
@@ -3067,7 +3067,7 @@ refdes=C142
 T 16400 20500 5 10 0 0 0 0 1
 symversion=0.1
 T 16700 19600 5 10 1 1 0 0 1
-footprint=0603
+footprint=0402
 T 16800 19900 5 10 1 1 0 0 1
 value=1n
 }
@@ -4138,7 +4138,7 @@ device=BNC
 T 79800 73400 5 10 1 1 0 6 1
 refdes=CONN3
 T 79800 72600 5 10 0 0 0 6 1
-footprint=custom_sma4
+footprint=custom_sma5
 }
 C 79600 72300 1 0 0 gnd-1.sym
 C 68400 74200 1 270 0 resistor-1.sym
@@ -4338,7 +4338,7 @@ device=BNC
 T 42000 51200 5 10 1 1 0 0 1
 refdes=CONN4
 T 42000 50400 5 10 0 0 0 0 1
-footprint=custom_sma4
+footprint=custom_sma5
 T 41400 50800 5 10 1 0 0 0 1
 dni=1
 }
@@ -4429,7 +4429,7 @@ device=BNC
 T 45800 52000 5 10 1 1 0 6 1
 refdes=CONN5
 T 45800 51200 5 10 0 0 0 6 1
-footprint=custom_coax1_1
+footprint=ufl
 T 46400 51600 5 10 1 0 0 6 1
 dni=1
 }
