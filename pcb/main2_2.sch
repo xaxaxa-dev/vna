@@ -969,51 +969,6 @@ N 64700 37700 71700 37700 4
 N 69800 21200 69800 37700 4
 N 61500 28900 61500 30100 4
 N 61500 30100 75500 30100 4
-C 57000 15900 1 90 0 terminal-1.sym
-{
-T 56250 16210 5 10 0 0 90 0 1
-device=terminal
-T 56400 16210 5 10 0 0 90 0 1
-footprint=custom_lvds1
-T 56950 16150 5 10 1 1 90 6 1
-refdes=T31
-}
-C 56700 15900 1 90 0 terminal-1.sym
-{
-T 55950 16210 5 10 0 0 90 0 1
-device=terminal
-T 56100 16210 5 10 0 0 90 0 1
-footprint=custom_lvds1
-T 56650 16150 5 10 1 1 90 6 1
-refdes=T30
-}
-C 56400 15900 1 90 0 terminal-1.sym
-{
-T 55650 16210 5 10 0 0 90 0 1
-device=terminal
-T 55800 16210 5 10 0 0 90 0 1
-footprint=custom_lvds1
-T 56350 16150 5 10 1 1 90 6 1
-refdes=T29
-}
-C 55800 15900 1 90 0 terminal-1.sym
-{
-T 55050 16210 5 10 0 0 90 0 1
-device=terminal
-T 55200 16210 5 10 0 0 90 0 1
-footprint=custom_lvds1
-T 55750 16150 5 10 1 1 90 6 1
-refdes=T27
-}
-C 56100 15900 1 90 0 terminal-1.sym
-{
-T 55350 16210 5 10 0 0 90 0 1
-device=terminal
-T 55500 16210 5 10 0 0 90 0 1
-footprint=custom_lvds1
-T 56050 16150 5 10 1 1 90 6 1
-refdes=T28
-}
 C 74100 33400 1 90 0 capacitor-1.sym
 {
 T 73400 33600 5 10 0 0 90 0 1
