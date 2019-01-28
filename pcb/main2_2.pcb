@@ -7766,7 +7766,6 @@ Layer(2 "in1" "copper")
 	Line[34.5000mm 36.5000mm 41.0000mm 36.5000mm 0.3000mm 0.6000mm "clearline"]
 	Line[67.0000mm 36.5000mm 73.2000mm 36.5000mm 0.3000mm 0.6000mm "clearline"]
 	Line[41.0000mm 36.5000mm 67.0000mm 36.5000mm 0.2000mm 0.4000mm "clearline"]
-	Text[58.1000mm 121.1000mm 0 150 "xaVNA T/R R202" "clearline"]
 	Polygon("clearpoly")
 	(
 		[125.0000mm 63.0000mm] [108.5000mm 63.0000mm] [108.5000mm 77.0000mm] [125.0000mm 77.0000mm] 
@@ -8522,7 +8521,6 @@ Layer(10 "top silk" "silk")
 	Text[122.7000mm 53.1000mm 1 100 "GND" "clearline"]
 	Text[120.8000mm 114.5000mm 1 100 "5V" "clearline"]
 	Text[121.4000mm 106.5000mm 1 100 "GND" "clearline"]
-	Text[77.5000mm 27.0000mm 0 122 "github.com/xaxaxa/vna" "clearline"]
 	Text[116.4000mm 85.9000mm 0 100 "0" "clearline"]
 	Text[116.5000mm 88.4000mm 0 100 "1" "clearline"]
 	Text[116.4000mm 90.9000mm 0 100 "2" "clearline"]
