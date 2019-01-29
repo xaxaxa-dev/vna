@@ -2918,8 +2918,8 @@ refdes=G3
 T 24700 13800 5 10 0 1 90 0 1
 footprint=adhoc
 }
-N 25600 13000 25600 14500 4
-C 25500 12700 1 0 0 gnd-1.sym
+N 25600 12700 25600 14500 4
+C 25500 12400 1 0 0 gnd-1.sym
 C 53400 44800 1 180 0 capacitor-1.sym
 {
 T 53200 44100 5 10 0 0 180 0 1
@@ -5899,4 +5899,22 @@ T 21410 14400 5 10 0 0 0 0 1
 footprint=custom_shield1
 T 21350 13850 5 10 1 1 0 6 1
 refdes=T3
+}
+C 24700 12900 1 0 0 terminal-1.sym
+{
+T 25010 13650 5 10 0 0 0 0 1
+device=terminal
+T 24950 12950 5 10 1 1 0 6 1
+refdes=G6
+T 24700 12900 5 10 0 1 90 0 1
+footprint=adhoc
+}
+C 24700 12600 1 0 0 terminal-1.sym
+{
+T 25010 13350 5 10 0 0 0 0 1
+device=terminal
+T 24950 12650 5 10 1 1 0 6 1
+refdes=G7
+T 24700 12600 5 10 0 1 90 0 1
+footprint=adhoc
 }
