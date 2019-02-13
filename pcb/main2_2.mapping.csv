@@ -38,6 +38,10 @@ RESISTOR	0603	100	findResistor(device,footprint,value,'1%')
 RESISTOR	0603	50	findResistor(device,footprint,'49.9','1%')	
 INDUCTOR	mcw-0630	10uH	('06030 (0630) 10uH 20% 4A', 'INDUCTOR', '06030', '10u')	
 CONNECTOR_5	custom_microusb1	*	('10118193-0001LF', 'CONNECTOR', 'micro usb', '')	
+CONNECTOR_5	connector5	*	'DNI'
+connector9	connector9	*	'DNI'
+*	adhoc	*	'DNI'
+*	custom_pad1	*	'DNI'
 *	custom_sma4	*	('CON-SMA-EDGE-S', 'CONNECTOR', 'SMA','')	
 CAPACITOR	*	*	findCapacitor(device,footprint,value)	
 RESISTOR	*	*	findResistor(device,footprint,value)	
