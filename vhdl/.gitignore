@@ -1,4 +1,4 @@
-*.svf
+a.svf
 *.b64
 *.tcl
 *.debug
@@ -7,7 +7,8 @@ ipcore_dir/*/*
 
 # intermediate build files
 *.bgn
-*.bit
+top.bit
+top2.bit
 *.bld
 *.cmd_log
 *.drc
