@@ -534,12 +534,14 @@ void MainWindow::captureSParam(vector<VNACalibratedValue> *var) {
     });
 }
 
-QString MainWindow::fileDialogSave(QString title, QString filter, QString defaultSuffix) {
+QString MainWindow::fileDialogSave(QString title, QString filter, QString defaultSuffix, QString defaultFile) {
     QFileDialog dialog(this);
     dialog.setWindowTitle(title);
     dialog.setAcceptMode(QFileDialog::AcceptSave);
     dialog.setDefaultSuffix(defaultSuffix);
     dialog.setNameFilter(filter);
+    if(defaultFile != "")
+        dialog.selectFile(defaultFile);
     if(dialog.exec() == QDialog::Accepted)
         return dialog.selectedFiles().at(0);
     return nullptr;
@@ -958,10 +960,16 @@ string serializeCSV(vector<Matrix2cd> data, double startFreqHz, double stepFreqH
 
 void MainWindow::on_actionExport_csv_triggered() {
     vector<VNACalibratedValue> res(vna->nPoints);
+    struct tm tm1;
+    time_t t = time(nullptr);
+    localtime_r(&t, &tm1);
+    string defaultFilename = "impedance-" + sstrftime("%Y%m%d", tm1) + ".csv";
 
     QString fileName = fileDialogSave(
             tr("Save impedance parameters"),
-            tr("CSV files (*.csv);;All Files (*)"), "csv");
+            tr("CSV files (*.csv);;All Files (*)"),
+            "csv",
+            qs(defaultFilename));
     if (fileName.isEmpty()) return;
 
     enableUI(false);

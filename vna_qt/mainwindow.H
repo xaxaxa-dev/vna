@@ -147,7 +147,7 @@ public:
 
     void captureSParam(vector<VNACalibratedValue>* var);
 
-    QString fileDialogSave(QString title, QString filter, QString defaultSuffix);
+    QString fileDialogSave(QString title, QString filter, QString defaultSuffix, QString defaultFile="");
 
 
     string freqStr(double freqHz);

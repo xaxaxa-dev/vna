@@ -68,6 +68,11 @@ inline string ssprintf(int maxLen, const char* fmt, ...) {
     tmp.resize(len);
     return tmp;
 }
+inline string sstrftime(const char *format, const struct tm &tm) {
+    char buf[256] = {0};
+    strftime(buf, 256, format, &tm);
+    return buf;
+}
 
 
 // trim from start (in place)
