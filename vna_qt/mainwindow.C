@@ -114,14 +114,7 @@ void MainWindow::loadSettings() {
     refreshRecentFiles();
     cks = settings.value("calkits").value<CalKitSettings>();
 
-    nv.graphLimits = {
-        {-1000,-999, 12},
-        {-70, 30, 10},      //TYPE_MAG=1
-        {-180, 180, 10},    //TYPE_PHASE
-        {0, 50, 10},        //TYPE_GRPDELAY
-        {1, 11, 10},        //TYPE_SWR
-        {-1000,-999, 10}    //TYPE_COMPLEX
-    };
+    nv.graphLimits = NetworkView::defaultGraphLimits;
 }
 
 void MainWindow::populateCalTypes() {

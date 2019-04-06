@@ -23,12 +23,16 @@ inline double swr(double power) {
     return (double)fmin(11.0,(d+1)/(d-1));
 }
 
-// freq is in Hz, Z is in ohms
+// freq is in Hz, Z is in ohms.
+// if return value is positive, it is in henries;
+// if return value is negative, it is in farads.
 inline double capacitance_inductance(double freq, double Z) {
     if(Z>0) return Z/(2*M_PI*freq);
     return 1./(2*Z*M_PI*freq);
 }
 // freq is in Hz, Y is in mhos
+// if return value is positive, it is in henries;
+// if return value is negative, it is in farads.
 inline double capacitance_inductance_Y(double freq, double Y) {
     if(Y<0) return -1./(2*Y*M_PI*freq);
     return -Y/(2*M_PI*freq);

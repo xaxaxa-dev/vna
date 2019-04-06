@@ -16,18 +16,30 @@
 using namespace std;
 using namespace xaxaxa;
 
+const vector<array<double,3> > NetworkView::defaultGraphLimits = {
+    {-1000,-999, 12},
+    {-80, 30, 11},      //TYPE_MAG=1
+    {-180, 180, 12},    //TYPE_PHASE
+    {0, 50, 10},        //TYPE_GRPDELAY
+    {1, 11, 10},        //TYPE_SWR
+    {0, 200, 10},       //TYPE_Z_RE
+    {-200, 200, 10},    //TYPE_Z_IM
+    {0, 200, 10},       //TYPE_Z_MAG
+    {0, 1000, 10},      //TYPE_Z_CAP
+    {0, 1000, 10},      //TYPE_Z_IND
+    {0, 1000, 10},      //TYPE_Y_RE
+    {-1000, 1000, 10},  //TYPE_Y_IM
+    {0, 1000, 10},      //TYPE_Y_MAG
+    {0, 1000, 10},      //TYPE_Y_CAP
+    {0, 1000, 10},      //TYPE_Y_IND
+    {-1000,-999, 10}    //TYPE_COMPLEX
+};
+
 NetworkView::NetworkView() {
     xAxisValueStr = [](double val) {
         return to_string(val);
     };
-    graphLimits = {
-        {-1000,-999, 12},
-        {-80, 30, 11},      //TYPE_MAG=1
-        {-180, 180, 12},    //TYPE_PHASE
-        {0, 50, 10},        //TYPE_GRPDELAY
-        {1, 11, 10},        //TYPE_SWR
-        {-1000,-999, 10}    //TYPE_COMPLEX  
-    };
+    graphLimits = NetworkView::defaultGraphLimits;
 }
 
 void NetworkView::init(QLayout *sliderContainer) {
@@ -55,12 +67,30 @@ GraphPanel* NetworkView::createGraphView(bool freqDomain, bool tr) {
         case SParamViewSource::TYPE_MAG: name = "mag"; break;
         case SParamViewSource::TYPE_PHASE: name = "arg"; break;
         case SParamViewSource::TYPE_SWR: name = "swr"; break;
+        case SParamViewSource::TYPE_Z_RE: name = "Z_re"; break;
+        case SParamViewSource::TYPE_Z_IM: name = "Z_im"; break;
+        case SParamViewSource::TYPE_Z_MAG: name = "|Z|"; break;
+        case SParamViewSource::TYPE_Z_CAP: name = "Cseries"; break;
+        case SParamViewSource::TYPE_Z_IND: name = "Lseries"; break;
+        case SParamViewSource::TYPE_Y_RE: name = "Y_re"; break;
+        case SParamViewSource::TYPE_Y_IM: name = "Y_im"; break;
+        case SParamViewSource::TYPE_Y_MAG: name = "|Y|"; break;
+        case SParamViewSource::TYPE_Y_CAP: name = "Cparallel"; break;
+        case SParamViewSource::TYPE_Y_IND: name = "Lparallel"; break;
         }
         for(int row=0;row<2;row++)
             for(int col=0;col<2;col++) {
                 if(tr && col==1) continue;
+
                 // group delay only makes sense in frequency domain view
                 if(!freqDomain && i==SParamViewSource::TYPE_GRPDELAY) continue;
+
+                // impedance parameters only make sense for Snn, not Snm,
+                // and also only in frequency domain.
+                if(i >= SParamViewSource::TYPE_Z_RE && i <= SParamViewSource::TYPE_Y_IND) {
+                    if(row != col) continue;
+                    if(!freqDomain) continue;
+                }
                 string desc = name + "(S" + to_string(row+1) + to_string(col+1) + ")";
                 graphTraces.push_back(desc);
                 graphSources.push_back({row, col, SParamViewSource::Types(i)});
@@ -116,6 +146,16 @@ void NetworkView::updateXAxis(double start, double step, int cnt) {
         case SParamViewSource::TYPE_SWR:
         case SParamViewSource::TYPE_PHASE:
         case SParamViewSource::TYPE_GRPDELAY:
+        case SParamViewSource::TYPE_Z_RE:
+        case SParamViewSource::TYPE_Z_IM:
+        case SParamViewSource::TYPE_Z_MAG:
+        case SParamViewSource::TYPE_Z_CAP:
+        case SParamViewSource::TYPE_Z_IND:
+        case SParamViewSource::TYPE_Y_RE:
+        case SParamViewSource::TYPE_Y_IM:
+        case SParamViewSource::TYPE_Y_MAG:
+        case SParamViewSource::TYPE_Y_CAP:
+        case SParamViewSource::TYPE_Y_IND:
         {
             auto* series = dynamic_cast<QLineSeries*>(tmp.view);
             series->clear();
@@ -160,17 +200,19 @@ void NetworkView::updateView(int viewIndex, int freqIndex) {
         }
         return;
     }
+    double freqHz = xAxisAt(freqIndex)*1e6; // only meaningful in frequency domain
     SParamView tmp = this->views.at(viewIndex);
 
     VNACalibratedValue val = this->values.at(freqIndex);
     complex<double> entry = val(tmp.src.row,tmp.src.col);
+    double z0 = 50;
+    complex<double> Z = -z0*(entry+1.)/(entry-1.);
+    complex<double> Y = -(entry-1.)/(z0*(entry+1.));
 
-    switch(tmp.src.type) {
-    case SParamViewSource::TYPE_MAG:
-    case SParamViewSource::TYPE_SWR:
-    case SParamViewSource::TYPE_PHASE:
-    case SParamViewSource::TYPE_GRPDELAY:
-    {
+    if(tmp.src.type == SParamViewSource::TYPE_COMPLEX) {
+        auto* view = dynamic_cast<PolarView*>(tmp.view);
+        view->points.at(freqIndex) = entry;
+    } else {
         auto* series = dynamic_cast<QLineSeries*>(tmp.view);
         double y = 0;
         switch(tmp.src.type) {
@@ -182,6 +224,36 @@ void NetworkView::updateView(int viewIndex, int freqIndex) {
             break;
         case SParamViewSource::TYPE_PHASE:
             y = arg(entry)*180./M_PI;
+            break;
+        case SParamViewSource::TYPE_Z_RE:
+            y = Z.real();
+            break;
+        case SParamViewSource::TYPE_Z_IM:
+            y = Z.imag();
+            break;
+        case SParamViewSource::TYPE_Z_MAG:
+            y = abs(Z);
+            break;
+        case SParamViewSource::TYPE_Z_CAP: // capacitance in pF
+            y = -capacitance_inductance(freqHz, Z.imag()) * 1e12;
+            break;
+        case SParamViewSource::TYPE_Z_IND: // inductance in nH
+            y = capacitance_inductance(freqHz, Z.imag()) * 1e9;
+            break;
+        case SParamViewSource::TYPE_Y_RE:
+            y = Y.real() * 1000;
+            break;
+        case SParamViewSource::TYPE_Y_IM:
+            y = Y.imag() * 1000;
+            break;
+        case SParamViewSource::TYPE_Y_MAG:
+            y = abs(Y) * 1000;
+            break;
+        case SParamViewSource::TYPE_Y_CAP: // capacitance in pF
+            y = -capacitance_inductance_Y(freqHz, Y.imag()) * 1e12;
+            break;
+        case SParamViewSource::TYPE_Y_IND: // inductance in nH
+            y = capacitance_inductance_Y(freqHz, Y.imag()) * 1e9;
             break;
         case SParamViewSource::TYPE_GRPDELAY:
         {
@@ -197,16 +269,26 @@ void NetworkView::updateView(int viewIndex, int freqIndex) {
         }
         default: assert(false);
         }
+
+        // clamp values to avoid enlarging labels
+        switch(tmp.src.type) {
+            case SParamViewSource::TYPE_Z_CAP:
+            case SParamViewSource::TYPE_Z_IND:
+            case SParamViewSource::TYPE_Y_CAP:
+            case SParamViewSource::TYPE_Y_IND:
+                if(y < 0) y = 0;
+                if(y > 999) y = 999;
+                break;
+            case SParamViewSource::TYPE_Z_RE:
+            case SParamViewSource::TYPE_Z_IM:
+            case SParamViewSource::TYPE_Z_MAG:
+                if(y < -999) y = -999;
+                if(y > 999) y = 999;
+                break;
+            default: break;
+        }
+
         series->replace(freqIndex,series->at(freqIndex).x(), y);
-        break;
-    }
-    case SParamViewSource::TYPE_COMPLEX:
-    {
-        auto* view = dynamic_cast<PolarView*>(tmp.view);
-        view->points.at(freqIndex) = entry;
-        break;
-    }
-    default: assert(false);
     }
 }
 
@@ -262,6 +344,16 @@ void NetworkView::updateBottomLabels(int marker) {
                 case SParamViewSource::TYPE_SWR: fmt = "%.2lf:1"; break;
                 case SParamViewSource::TYPE_PHASE: fmt = "%.1lf °"; break;
                 case SParamViewSource::TYPE_GRPDELAY: fmt = "%.2lf ns"; break;
+                case SParamViewSource::TYPE_Z_RE: fmt = "%.1lf Ω"; break;
+                case SParamViewSource::TYPE_Z_IM: fmt = "%.1lf Ω"; break;
+                case SParamViewSource::TYPE_Z_MAG: fmt = "%.1lf Ω"; break;
+                case SParamViewSource::TYPE_Z_CAP: fmt = "%.1lf pF"; break;
+                case SParamViewSource::TYPE_Z_IND: fmt = "%.2lf nH"; break;
+                case SParamViewSource::TYPE_Y_RE: fmt = "%.1lf mS"; break;
+                case SParamViewSource::TYPE_Y_IM: fmt = "%.1lf mS"; break;
+                case SParamViewSource::TYPE_Y_MAG: fmt = "%.1lf mS"; break;
+                case SParamViewSource::TYPE_Y_CAP: fmt = "%.1lf pF"; break;
+                case SParamViewSource::TYPE_Y_IND: fmt = "%.2lf nH"; break;
                 default: fmt = "%.2lf";
                 }
                 marker.ms->setLabelText(j, ssprintf(32, fmt, series->at(marker.freqIndex).y()));

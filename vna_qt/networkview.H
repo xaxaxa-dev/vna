@@ -24,11 +24,23 @@ struct SParamViewSource {
     int row,col;    // which S parameter are we viewing
     enum Types {
         UNDEFINED=0,
-        TYPE_MAG=1,     // view must be QLineSeries
-        TYPE_PHASE,     // view must be QLineSeries
-        TYPE_GRPDELAY,  // view must be QLineSeries
-        TYPE_SWR,       // view must be QLineSeries
-        TYPE_COMPLEX,   // view must be PolarView
+        // view must be QLineSeries:
+        TYPE_MAG=1,     // display the magnitude of Snn
+        TYPE_PHASE,     // display the phase of Snn
+        TYPE_GRPDELAY,  // group delay calculated from change in phase
+        TYPE_SWR,       // standing wave ratio
+        TYPE_Z_RE,      // real part of series equivalent impedance
+        TYPE_Z_IM,      // imaginary part of series equivalent impedance
+        TYPE_Z_MAG,     // magnitude of series equivalent impedance
+        TYPE_Z_CAP,     // capacitance (in pF), series equivalent
+        TYPE_Z_IND,     // inductance (in nH), series equivalent
+        TYPE_Y_RE,      // real part of parallel equivalent admittance, mS
+        TYPE_Y_IM,      // imaginary part of parallel equivalent admittance, mS
+        TYPE_Y_MAG,     // magnitude of parallel equivalent admittance, mS
+        TYPE_Y_CAP,     // capacitance (in pF), parallel equivalent
+        TYPE_Y_IND,     // inductance (in nH), parallel equivalent
+        // view must be PolarView:
+        TYPE_COMPLEX,
         _LAST
     } type;
 };
@@ -84,6 +96,7 @@ public:
     // min, max, and division count of the y axis of the graph, indexed by SParamViewSource::Types
     vector<array<double,3> > graphLimits;
 
+    static const vector<array<double,3> > defaultGraphLimits;
 
 
     NetworkView();

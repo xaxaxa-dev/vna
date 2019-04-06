@@ -21,7 +21,7 @@
   </property>
   <layout class="QHBoxLayout" name="horizontalLayout">
    <property name="spacing">
-    <number>6</number>
+    <number>3</number>
    </property>
    <property name="topMargin">
     <number>0</number>
@@ -123,13 +123,13 @@
       <string notr="true">color: red; font-weight: bold</string>
      </property>
      <property name="text">
-      <string>TextLabel</string>
+      <string>-100.1 Ω</string>
      </property>
      <property name="alignment">
       <set>Qt::AlignCenter</set>
      </property>
      <property name="margin">
-      <number>5</number>
+      <number>0</number>
      </property>
     </widget>
    </item>
@@ -145,13 +145,13 @@
       <string notr="true">color: blue; font-weight: bold</string>
      </property>
      <property name="text">
-      <string>TextLabel</string>
+      <string>TextLabel1</string>
      </property>
      <property name="alignment">
       <set>Qt::AlignCenter</set>
      </property>
      <property name="margin">
-      <number>5</number>
+      <number>0</number>
      </property>
     </widget>
    </item>
