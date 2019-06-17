@@ -38,21 +38,26 @@ end entity;
 
 architecture a of vnaTxNew is
 	constant resultBits: integer := adcBits+sgBits;
-	constant accumBits: integer := 35;
+	constant accumPeriodOrder: integer := 12;
+	constant accumBits: integer := resultBits+accumPeriodOrder;
+	constant outBits: integer := 35;
 	constant nInputs: integer := 3;
 
 	type input_t is array(nInputs-1 downto 0) of signed(adcBits-1 downto 0);
 	signal inputs: input_t;
 
 	-- state machine
-	signal accumPhase: unsigned(11 downto 0);
+	signal accumPhase: unsigned(accumPeriodOrder-1 downto 0);
 
 	-- mixer
 	type mixer_t is array(nInputs-1 downto 0) of signed(adcBits+sgBits-1 downto 0);
 	signal mixed_re,mixed_im: mixer_t;
+	
 	-- accumulator
 	type accum_t is array(nInputs-1 downto 0) of signed(accumBits-1 downto 0);
 	signal accum_re,accum_im,accum_reNext,accum_imNext: accum_t;
+	type out_t is array(nInputs-1 downto 0) of signed(outBits-1 downto 0);
+	signal out_re, out_im: out_t;
 	
 	-- serial tx
 	type txSR_t is array(nInputs*10-1 downto 0) of signed(7 downto 0);
@@ -85,18 +90,21 @@ g1:	for I in 0 to nInputs-1 generate
 		accum_imNext(I) <= resize(mixed_im(I),accumBits) when accumPhase=0 else accum_im(I)+resize(mixed_im(I),accumBits);
 		accum_re(I) <= accum_reNext(I) when rising_edge(clk);
 		accum_im(I) <= accum_imNext(I) when rising_edge(clk);
+		
+		out_re(I) <= accum_re(I)(accum_re(I)'left downto accum_re(I)'left-outBits+1)
+			when I/=0 or not disableInput0 else (others=>'1');
+		out_im(I) <= accum_im(I)(accum_im(I)'left downto accum_im(I)'left-outBits+1)
+			when I/=0 or not disableInput0 else (others=>'1');
 	end generate;
-	
-	
 	
 	-- tx shift register
 g2:	for I in 0 to nInputs-1 generate
 		constant isContinuation: std_logic := to_std_logic(I/=0);
 	begin
-		txValue(I*10+9 downto I*10) <= ("1"&accum_re(I)(34 downto 28), "1"&accum_re(I)(27 downto 21), "1"&accum_re(I)(20 downto 14), 
-				"1"&accum_re(I)(13 downto 7), "1"&accum_re(I)(6 downto 0), 
-				"1"&accum_im(I)(34 downto 28), "1"&accum_im(I)(27 downto 21), "1"&accum_im(I)(20 downto 14), 
-				"1"&accum_im(I)(13 downto 7), isContinuation & accum_im(I)(6 downto 0));
+		txValue(I*10+9 downto I*10) <= ("1"&out_re(I)(34 downto 28), "1"&out_re(I)(27 downto 21), "1"&out_re(I)(20 downto 14), 
+				"1"&out_re(I)(13 downto 7), "1"&out_re(I)(6 downto 0), 
+				"1"&out_im(I)(34 downto 28), "1"&out_im(I)(27 downto 21), "1"&out_im(I)(20 downto 14), 
+				"1"&out_im(I)(13 downto 7), isContinuation & out_im(I)(6 downto 0));
 	end generate;
 	
 	txSRNext <= txValue when accumPhase=0 else ("00000000") & txSR(nInputs*10-1 downto 1);

@@ -222,7 +222,7 @@ begin
 	
 	
 	-- adf4350 spi
-	lo_freq <= config_freq+70;
+	lo_freq <= config_freq+75;
 	pll1_pwr <= cfg(5)(3 downto 2);
 	pll2_pwr <= cfg(5)(1 downto 0);
 	
@@ -280,7 +280,7 @@ begin
 	
 	
 	-- vna data
-	sg: entity ejxGenerator port map(adcclk,to_unsigned(9786709,28),sg_re,sg_im);
+	sg: entity ejxGenerator port map(adcclk,to_unsigned(10485760,28),sg_re,sg_im);
 	vnaTx1: entity vnaTxNew generic map(adcBits=>14) port map(adcclk,
 		filtered0(17 downto 4),filtered1(17 downto 4),filtered2(17 downto 4), sg_im,sg_re, vna_txdat, vna_txval);
 	txclk <= adcclk;
