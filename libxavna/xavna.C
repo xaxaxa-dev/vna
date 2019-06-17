@@ -37,8 +37,9 @@ static complex<double> processValue(u64 data1,u64 data2) {
 }
 
 // returns [adc0r, adc0i, adc1r, adc1i, adc2r, adc2i, ...]
-// unnormalized
-static tuple<array<int64_t,8>,int> readValue2(int ttyFD, int cnt) {
+// unnormalized values;
+// if normalizePhase is true, divide all values by polar(arg(adc0))
+static tuple<array<int64_t,8>,int> readValue2(int ttyFD, int cnt, bool normalizePhase=true) {
 	array<int64_t,8> res;
 	for(int i=0;i<8;i++) res[i] = 0;
 	
@@ -65,8 +66,23 @@ static tuple<array<int64_t,8>,int> readValue2(int ttyFD, int cnt) {
 					if(checksumPrev != u8(values[k])) {
 						printf("ERROR: checksum should be %d, is %d\n", (int)checksumPrev, (int)(u8)values[6]);
 					}
+					int64_t valuesOut[N+1];
 					for(int g=0;g<k;g++)
-						res[g] += sx(values[g], 35);
+						valuesOut[g] = (int64_t)sx(values[g], 35);
+					if(normalizePhase) {
+						complex<double> val0(valuesOut[0], valuesOut[1]);
+						double phase = arg(val0);
+						complex<double> scale = polar(1., -phase);
+						for(int g=0;g<k;g+=2) {
+							complex<double> val(valuesOut[g], valuesOut[g+1]);
+							val *= scale;
+							res[g] += (u64)round(val.real());
+							res[g+1] += (u64)round(val.imag());
+						}
+					} else {
+						for(int g=0;g<k;g++)
+							res[g] += valuesOut[g];
+					}
 					if(++n >= cnt) {
 						return make_tuple(res, n);
 					}
