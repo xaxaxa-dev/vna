@@ -279,6 +279,10 @@ public:
     bool is_tr() {
         return false;
     }
+
+	bool is_autosweep() {
+		return false;
+	}
 	
     int set_params(int freq_khz, int atten, int port, int nWait) {
 		if(atten == -1) atten=100;
@@ -293,6 +297,12 @@ public:
         //virt.excitations[1] += tmp*polar(0.002,5.3);
 		
 		return 0;
+	}
+	int set_autosweep(double sweepStartHz, double sweepStepHz, int sweepPoints) {
+		return -1;
+	}
+	int read_autosweep(autoSweepDataPoint* out_values, int n_values) {
+		return -1;
 	}
 
     int set_if_freq(int freq_khz) {

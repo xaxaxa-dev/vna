@@ -52,6 +52,9 @@ namespace xaxaxa {
 		// returns whether the device is a T/R vna
 		bool isTR();
 		
+		// returns whether the device uses the autosweep protocol
+		bool isAutoSweep();
+		
 		// returns true if either device is a T/R vna or forceTR is true
 		bool isTRMode();
 		
@@ -100,6 +103,7 @@ namespace xaxaxa {
 		
 		// internal methods
 		void* _mainThread();
+		void* _runAutoSweep();
 	};
 }
 #endif

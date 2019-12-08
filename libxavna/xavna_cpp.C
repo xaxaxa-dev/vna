@@ -9,7 +9,7 @@ using namespace std;
 
 namespace xaxaxa {
     static void* _mainThread_(void* param);
-
+	bool _noscan = false;
 
 	VNADevice::VNADevice() {
         _cb_ = &_cb;
@@ -40,6 +40,10 @@ namespace xaxaxa {
 		if(!_dev) return true;
 		//return true;
 		return xavna_is_tr(_dev);
+	}
+	bool VNADevice::isAutoSweep() {
+		if(!_dev) return false;
+		return xavna_is_autosweep(_dev);
 	}
 	bool VNADevice::isTRMode() {
 		return isTR() || forceTR;
@@ -85,6 +89,10 @@ namespace xaxaxa {
 		bool tr = isTRMode();
 		uint32_t last_measurementCnt = _measurementCnt;
 		int cnt=0;
+		if(xavna_is_autosweep(_dev)) {
+			xavna_set_autosweep(_dev, startFreqHz, stepFreqHz, nPoints);
+			return _runAutoSweep();
+		}
 		while(!_shouldExit) {
 			vector<VNARawValue> results(nPoints);
 			for(int i=0;i<nPoints;i++) {
@@ -96,10 +104,12 @@ namespace xaxaxa {
 				vector<array<complex<double>, 4> > values(ports);
 				for(int port=0; port<ports; port++) {
 					int p = swapPorts?(1-port):port;
-                    if(xavna_set_params(_dev, (int)round(freqAt(i)/1000.),
-                                        (p==0?attenuation1:attenuation2), p, nWait) < 0) {
-						backgroundErrorCallback(runtime_error("xavna_set_params failed: " + string(strerror(errno))));
-						return NULL;
+					if(!_noscan) {
+						if(xavna_set_params(_dev, (int)round(freqAt(i)/1000.),
+											(p==0?attenuation1:attenuation2), p, nWait) < 0) {
+							backgroundErrorCallback(runtime_error("xavna_set_params failed: " + string(strerror(errno))));
+							return NULL;
+						}
 					}
                     if(xavna_read_values_raw(_dev, (double*)&values[port], nValues)<0) {
 						backgroundErrorCallback(runtime_error("xavna_read_values_raw failed: " + string(strerror(errno))));
@@ -148,6 +158,12 @@ namespace xaxaxa {
 					tmp(1,1) = ((b3p/a3p) - (b3*a0p)/(a3p*a0))/d;
 				}
 				//tmp(0,0) = tmp(1,0)*6.;
+				/*if(abs(tmp(0,0)) > 0.5 && (arg(tmp(0,0))*180) < -90) {
+					static int cnt = 0;
+					if((cnt++) > 10) {
+						_noscan = true;
+					}
+				}*/
 				
                 frequencyCompletedCallback(i, tmp);
                 frequencyCompletedCallback2_(i, values);
@@ -168,6 +184,56 @@ namespace xaxaxa {
 				} else cnt++;
 			}
 			
+		}
+		return NULL;
+	}
+	static complex<double> cx(const double* v) {
+		return {v[0], v[1]};
+	}
+	void* VNADevice::_runAutoSweep() {
+		uint32_t last_measurementCnt = _measurementCnt;
+		int cnt=0;
+		while(!_shouldExit) {
+			vector<VNARawValue> results(nPoints);
+			for(int i=0;i<nPoints;i++) {
+				fflush(stdout);
+				
+				autoSweepDataPoint value;
+				vector<array<complex<double>, 4> > rawValues(1);
+				if(xavna_read_autosweep(_dev, &value, 1)<0) {
+					backgroundErrorCallback(runtime_error("xavna_read_autosweep failed: " + string(strerror(errno))));
+					return NULL;
+				}
+				rawValues[0] = {cx(value.forward[0]), cx(value.reverse[0]),
+								cx(value.forward[1]), cx(value.reverse[1])};
+				
+				VNARawValue tmp;
+				auto reference = cx(value.forward[0]);
+				if(disableReference)
+					tmp << cx(value.reverse[0]), 0,
+							cx(value.reverse[1]), 0;
+				else
+					tmp << cx(value.reverse[0]) / reference, 0,
+							cx(value.reverse[1]) / reference, 0;
+				
+                frequencyCompletedCallback(value.freqIndex, tmp);
+                frequencyCompletedCallback2_(value.freqIndex, rawValues);
+                
+				results[value.freqIndex] = tmp;
+				if(_shouldExit) return NULL;
+			}
+			sweepCompletedCallback(results);
+			
+			if(_measurementCnt != last_measurementCnt) {
+				__sync_synchronize();
+				if(cnt == 1) {
+					function<void(const vector<VNARawValue>& vals)> func
+						= *(function<void(const vector<VNARawValue>& vals)>*)_cb_;
+					func(results);
+					cnt = 0;
+					last_measurementCnt = _measurementCnt;
+				} else cnt++;
+			}
 		}
 		return NULL;
 	}

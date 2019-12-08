@@ -6,6 +6,7 @@
 #include <unistd.h>
 #include <string.h>
 #include <errno.h>
+#include <poll.h>
 #include <complex>
 #include <tuple>
 #include <map>
@@ -36,6 +37,16 @@ static complex<double> processValue(u64 data1,u64 data2) {
 	return {double((ll)data2), double((ll)data1)};
 }
 
+static int readAll(int fd, void* buf, int len) {
+	u8* buf1=(u8*)buf;
+	int off=0;
+	int r;
+	while(off<len) {
+		if((r=read(fd,buf1+off,len-off))<=0) break;
+		off+=r;
+	}
+	return off;
+}
 // returns [adc0r, adc0i, adc1r, adc1i, adc2r, adc2i, ...]
 // unnormalized values;
 // if normalizePhase is true, divide all values by polar(arg(adc0))
@@ -197,6 +208,7 @@ public:
 	bool _first = true;
 	bool tr = false;
 	bool mirror = false;
+	bool autoSweep = false;
 	int _curPort = 0;
 	int _nWait = 20;
 	xavna_default(const char* dev) {
@@ -205,14 +217,29 @@ public:
 			throw runtime_error(strerror(errno));
 		}
 		
-		set_params(100000, 31, 0, 20);
+		// check for autosweep device
+		xavna_drainfd(ttyFD);
+		usleep(10000);
+		xavna_drainfd(ttyFD);
+		usleep(10000);
+		pollfd pfd;
+		pfd.fd = ttyFD;
+		pfd.events = POLLIN;
+		if(poll(&pfd,1,100) == 0) {
+			// no data was received => autosweep device
+			autoSweep = true;
+			fprintf(stderr, "detected autosweep vna\n");
+			return;
+		}
+		
+		set_params(100000, 31, 0, 5);
 		
 		xavna_drainfd(ttyFD);
-		readValue2(ttyFD, 50);
+		readValue2(ttyFD, 5);
 		
 		array<int64_t, 8> result;
 		int n;
-		tie(result, n) = readValue2(ttyFD, 10);
+		tie(result, n) = readValue2(ttyFD, 5);
 		if(result[6] != 0 && result[7] != 0) {
 			tr = false;
 			fprintf(stderr, "detected full two port vna\n");
@@ -227,6 +254,9 @@ public:
 	}
 	virtual bool is_tr() {
 		return tr;
+	}
+	virtual bool is_autosweep() {
+		return autoSweep;
 	}
 	virtual int set_params(int freq_khz, int atten, int port, int nWait) {
 		_nWait = nWait;
@@ -272,6 +302,24 @@ public:
 		//_first = false;
 		
 		
+		return 0;
+	}
+	virtual int set_autosweep(double sweepStartHz, double sweepStepHz, int sweepPoints) {
+		u8 buf[] = {
+			// 0
+			0,0,0,0,0,0,0,0,
+			// 8
+			0x23, 0x00, 0,0,0,0,0,0,0,0,
+			// 18
+			0x23, 0x10, 0,0,0,0,0,0,0,0,
+			// 28
+			0x21, 0x20, 0,0,
+			// 32
+		};
+		*(uint64_t*)(buf + 8 + 2) = (uint64_t)sweepStartHz;
+		*(uint64_t*)(buf + 18 + 2) = (uint64_t)sweepStepHz;
+		*(uint16_t*)(buf + 28 + 2) = (uint16_t)sweepPoints;
+		if(write(ttyFD,buf,sizeof(buf)) != (int)sizeof(buf)) return -1;
 		return 0;
 	}
 	virtual int set_if_freq(int freq_khz) {
@@ -413,6 +461,31 @@ public:
 		return n;
 	}
 
+	virtual int read_autosweep(autoSweepDataPoint* out_values, int n_values) {
+		u8 buf[] = {
+			// 8
+			0x13, 0x30, (u8)n_values
+		};
+		if(write(ttyFD,buf,sizeof(buf)) != (int)sizeof(buf)) return -1;
+
+		int bytes = n_values * 32;
+		u8 rBuf[bytes];
+		if(readAll(ttyFD, rBuf, bytes) != bytes) return -1;
+
+		for(int i=0; i<n_values; i++) {
+			u8* ptr = rBuf + i*32;
+			out_values[i].forward[0][0] = *(int32_t*)(ptr + 0);
+			out_values[i].forward[0][1] = *(int32_t*)(ptr + 4);
+			out_values[i].forward[1][0] = 0;
+			out_values[i].forward[1][1] = 0;
+			out_values[i].reverse[0][1] = *(int32_t*)(ptr + 8);
+			out_values[i].reverse[0][1] = *(int32_t*)(ptr + 12);
+			out_values[i].reverse[1][1] = *(int32_t*)(ptr + 16);
+			out_values[i].reverse[1][1] = *(int32_t*)(ptr + 20);
+			out_values[i].freqIndex = *(uint16_t*)(ptr + 24);
+		}
+		return n_values;
+	}
 	virtual ~xavna_default() {
 		close(ttyFD);
 	}
@@ -442,8 +515,16 @@ extern "C" {
 		return ((xavna_generic*)dev)->is_tr();
 	}
 
+	bool xavna_is_autosweep(void* dev) {
+		return ((xavna_generic*)dev)->is_autosweep();
+	}
+
 	int xavna_set_params(void* dev, int freq_khz, int atten, int port, int nWait) {
 		return ((xavna_generic*)dev)->set_params(freq_khz, atten, port, nWait);
+	}
+
+	int xavna_set_autosweep(void* dev, double sweepStartHz, double sweepStepHz, int sweepPoints) {
+		return ((xavna_generic*)dev)->set_autosweep(sweepStartHz, sweepStepHz, sweepPoints);
 	}
 
 	int xavna_read_values(void* dev, double* out_values, int n_samples) {
@@ -452,6 +533,10 @@ extern "C" {
 	
 	int xavna_read_values_raw(void* dev, double* out_values, int n_samples) {
 		return ((xavna_generic*)dev)->read_values_raw(out_values, n_samples);
+	}
+
+	int xavna_read_autosweep(void* dev, autoSweepDataPoint* out_values, int n_values) {
+		return ((xavna_generic*)dev)->read_autosweep(out_values, n_values);
 	}
 	
 	int xavna_read_values_raw2(void* dev, double* out_values, int n_samples) {
