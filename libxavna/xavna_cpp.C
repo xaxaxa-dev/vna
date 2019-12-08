@@ -207,6 +207,11 @@ namespace xaxaxa {
 				rawValues[0] = {cx(value.forward[0]), cx(value.reverse[0]),
 								cx(value.forward[1]), cx(value.reverse[1])};
 				
+
+				if(value.freqIndex >= nPoints) {
+					fprintf(stderr, "warning: hw returned freqIndex (%d) >= nPoints (%d)\n", value.freqIndex, nPoints);
+					continue;
+				}
 				VNARawValue tmp;
 				auto reference = cx(value.forward[0]);
 				if(disableReference)

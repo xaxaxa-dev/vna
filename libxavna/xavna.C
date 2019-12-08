@@ -462,6 +462,7 @@ public:
 	}
 
 	virtual int read_autosweep(autoSweepDataPoint* out_values, int n_values) {
+		xavna_drainfd(ttyFD);
 		u8 buf[] = {
 			// 8
 			0x13, 0x30, (u8)n_values
@@ -478,9 +479,9 @@ public:
 			out_values[i].forward[0][1] = *(int32_t*)(ptr + 4);
 			out_values[i].forward[1][0] = 0;
 			out_values[i].forward[1][1] = 0;
-			out_values[i].reverse[0][1] = *(int32_t*)(ptr + 8);
+			out_values[i].reverse[0][0] = *(int32_t*)(ptr + 8);
 			out_values[i].reverse[0][1] = *(int32_t*)(ptr + 12);
-			out_values[i].reverse[1][1] = *(int32_t*)(ptr + 16);
+			out_values[i].reverse[1][0] = *(int32_t*)(ptr + 16);
 			out_values[i].reverse[1][1] = *(int32_t*)(ptr + 20);
 			out_values[i].freqIndex = *(uint16_t*)(ptr + 24);
 		}
