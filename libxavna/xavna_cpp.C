@@ -35,6 +35,11 @@ namespace xaxaxa {
 		}
 		_dev = xavna_open(dev.c_str());
 		if(!_dev) throw runtime_error(strerror(errno));
+		if(isAutoSweep()) {
+			nValues = 3;
+		} else {
+			nValues = 50;
+		}
 	}
 	bool VNADevice::isTR() {
 		if(!_dev) return true;
@@ -86,13 +91,12 @@ namespace xaxaxa {
 		b = tmp;
 	}
 	void* VNADevice::_mainThread() {
+		if(xavna_is_autosweep(_dev)) {
+			return _runAutoSweep();
+		}
 		bool tr = isTRMode();
 		uint32_t last_measurementCnt = _measurementCnt;
 		int cnt=0;
-		if(xavna_is_autosweep(_dev)) {
-			xavna_set_autosweep(_dev, startFreqHz, stepFreqHz, nPoints);
-			return _runAutoSweep();
-		}
 		while(!_shouldExit) {
 			vector<VNARawValue> results(nPoints);
 			for(int i=0;i<nPoints;i++) {
@@ -192,52 +196,95 @@ namespace xaxaxa {
 	}
 	void* VNADevice::_runAutoSweep() {
 		uint32_t last_measurementCnt = _measurementCnt;
-		int cnt=0;
+		int lastFreqIndex = -1;
+		int measurementEndPoint = -1;
+		int chunkPoints = 8;
+		int nValues = this->nValues;
+		int collectDataState = 0;
+		int cnt = 0;
+		int currValueIndex = 0;
+		vector<VNARawValue> results(nPoints);
+		vector<array<complex<double>, 4> > rawValues(1);
+		rawValues[0] = {0., 0., 0., 0.};
+		
+		xavna_set_autosweep(_dev, startFreqHz, stepFreqHz, nPoints, nValues);
 		while(!_shouldExit) {
-			vector<VNARawValue> results(nPoints);
-			for(int i=0;i<nPoints;i++) {
-				fflush(stdout);
-				
-				autoSweepDataPoint value;
-				vector<array<complex<double>, 4> > rawValues(1);
-				if(xavna_read_autosweep(_dev, &value, 1)<0) {
-					backgroundErrorCallback(runtime_error("xavna_read_autosweep failed: " + string(strerror(errno))));
-					return NULL;
-				}
-				rawValues[0] = {cx(value.forward[0]), cx(value.reverse[0]),
-								cx(value.forward[1]), cx(value.reverse[1])};
-				
+			fflush(stdout);
+			int chunkValues = chunkPoints * nValues;
+			autoSweepDataPoint values[chunkValues];
+
+			// read a chunk of values
+			if(xavna_read_autosweep(_dev, values, chunkValues)<0) {
+				backgroundErrorCallback(runtime_error("xavna_read_autosweep failed: " + string(strerror(errno))));
+				return NULL;
+			}
+			
+			// process chunk
+			for(int i=0; i<chunkValues; i++) {
+				auto& value = values[i];
+				array<complex<double>, 4> currRawValue =
+						{cx(value.forward[0]), cx(value.reverse[0]),
+						cx(value.forward[1]), cx(value.reverse[1])};
+
+				for(int j=0; j<4; j++)
+					rawValues[0][j] += currRawValue[j];
 
 				if(value.freqIndex >= nPoints) {
 					fprintf(stderr, "warning: hw returned freqIndex (%d) >= nPoints (%d)\n", value.freqIndex, nPoints);
 					continue;
 				}
-				VNARawValue tmp;
-				auto reference = cx(value.forward[0]);
-				if(disableReference)
-					tmp << cx(value.reverse[0]), 0,
-							cx(value.reverse[1]), 0;
-				else
-					tmp << cx(value.reverse[0]) / reference, 0,
-							cx(value.reverse[1]) / reference, 0;
-				
-                frequencyCompletedCallback(value.freqIndex, tmp);
-                frequencyCompletedCallback2_(value.freqIndex, rawValues);
-                
-				results[value.freqIndex] = tmp;
+
+				// keep track of how many values so far for this frequency
+				if(value.freqIndex != lastFreqIndex) {
+					currValueIndex = 0;
+					lastFreqIndex = value.freqIndex;
+				} else currValueIndex++;
+
+				// last value for this frequency point
+				if(currValueIndex == nValues - 1) {
+					VNARawValue tmp;
+					if(disableReference)
+						tmp << rawValues[0][1], 0,
+						        rawValues[0][3], 0;
+					else
+						tmp << rawValues[0][1]/rawValues[0][0], 0,
+						        rawValues[0][3]/rawValues[0][0], 0;
+					frequencyCompletedCallback(value.freqIndex, tmp);
+					frequencyCompletedCallback2_(value.freqIndex, rawValues);
+					results[value.freqIndex] = tmp;
+					if(value.freqIndex == nPoints - 1)
+						sweepCompletedCallback(results);
+					rawValues[0] = {0., 0., 0., 0.};
+				}
 				if(_shouldExit) return NULL;
+				if(collectDataState == 1 && value.freqIndex == 0) {
+					collectDataState = 2;
+				} else if(collectDataState == 2 && value.freqIndex == nPoints - 1) {
+					collectDataState = 3;
+					cnt = 0;
+				} else if(collectDataState == 3) {
+					if(currValueIndex == nValues - 1) {
+						cnt++;
+						if(cnt >= 5) {
+							collectDataState = 0;
+							nValues = this->nValues;
+							xavna_set_autosweep(_dev, startFreqHz, stepFreqHz, nPoints, nValues);
+
+							function<void(const vector<VNARawValue>& vals)> func
+									= *(function<void(const vector<VNARawValue>& vals)>*)_cb_;
+							func(results);
+						}
+					}
+				}
 			}
-			sweepCompletedCallback(results);
 			
 			if(_measurementCnt != last_measurementCnt) {
-				__sync_synchronize();
-				if(cnt == 1) {
-					function<void(const vector<VNARawValue>& vals)> func
-						= *(function<void(const vector<VNARawValue>& vals)>*)_cb_;
-					func(results);
-					cnt = 0;
-					last_measurementCnt = _measurementCnt;
-				} else cnt++;
+				// collect measurement requested
+				last_measurementCnt = _measurementCnt;
+				// when collecting measurements, use double the averaging factor
+				nValues = this->nValues * 2;
+				xavna_set_autosweep(_dev, startFreqHz, stepFreqHz, nPoints, nValues);
+				collectDataState = 1;
 			}
 		}
 		return NULL;

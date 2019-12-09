@@ -298,7 +298,7 @@ public:
 		
 		return 0;
 	}
-	int set_autosweep(double sweepStartHz, double sweepStepHz, int sweepPoints) {
+	int set_autosweep(double sweepStartHz, double sweepStepHz, int sweepPoints, int nValues) {
 		return -1;
 	}
 	int read_autosweep(autoSweepDataPoint* out_values, int n_values) {

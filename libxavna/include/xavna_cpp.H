@@ -16,8 +16,8 @@ namespace xaxaxa {
 		double startFreqHz=200e6;	// start frequency in Hz
 		double stepFreqHz=25e6;		// step frequency in Hz
 		int nPoints=50;				// how many frequency points
-		int nValues=50;	 			// how many values to average over
-		int nWait=20;				// how many values to skip after changing frequency
+		int nValues=-1;	 			// how many values to average over
+		int nWait=-1;				// how many values to skip after changing frequency
 		bool disableReference = false;	// if true, do not divide by reference value
 		bool forceTR = false;		// if device is full two port vna, force T/R mode
 		bool swapPorts = false;		// only supported on full two port vna

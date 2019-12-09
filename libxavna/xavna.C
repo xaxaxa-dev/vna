@@ -228,7 +228,8 @@ public:
 		if(poll(&pfd,1,100) == 0) {
 			// no data was received => autosweep device
 			autoSweep = true;
-			fprintf(stderr, "detected autosweep vna\n");
+			tr = true;
+			fprintf(stderr, "detected autosweep T/R vna\n");
 			return;
 		}
 		
@@ -304,7 +305,7 @@ public:
 		
 		return 0;
 	}
-	virtual int set_autosweep(double sweepStartHz, double sweepStepHz, int sweepPoints) {
+	virtual int set_autosweep(double sweepStartHz, double sweepStepHz, int sweepPoints, int nValues) {
 		u8 buf[] = {
 			// 0
 			0,0,0,0,0,0,0,0,
@@ -315,10 +316,12 @@ public:
 			// 28
 			0x21, 0x20, 0,0,
 			// 32
+			0x21, 0x22, 0,0,
 		};
 		*(uint64_t*)(buf + 8 + 2) = (uint64_t)sweepStartHz;
 		*(uint64_t*)(buf + 18 + 2) = (uint64_t)sweepStepHz;
 		*(uint16_t*)(buf + 28 + 2) = (uint16_t)sweepPoints;
+		*(uint16_t*)(buf + 32 + 2) = (uint16_t)nValues;
 		if(write(ttyFD,buf,sizeof(buf)) != (int)sizeof(buf)) return -1;
 		return 0;
 	}
@@ -524,8 +527,8 @@ extern "C" {
 		return ((xavna_generic*)dev)->set_params(freq_khz, atten, port, nWait);
 	}
 
-	int xavna_set_autosweep(void* dev, double sweepStartHz, double sweepStepHz, int sweepPoints) {
-		return ((xavna_generic*)dev)->set_autosweep(sweepStartHz, sweepStepHz, sweepPoints);
+	int xavna_set_autosweep(void* dev, double sweepStartHz, double sweepStepHz, int sweepPoints, int nValues) {
+		return ((xavna_generic*)dev)->set_autosweep(sweepStartHz, sweepStepHz, sweepPoints, nValues);
 	}
 
 	int xavna_read_values(void* dev, double* out_values, int n_samples) {

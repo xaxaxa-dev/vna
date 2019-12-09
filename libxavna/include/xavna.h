@@ -29,8 +29,9 @@ extern "C" {
 	// sweepStartHz: start frequency in Hz
 	// sweepStepHz: step frequency in Hz
 	// sweepPoints: number of frequency points
+	// nValues: number of values to output for each frequency point
 	// returns: 0 if success; -1 if failure
-	int xavna_set_autosweep(void* dev, double sweepStartHz, double sweepStepHz, int sweepPoints);
+	int xavna_set_autosweep(void* dev, double sweepStartHz, double sweepStepHz, int sweepPoints, int nValues=1);
 
 	// read vector values from device; applicable for T/R VNA only
 	// out_values: array of size 4 holding the following values (in order):
