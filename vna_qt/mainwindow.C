@@ -20,6 +20,7 @@
 #include <xavna/workarounds.H>
 #include <iostream>
 #include <stdexcept>
+#include <time.h>
 
 #include <QString>
 #include <QInputDialog>
@@ -955,7 +956,7 @@ void MainWindow::on_actionExport_csv_triggered() {
     vector<VNACalibratedValue> res(vna->nPoints);
     struct tm tm1;
     time_t t = time(nullptr);
-    localtime_r(&t, &tm1);
+    tm1 = *localtime(&t);
     string defaultFilename = "impedance-" + sstrftime("%Y%m%d", tm1) + ".csv";
 
     QString fileName = fileDialogSave(

@@ -6,7 +6,6 @@
 #include <unistd.h>
 #include <string.h>
 #include <errno.h>
-#include <poll.h>
 #include <complex>
 #include <tuple>
 #include <map>
@@ -47,6 +46,18 @@ static int readAll(int fd, void* buf, int len) {
 	}
 	return off;
 }
+
+static int writeAll(int fd, const void* buf, int len) {
+	const u8* buf1=(const u8*)buf;
+	int off=0;
+	int r;
+	while(off<len) {
+		if((r=write(fd,buf1+off,len-off))<=0) break;
+		off+=r;
+	}
+	return off;
+}
+
 // returns [adc0r, adc0i, adc1r, adc1i, adc2r, adc2i, ...]
 // unnormalized values;
 // if normalizePhase is true, divide all values by polar(arg(adc0))
@@ -212,27 +223,29 @@ public:
 	int _curPort = 0;
 	int _nWait = 20;
 	xavna_default(const char* dev) {
+		fprintf(stderr, "Opening serial...\n");
 		ttyFD=xavna_open_serial(dev);
 		if(ttyFD < 0) {
 			throw runtime_error(strerror(errno));
 		}
-		
+
+		fprintf(stderr, "Detecting device type...\n");
+		fflush(stderr);
+
 		// check for autosweep device
 		xavna_drainfd(ttyFD);
 		usleep(10000);
 		xavna_drainfd(ttyFD);
 		usleep(10000);
-		pollfd pfd;
-		pfd.fd = ttyFD;
-		pfd.events = POLLIN;
-		if(poll(&pfd,1,100) == 0) {
-			// no data was received => autosweep device
-			autoSweep = true;
+
+		autoSweep = xavna_detect_autosweep(ttyFD);
+		if(autoSweep) {
 			tr = true;
 			fprintf(stderr, "detected autosweep T/R vna\n");
+			fflush(stderr);
 			return;
 		}
-		
+
 		set_params(100000, 31, 0, 5);
 		
 		xavna_drainfd(ttyFD);
@@ -322,7 +335,7 @@ public:
 		*(uint64_t*)(buf + 18 + 2) = (uint64_t)sweepStepHz;
 		*(uint16_t*)(buf + 28 + 2) = (uint16_t)sweepPoints;
 		*(uint16_t*)(buf + 32 + 2) = (uint16_t)nValues;
-		if(write(ttyFD,buf,sizeof(buf)) != (int)sizeof(buf)) return -1;
+		if(writeAll(ttyFD,buf,sizeof(buf)) != (int)sizeof(buf)) return -1;
 		return 0;
 	}
 	virtual int set_if_freq(int freq_khz) {
@@ -468,13 +481,19 @@ public:
 		xavna_drainfd(ttyFD);
 		u8 buf[] = {
 			// 8
-			0x13, 0x30, (u8)n_values
+			0x18, 0x30, (u8)n_values
 		};
-		if(write(ttyFD,buf,sizeof(buf)) != (int)sizeof(buf)) return -1;
+		if(writeAll(ttyFD,buf,sizeof(buf)) != (int)sizeof(buf)) {
+			errno = EADDRINUSE;
+			return -1;
+		}
 
 		int bytes = n_values * 32;
 		u8 rBuf[bytes];
-		if(readAll(ttyFD, rBuf, bytes) != bytes) return -1;
+		if(readAll(ttyFD, rBuf, bytes) != bytes) {
+			errno = EDEADLK;
+			return -1;
+		}
 
 		for(int i=0; i<n_values; i++) {
 			u8* ptr = rBuf + i*32;

@@ -45,12 +45,51 @@ int xavna_open_serial(const char* path) {
     }
     DCB dcbSerialParams = { 0 }; // Initializing DCB structure
     dcbSerialParams.DCBlength = sizeof(dcbSerialParams);
+
     GetCommState(hComm, &dcbSerialParams);
+    dcbSerialParams.fOutX = FALSE;
+    dcbSerialParams.fInX = FALSE;
+    dcbSerialParams.fParity = FALSE;
+    dcbSerialParams.fNull = FALSE;
+    dcbSerialParams.fRtsControl = RTS_CONTROL_DISABLE;
+    dcbSerialParams.fAbortOnError = FALSE;
+    dcbSerialParams.Parity = NOPARITY;
     SetCommState(hComm, &dcbSerialParams);
-    
+
     return _open_osfhandle((intptr_t)hComm, 0);
 }
 
 void xavna_drainfd(int fd) {
-    // TODO
+    HANDLE hComm = (HANDLE) _get_osfhandle(fd);
+    COMMTIMEOUTS comTimeOut = {};
+    comTimeOut.ReadIntervalTimeout = MAXDWORD;
+    comTimeOut.ReadTotalTimeoutMultiplier = MAXDWORD;
+    comTimeOut.ReadTotalTimeoutConstant = 1;
+    SetCommTimeouts(hComm,&comTimeOut);
+
+    char buf[1024];
+    read(fd, buf, sizeof(buf));
+
+    comTimeOut.ReadTotalTimeoutConstant = 200;
+    SetCommTimeouts(hComm,&comTimeOut);
+}
+
+bool xavna_detect_autosweep(int fd) {
+    bool ret = true;
+    HANDLE hComm = (HANDLE) _get_osfhandle(fd);
+    COMMTIMEOUTS comTimeOut = {};
+    comTimeOut.ReadIntervalTimeout = MAXDWORD;
+    comTimeOut.ReadTotalTimeoutMultiplier = MAXDWORD;
+    comTimeOut.ReadTotalTimeoutConstant = 300;
+    SetCommTimeouts(hComm,&comTimeOut);
+
+    char buf[128];
+    if(read(fd, buf, sizeof(buf)) > 0) {
+        ret = false;
+    }
+    // no data was received => autosweep device
+
+    comTimeOut.ReadTotalTimeoutConstant = 200;
+    SetCommTimeouts(hComm,&comTimeOut);
+    return ret;
 }

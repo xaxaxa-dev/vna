@@ -65,3 +65,15 @@ void xavna_drainfd(int fd) {
 		read(fd,buf,sizeof(buf));
 	}
 }
+
+
+bool xavna_detect_autosweep(int fd) {
+	pollfd pfd;
+	pfd.fd = fd;
+	pfd.events = POLLIN;
+	if(poll(&pfd,1,100) == 0) {
+		// no data was received => autosweep device
+		return true;
+	}
+	return false;
+}

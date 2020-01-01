@@ -35,10 +35,15 @@ namespace xaxaxa {
 		}
 		_dev = xavna_open(dev.c_str());
 		if(!_dev) throw runtime_error(strerror(errno));
-		if(isAutoSweep()) {
-			nValues = 3;
-		} else {
-			nValues = 50;
+		
+		if(isAutoSweep() != _lastDeviceIsAutosweep) {
+			if(isAutoSweep()) {
+				nValues = 2;
+				nWait = -1;
+			} else {
+				nValues = 30;
+				nWait = 20;
+			}
 		}
 	}
 	bool VNADevice::isTR() {

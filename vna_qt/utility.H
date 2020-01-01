@@ -8,6 +8,8 @@
 #include <vector>
 #include <sstream>
 #include <QString>
+#include <time.h>
+
 using namespace std;
 
 inline QString qs(const string& s) {

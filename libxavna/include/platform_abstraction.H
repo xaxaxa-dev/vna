@@ -8,3 +8,4 @@ using namespace std;
 vector<string> xavna_find_devices();
 int xavna_open_serial(const char* path);
 void xavna_drainfd(int fd);
+bool xavna_detect_autosweep(int fd);
