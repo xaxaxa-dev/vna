@@ -1,7 +1,9 @@
 #ifndef XAVNA_MOCK_UI_H
 #define XAVNA_MOCK_UI_H
 
+#include <string>
 #include <functional>
+
 using namespace std;
 typedef function<void(string dut_name, double cableLen1, double cableLen2)> xavna_ui_changed_cb;
 
